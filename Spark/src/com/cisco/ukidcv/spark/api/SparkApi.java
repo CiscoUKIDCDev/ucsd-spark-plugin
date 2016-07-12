@@ -11,7 +11,6 @@ import java.io.IOException;
 import org.apache.commons.httpclient.HttpException;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
@@ -21,7 +20,7 @@ import com.rwhitear.ucsdHttpRequest.UCSDHttpRequest;
 import com.rwhitear.ucsdHttpRequest.constants.HttpRequestConstants;
 
 /**
- * Gets the spark forecast for a particular city
+ * Spark API requests - obtains raw JSON
  *
  * @author Matt Day
  *
@@ -43,12 +42,7 @@ public class SparkApi {
 	 *             if there's a problem accessing the report
 	 * @see SparkRooms
 	 */
-	public static String getSparkRoomsJson(SparkAccount account)
-			throws SparkReportException, HttpException, IOException {
-
-		// Check inventory:
-		SparkInventory.getRooms(account);
-
+	public static String getSparkRooms(SparkAccount account) throws SparkReportException, HttpException, IOException {
 		// Set up a request to the spark server
 		UCSDHttpRequest req = basicRequest(account);
 
@@ -64,32 +58,6 @@ public class SparkApi {
 	}
 
 	/**
-	 * Takes a JSON response for Spark rooms and turns it in to a SparkRooms
-	 * class
-	 *
-	 * @param json
-	 *            JSON response from server
-	 * @return Java formatted list of rooms
-	 * @throws SparkReportException
-	 *             if the report fails
-	 * @throws HttpException
-	 *             if there's a problem accessing the report
-	 * @throws IOException
-	 *             if there's a problem accessing the report
-	 * @see SparkRooms
-	 */
-	public static SparkRooms getSparkRooms(String json) throws SparkReportException, HttpException, IOException {
-
-		// Check if the response is not empty:
-		if (!"".equals(json)) {
-			Gson gson = new Gson();
-			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
-			return rooms;
-		}
-		throw new SparkReportException("Could not parse JSON");
-	}
-
-	/**
 	 * Returns JSON information on the signed-in user
 	 *
 	 * @param account
@@ -102,8 +70,7 @@ public class SparkApi {
 	 * @throws IOException
 	 *             if there's a problem accessing the report
 	 */
-	public static String getSparkDetailsJson(SparkAccount account)
-			throws SparkReportException, HttpException, IOException {
+	public static String getSparkPerson(SparkAccount account) throws SparkReportException, HttpException, IOException {
 
 		// Set up a request to the spark server
 		UCSDHttpRequest req = basicRequest(account);
@@ -134,7 +101,7 @@ public class SparkApi {
 	 * @throws IOException
 	 *             if there's a problem accessing the report
 	 */
-	public static String getSparkDetailsJson(SparkAccount account, String userId)
+	public static String getSparkPerson(SparkAccount account, String userId)
 			throws SparkReportException, HttpException, IOException {
 
 		// Set up a request to the spark server
@@ -167,16 +134,42 @@ public class SparkApi {
 	 *             if there's a problem accessing the report
 	 * @see SparkPersonDetails
 	 */
+	@Deprecated
 	public static SparkPersonDetails getSparkDetails(String json)
 			throws SparkReportException, HttpException, IOException {
 
 		// Check if the response is not empty:
 		if (!"".equals(json)) {
 			Gson gson = new Gson();
-			SparkPersonDetails rooms = gson.fromJson(json, SparkPersonDetails.class);
-			return rooms;
+			SparkPersonDetails person = gson.fromJson(json, SparkPersonDetails.class);
+			return person;
 		}
 		throw new SparkReportException("Could not parse JSON");
+	}
+
+	/**
+	 * Tests if an account can correctly connect to Spark
+	 *
+	 * @param account
+	 *            Account to test
+	 * @return true if the connection is successful
+	 */
+	public static boolean testConnection(SparkAccount account) {
+		try {
+			String json = getSparkPerson(account);
+			// Check if the response is not empty:
+			if (!"".equals(json)) {
+				Gson gson = new Gson();
+				SparkPersonDetails person = gson.fromJson(json, SparkPersonDetails.class);
+				if ((person.getId() != null) && (!"".equals(person.getId()))) {
+					return true;
+				}
+			}
+		}
+		catch (@SuppressWarnings("unused") SparkReportException | IOException e) {
+			// Don't do anything
+		}
+		return false;
 	}
 
 	// Set up a basic http request (no method type)
@@ -199,24 +192,4 @@ public class SparkApi {
 		return req;
 	}
 
-	/**
-	 * Tests if an account can correctly connect to Spark
-	 *
-	 * @param account
-	 *            Account to test
-	 * @return true if the connection is successful
-	 */
-	public static boolean testConnection(SparkAccount account) {
-		try {
-			SparkPersonDetails person = getSparkDetails(getSparkDetailsJson(account));
-			if ((person.getId() != null) && (!"".equals(person.getId()))) {
-				return true;
-			}
-		}
-		catch (SparkReportException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
 }

@@ -7,6 +7,7 @@
 package com.cisco.ukidcv.spark.account.inventory;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.log4j.Logger;
@@ -22,6 +23,7 @@ import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.account.AccountUtil;
 import com.cloupia.lib.connector.account.PhysicalConnectivityStatus;
 import com.cloupia.lib.connector.account.PhysicalInfraAccount;
+import com.google.gson.Gson;
 
 /**
  * Runs every 60 minutes or after a user action (e.g. adding a city) and
@@ -29,6 +31,9 @@ import com.cloupia.lib.connector.account.PhysicalInfraAccount;
  * <p>
  * This is handled in two parts - this inventory class providing static methods
  * and a database store
+ * <p>
+ * This is a complex class and the heart of the plugin's communication with
+ * Spark
  *
  * @author Matt Day
  * @see com.cisco.ukidcv.spark.account.inventory.SparkInventoryDB
@@ -37,8 +42,87 @@ import com.cloupia.lib.connector.account.PhysicalInfraAccount;
 public class SparkInventory {
 	static Logger logger = Logger.getLogger(SparkInventory.class);
 
-	public static void update(SparkAccount account, String reason, boolean force) {
+	/**
+	 * Attempt to update the inventory.
+	 * <p>
+	 * UCS Director's internal inventory collection happens every 60 minutes.
+	 * This is a long time. Whenever this is called it will check if a
+	 * determined polling period has passed and if so, refresh the cached
+	 * inventory
+	 *
+	 * @param account
+	 *            Account to update
+	 * @param reason
+	 *            String reason for logging purposes
+	 * @param force
+	 *            set to true to force an update even if it's not due
+	 * @throws Exception
+	 */
+	public static void update(SparkAccount account, String reason, boolean force) throws Exception {
+		Date d = new Date();
+		long c = d.getTime();
+		// SparkInventoryDB invStore = getInventoryStore(account);
+		final String accountName = account.getAccountName();
+		final String queryString = "accountName == '" + accountName + "'";
 
+		PhysicalInfraAccount infraAccount = AccountUtil.getAccountByName(accountName);
+		PhysicalConnectivityStatus status = new PhysicalConnectivityStatus(infraAccount);
+
+		try {
+
+			ObjStore<SparkInventoryDB> invStoreCollection = ObjStoreHelper.getStore(SparkInventoryDB.class);
+			SparkInventoryDB store = null;
+			try {
+				store = invStoreCollection.query(queryString).iterator().next();
+			}
+			catch (Exception e) {
+				logger.warn("Possibly stale entry from older API - deleting & re-creating. " + e.getMessage());
+				invStoreCollection.delete(queryString);
+				create(account);
+				return;
+			}
+
+			if (store == null) {
+				logger.warn("Cannot find " + accountName + " in inventory! Rolling back and creating new");
+				// Attempt to create it:
+				create(account);
+				return;
+			}
+
+			// Get user configured inventory lifespan (TODO fixme)
+			final long inventoryLife = SparkConstants.MAX_POLLING_TIME;
+
+			if ((!force) && ((d.getTime() - store.getUpdated()) < inventoryLife)) {
+				return;
+			}
+			store.setUpdated(c);
+
+			store.setRoomList(SparkApi.getSparkRooms(account));
+
+			d = new Date();
+			final String update = c + "@" + d.getTime() + "@" + force + "@" + reason;
+
+			log(store, update);
+
+			invStoreCollection.modifySingleObject(queryString, store);
+
+			status.setConnectionOK(true);
+
+		}
+		catch (Exception e) {
+			logger.warn("Exception updating database! " + e.getMessage());
+
+			status.setConnectionOK(false);
+		}
+	}
+
+	private static void log(SparkInventoryDB store, String message) {
+		store.getPolling().add(message);
+
+		// Remove oldest entry if longer than the allowed log length
+		if (store.getPolling().size() > SparkConstants.MAX_POLLING_LOG_ENTRIES) {
+			store.getPolling().remove(0);
+		}
 	}
 
 	private static SparkInventoryDB getInventoryStore(SparkAccount account) throws Exception {
@@ -86,9 +170,41 @@ public class SparkInventory {
 		throw new SparkAccountException("Could not create inventory store!");
 	}
 
-	public static SparkRooms getRooms(SparkAccount account) throws HttpException, SparkReportException, IOException {
+	/**
+	 * Gets a list of Spark rooms for the account requested. It will first check
+	 * the cache needs updating.
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @return List of Spark rooms
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkRooms
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkRooms getRooms(SparkAccount account)
+			throws HttpException, SparkReportException, IOException, Exception {
 		// Update inventory if needed:
 		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
-		return SparkApi.getSparkRooms(SparkApi.getSparkRoomsJson(account));
+
+		SparkInventoryDB inv = getInventoryStore(account);
+		String json = inv.getRoomList();
+
+		// Check if the response is not empty:
+		if (!"".equals(json)) {
+			Gson gson = new Gson();
+			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
+			return rooms;
+		}
+		throw new SparkReportException("Could not parse JSON");
 	}
 }

@@ -29,7 +29,7 @@ public class SparkConstants {
 	 * Accounts must have a magic number in the converged view. The docs say to
 	 * use something "over 1000". Let's hope no one else uses this value!
 	 */
-	public static final int INFRA_ACCOUNT_MAGIC_NUMBER = 19842701;
+	public static final int INFRA_ACCOUNT_MAGIC_NUMBER = 19852807;
 	/**
 	 * Category to put all the workflows
 	 */
@@ -67,5 +67,15 @@ public class SparkConstants {
 	 * Log message for periodic inventory updates
 	 */
 	public final static String INVENTORY_REASON_PERIODIC = "Periodic inventory update";
+
+	/**
+	 * Maximum number of log entries
+	 */
+	public final static int MAX_POLLING_LOG_ENTRIES = 100;
+
+	/**
+	 * Time between polling (miliseconds)
+	 */
+	public final static long MAX_POLLING_TIME = 900000;
 
 }

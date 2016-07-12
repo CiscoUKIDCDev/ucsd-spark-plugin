@@ -185,34 +185,78 @@ public class SparkInventoryDB {
 		this.me = me;
 	}
 
+	/**
+	 * Get the ID for this store
+	 *
+	 * @return store ID
+	 */
 	public long getId() {
 		return this.id;
 	}
 
+	/**
+	 * Set the ID for this inventory store
+	 *
+	 * @param id
+	 *            Inventory store ID
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
+	/**
+	 * Get the account name
+	 *
+	 * @return Account name
+	 */
 	public String getAccountName() {
 		return this.accountName;
 	}
 
+	/**
+	 * Set the account name
+	 *
+	 * @param accountName
+	 *            Account name
+	 */
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
 
+	/**
+	 * Get the last updated time for this account as an epoch number in
+	 * miliseconds
+	 *
+	 * @return Plugin update time in miliseconds
+	 */
 	public long getUpdated() {
 		return this.updated;
 	}
 
+	/**
+	 * Set the time this account was last polled
+	 *
+	 * @param updated
+	 */
 	public void setUpdated(long updated) {
 		this.updated = updated;
 	}
 
+	/**
+	 * Get the polling log
+	 *
+	 * @return Historical polling log
+	 */
 	public LinkedList<String> getPolling() {
 		return this.polling;
 	}
 
+	/**
+	 * Create a new polling log
+	 *
+	 * @param polling
+	 *            Linked list of entries
+	 */
 	public void setPolling(LinkedList<String> polling) {
 		this.polling = polling;
 	}
