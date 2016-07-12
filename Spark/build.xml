@@ -1,0 +1,70 @@
+<project basedir="." default="build" name="Spark-module">
+	<property name="classesdir" value="${basedir}/bin" />
+	<property name="moduleID" value="Spark" />
+	
+	<target name="clean">
+		<delete dir="${basedir}/build" />
+		<delete file="${basedir}/${moduleID}-plugin.zip" />
+	</target>
+	
+	<target name="build" depends="clean, jdoEnhance, verify">
+		<delete dir="${basedir}/build" />
+		<mkdir dir="${basedir}/build" />
+		<jar destfile="${basedir}/build/feature-${moduleID}.jar" update="true">
+	        <fileset dir="${basedir}/bin">
+	        </fileset>
+	    </jar>
+		<copy file="${basedir}/${moduleID}.feature" tofile="${basedir}/build/${moduleID}.feature" />
+		<!-- 
+		TODO: Necessary runtime jars need to be copied into ${basedir}/build folder!
+		But DO NOT copy the open automation jars into the build folder!
+		When introducing new jars, make sure your .feature file lists each jar as well!!!
+		-->
+		<!-- Copy all the resources into the zip -->
+		<mkdir dir="${basedir}/build/resources" />
+		<copy todir="${basedir}/build/resources">
+			<fileset dir="${basedir}/resources" includes="**"/>  
+		</copy>
+		<!-- Copy all the cloudsense artifacts into the zip -->
+		<mkdir dir="${basedir}/build/cloudsense" />
+		<copy todir="${basedir}/build/cloudsense">
+			<fileset dir="${basedir}/cloudsense" includes="**"/>  
+		</copy>
+		<!-- Copy the pod definition folder into the zip -->
+		<mkdir dir="${basedir}/build/poddefinition" />
+		<copy todir="${basedir}/build/poddefinition">
+			<fileset dir="${basedir}/poddefinition" includes="**"/> 
+		</copy>
+		<mkdir dir="${basedir}/build/${moduleID}/lib" />
+		<!-- this is how you copy a folder of jars to be part of your module -->
+        <copy todir="${basedir}/build/${moduleID}/lib">
+	        <fileset dir="${basedir}/lib">
+                <include name="jsch/**"/>
+	        	<include name="apache-commons-httpclient/**"/>
+	        	<include name="ucsd-httprequest/**"/>
+	        </fileset>
+        </copy>
+		<zip destfile="${basedir}/${moduleID}-plugin.zip" basedir="${basedir}/build">
+		</zip>
+		<echo message="${moduleID} feature is located at ${basedir}/${moduleID}-plugin.zip"></echo>
+	</target>
+	<target name="jdoEnhance">
+		<java classname="com.cloupia.cbuild.JDOEnhancerTool" fork="true" maxmemory="512m">
+			<arg value="${basedir}/src"/>
+			<arg value="${basedir}/bin"/>
+			<classpath>
+				<pathelement path="${classesdir}"/>
+			</classpath>
+			<classpath>
+				<fileset dir="${basedir}/lib">
+					<include name="jdo/**/*.jar" />
+					<include name="ucsd-oa-sdk/**/*.jar" />
+					<include name="logging/**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="verify">
+    </target>
+</project>

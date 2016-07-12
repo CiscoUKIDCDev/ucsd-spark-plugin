@@ -1,0 +1,9 @@
+.DS_Store
+.metadata
+.recommenders
+copyrightLog.txt
+Spark-plugin.zip
+Spark-plugin.zip.asc
+bin
+build
+src/com/cisco/ukidcv/spark/test

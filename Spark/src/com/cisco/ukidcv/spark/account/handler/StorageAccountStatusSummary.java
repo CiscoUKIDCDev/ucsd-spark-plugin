@@ -1,0 +1,134 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Matt Day, Cisco and others
+ *
+ * Unless explicitly stated otherwise all files in this repository are licensed
+ * under the Apache Software License 2.0
+ *******************************************************************************/
+package com.cisco.ukidcv.spark.account.handler;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
+import org.apache.log4j.Logger;
+
+import com.cisco.cuic.api.client.JSON;
+import com.cisco.ukidcv.spark.account.SparkAccount;
+import com.cisco.ukidcv.spark.account.SparkAccountDB;
+import com.cisco.ukidcv.spark.api.Spark;
+import com.cisco.ukidcv.spark.api.json.SparkReport;
+import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.exceptions.SparkReportException;
+import com.cloupia.fw.objstore.ObjStoreHelper;
+import com.cloupia.lib.cIaaS.netapp.model.StorageAccountStatus;
+import com.cloupia.lib.connector.account.AbstractInfraAccount;
+import com.cloupia.lib.connector.account.AccountUtil;
+import com.cloupia.lib.connector.account.PhysicalConnectivityStatus;
+import com.cloupia.lib.connector.account.PhysicalInfraAccount;
+
+/**
+ * This periodically polls the account to ensure everything is working. It tests
+ * the spark in London to do so
+ * 
+ * @author Matt Day
+ *
+ */
+public class StorageAccountStatusSummary {
+	private static Logger logger = Logger.getLogger(StorageAccountStatusSummary.class);
+
+	/**
+	 * Obtain account summary information
+	 *
+	 * @param accountName
+	 * @throws Exception
+	 */
+	public static void accountSummary(String accountName) throws Exception {
+		final String testPlace = "London";
+		PhysicalInfraAccount acc = AccountUtil.getAccountByName(accountName);
+
+		// Obtain internal account database to get the pod type
+		String json = acc.getCredential();
+		AbstractInfraAccount dbStore = (AbstractInfraAccount) JSON.jsonToJavaObject(json, SparkAccountDB.class);
+		dbStore.setAccount(acc);
+
+		PhysicalConnectivityStatus status = new PhysicalConnectivityStatus(acc);
+
+		StorageAccountStatus accStatus = new StorageAccountStatus();
+		accStatus.setAccountName(acc.getAccountName());
+		accStatus.setDcName(dbStore.getPod());
+
+		SparkAccount account = new SparkAccount(accountName);
+
+		try {
+			// Get a spark report and check it has a valid
+			// temperature:
+			SparkReport rep = Spark.getSpark(account, testPlace);
+			if (testPlace.equals(rep.getName())) {
+				accStatus.setReachable(true);
+				accStatus.setLastMessage("Connection OK");
+				status.setConnectionOK(true);
+			}
+			else {
+				accStatus.setReachable(false);
+				status.setConnectionOK(false);
+				accStatus.setLastMessage("Could not connect (check credentials)");
+			}
+		}
+		// If there's a SparkReportException here it's probably because
+		// authentication failed:
+		catch (@SuppressWarnings("unused") SparkReportException e) {
+			logger.warn("Connection failed: " + accountName);
+			accStatus.setLastMessage("Could not connect (check credentials)");
+			accStatus.setReachable(false);
+			status.setConnectionOK(false);
+		}
+		// Other exceptions are probably IO etc which indicate failed
+		// connectivity
+		catch (@SuppressWarnings("unused") Exception e) {
+			logger.warn("Connection failed: " + accountName);
+			accStatus.setLastMessage("Could not connect (check proxy)");
+			accStatus.setReachable(false);
+			status.setConnectionOK(false);
+		}
+
+		accStatus.setLastUpdated(System.currentTimeMillis());
+
+		accStatus.setModel(SparkConstants.INFRA_ACCOUNT_LABEL);
+		accStatus.setServerAddress(dbStore.getServerAddress());
+		accStatus.setVersion(SparkConstants.API_VERSION);
+		persistStorageAccountStatus(accStatus);
+	}
+
+	/**
+	 * Not sure what this does - adding from SDK boilerplate
+	 *
+	 * @param ac
+	 * @throws Exception
+	 */
+	public static void persistStorageAccountStatus(StorageAccountStatus ac) throws Exception {
+		PersistenceManager pm = ObjStoreHelper.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+
+		try {
+			tx.begin();
+
+			String query = "accountName == '" + ac.getAccountName() + "'";
+
+			Query q = pm.newQuery(StorageAccountStatus.class, query);
+			q.deletePersistentAll();
+
+			pm.makePersistent(ac);
+			tx.commit();
+		}
+		finally {
+			try {
+				if (tx.isActive()) {
+					tx.rollback();
+				}
+			}
+			finally {
+				pm.close();
+			}
+		}
+	}
+}
