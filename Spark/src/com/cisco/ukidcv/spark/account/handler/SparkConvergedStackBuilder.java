@@ -8,7 +8,6 @@ package com.cisco.ukidcv.spark.account.handler;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
-import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cloupia.model.cIM.ConvergedStackComponentDetail;
@@ -49,8 +48,7 @@ public class SparkConvergedStackBuilder implements ConvergedStackComponentBuilde
 		boolean ok = false;
 		try {
 			// Check we can reach the Spark API:
-			SparkPersonDetails me = SparkApi.getSparkDetails(account);
-			if (!"".equals(me.getId())) {
+			if (SparkApi.testConnection(account)) {
 				ok = true;
 			}
 		}

@@ -62,4 +62,10 @@ public class SparkConstants {
 	 */
 	public final static String SPARK_ME_URI = "/v1/people/me";
 
+	// ======== Spark Inventory constants
+	/**
+	 * Log message for periodic inventory updates
+	 */
+	public final static String INVENTORY_REASON_PERIODIC = "Periodic inventory update";
+
 }

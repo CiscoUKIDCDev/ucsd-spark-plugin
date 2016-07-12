@@ -16,9 +16,7 @@ import com.cisco.cuic.api.client.JSON;
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.SparkAccountDB;
 import com.cisco.ukidcv.spark.api.SparkApi;
-import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
-import com.cisco.ukidcv.spark.exceptions.SparkReportException;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.cIaaS.netapp.model.StorageAccountStatus;
 import com.cloupia.lib.connector.account.AbstractInfraAccount;
@@ -60,8 +58,7 @@ public class StorageAccountStatusSummary {
 
 		try {
 			// Check we can reach the Spark API:
-			SparkPersonDetails me = SparkApi.getSparkDetails(account);
-			if (!"".equals(me.getId())) {
+			if (SparkApi.testConnection(account)) {
 				accStatus.setReachable(true);
 				accStatus.setLastMessage("Connection OK");
 				status.setConnectionOK(true);
@@ -71,14 +68,6 @@ public class StorageAccountStatusSummary {
 				status.setConnectionOK(false);
 				accStatus.setLastMessage("Could not connect (check credentials)");
 			}
-		}
-		// If there's a SparkReportException here it's probably because
-		// authentication failed:
-		catch (@SuppressWarnings("unused") SparkReportException e) {
-			logger.warn("Connection failed: " + accountName);
-			accStatus.setLastMessage("Could not connect (check credentials)");
-			accStatus.setReachable(false);
-			status.setConnectionOK(false);
 		}
 		// Other exceptions are probably IO etc which indicate failed
 		// connectivity

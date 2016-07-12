@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
-import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cloupia.lib.connector.account.AccountUtil;
@@ -43,8 +42,7 @@ public class SparkConnectionHandler extends PhysicalConnectivityTestHandler {
 					SparkAccount account = new SparkAccount(accountName);
 					try {
 						// Check we can reach the Spark API:
-						SparkPersonDetails me = SparkApi.getSparkDetails(account);
-						if (!"".equals(me.getId())) {
+						if (SparkApi.testConnection(account)) {
 							status.setConnectionOK(true);
 						}
 						logger.debug("Token acquired - connection verified");
