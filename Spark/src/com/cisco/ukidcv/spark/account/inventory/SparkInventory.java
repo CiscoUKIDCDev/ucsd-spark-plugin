@@ -6,10 +6,8 @@
  *******************************************************************************/
 package com.cisco.ukidcv.spark.account.inventory;
 
-import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.httpclient.HttpException;
 import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
@@ -116,6 +114,14 @@ public class SparkInventory {
 		}
 	}
 
+	/**
+	 * Add a log entry
+	 *
+	 * @param store
+	 *            Inventory store to log to
+	 * @param message
+	 *            Message to include
+	 */
 	private static void log(SparkInventoryDB store, String message) {
 		store.getPolling().add(message);
 
@@ -125,6 +131,15 @@ public class SparkInventory {
 		}
 	}
 
+	/**
+	 * Get the inventory database store
+	 *
+	 * @param account
+	 *            Account to obtain
+	 * @return Inventory DB
+	 * @throws Exception
+	 *             if there's a problem getting it
+	 */
 	private static SparkInventoryDB getInventoryStore(SparkAccount account) throws Exception {
 		final String accountName = account.getAccountName();
 		final String queryString = "accountName == '" + accountName + "'";
@@ -145,6 +160,15 @@ public class SparkInventory {
 		return create(account);
 	}
 
+	/**
+	 * Create a new inventory store
+	 * 
+	 * @param account
+	 *            Account to create it for
+	 * @return New inventory store
+	 * @throws Exception
+	 *             if there's a problem creating it
+	 */
 	private static SparkInventoryDB create(SparkAccount account) throws Exception {
 		PhysicalInfraAccount infraAccount = AccountUtil.getAccountByName(account.getAccountName());
 		PhysicalConnectivityStatus status = new PhysicalConnectivityStatus(infraAccount);
@@ -182,17 +206,12 @@ public class SparkInventory {
 	 * @return List of Spark rooms
 	 * @throws SparkReportException
 	 *             if the report fails
-	 * @throws HttpException
-	 *             if there's a problem accessing the report
-	 * @throws IOException
-	 *             if there's a problem accessing the report
 	 * @throws Exception
 	 *             If there's an issue reading or parsing the cache
 	 * @see SparkRooms
 	 * @see #update(SparkAccount, String, boolean)
 	 */
-	public static SparkRooms getRooms(SparkAccount account)
-			throws HttpException, SparkReportException, IOException, Exception {
+	public static SparkRooms getRooms(SparkAccount account) throws SparkReportException, Exception {
 		// Update inventory if needed:
 		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
 
