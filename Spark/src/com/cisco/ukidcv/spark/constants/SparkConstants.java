@@ -42,15 +42,24 @@ public class SparkConstants {
 	/**
 	 * API Version
 	 */
-	public static final String API_VERSION = "2.5";
+	public static final String API_VERSION = "1";
 	/**
 	 * Spark report server
 	 */
-	public static final String SPARK_SERVER = "api.opensparkmap.org";
+	public static final String SPARK_SERVER = "api.ciscospark.com";
 
 	/**
 	 * URI for spark report
 	 */
-	public final static String SPARK_REPORT_URI = "/data/2.5/spark";
+	public final static String SPARK_ROOM_URI = "/v1/rooms";
+
+	/**
+	 * URI for spark report
+	 */
+	public final static String SPARK_PEOPLE_URI = "/v1/people/";
+	/**
+	 * URI for spark report
+	 */
+	public final static String SPARK_ME_URI = "/v1/people/me";
 
 }

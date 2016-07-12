@@ -9,8 +9,8 @@ package com.cisco.ukidcv.spark.account.handler;
 import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.Spark;
-import com.cisco.ukidcv.spark.api.json.SparkReport;
+import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cloupia.lib.connector.account.AccountUtil;
@@ -28,8 +28,6 @@ import com.cloupia.lib.connector.account.PhysicalInfraAccount;
 public class SparkConnectionHandler extends PhysicalConnectivityTestHandler {
 	static Logger logger = Logger.getLogger(PhysicalConnectivityTestHandler.class);
 
-	private final static String testPlace = "London";
-
 	@Override
 	public PhysicalConnectivityStatus testConnection(String accountName) throws Exception {
 
@@ -44,10 +42,9 @@ public class SparkConnectionHandler extends PhysicalConnectivityTestHandler {
 
 					SparkAccount account = new SparkAccount(accountName);
 					try {
-						// Get a spark report and check it has a valid
-						// temperature:
-						SparkReport rep = Spark.getSpark(account, testPlace);
-						if (testPlace.equals(rep.getName())) {
+						// Check we can reach the Spark API:
+						SparkPersonDetails me = SparkApi.getSparkDetails(account);
+						if (!"".equals(me.getId())) {
 							status.setConnectionOK(true);
 						}
 						logger.debug("Token acquired - connection verified");

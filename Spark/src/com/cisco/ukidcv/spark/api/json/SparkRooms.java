@@ -6,61 +6,41 @@
  *******************************************************************************/
 package com.cisco.ukidcv.spark.api.json;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * This class file represents a spark forecast from the opensparkmap.org
+ * This implements the JSON from the Spark API directly in Java.
  * <p>
- * Each element maps 1:1 with the JSON API. See
- * <a href="http://opensparkmap.org/current">http://opensparkmap.org/current
- * </a>
- * </p>
- * <p>
- * This is not javadoc'd, please see the API documentation for detail.
+ * There is no Javadoc here. See the API documentation at
+ * <a href="https://developer.ciscospark.com">developer.ciscospark.com</a>
  *
  * @author Matt Day
  *
  */
 @SuppressWarnings("javadoc")
-public class SparkReportWind {
+public class SparkRooms {
 
-	private Double speed;
-	private Integer deg;
+	private List<SparkRoomItem> items = new ArrayList<>();
 	private Map<String, Object> additionalProperties = new HashMap<>();
 
 	/**
 	 *
-	 * @return The speed
+	 * @return The items
 	 */
-	public Double getSpeed() {
-		return this.speed;
+	public List<SparkRoomItem> getItems() {
+		return this.items;
 	}
 
 	/**
 	 *
-	 * @param speed
-	 *            The speed
+	 * @param items
+	 *            The items
 	 */
-	public void setSpeed(Double speed) {
-		this.speed = speed;
-	}
-
-	/**
-	 *
-	 * @return The deg
-	 */
-	public Integer getDeg() {
-		return this.deg;
-	}
-
-	/**
-	 *
-	 * @param deg
-	 *            The deg
-	 */
-	public void setDeg(Integer deg) {
-		this.deg = deg;
+	public void setItems(List<SparkRoomItem> items) {
+		this.items = items;
 	}
 
 	public Map<String, Object> getAdditionalProperties() {

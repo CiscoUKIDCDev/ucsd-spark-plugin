@@ -49,7 +49,7 @@ public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCre
 
 	// Input field for API key:
 	@Persistent
-	@FormField(label = "API Key", help = "API Key from opensparkmap.org", mandatory = true)
+	@FormField(label = "Spark API Key", help = "API Key from developer.ciscospark.com", mandatory = true, type = FormFieldDefinition.FIELD_TYPE_PASSWORD)
 	private String apiKey;
 
 	// Input field for API key:

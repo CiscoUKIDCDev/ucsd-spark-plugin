@@ -7,8 +7,8 @@
 package com.cisco.ukidcv.spark.account.handler;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.Spark;
-import com.cisco.ukidcv.spark.api.json.SparkReport;
+import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cloupia.model.cIM.ConvergedStackComponentDetail;
@@ -23,9 +23,6 @@ import com.cloupia.service.cIM.inframgr.reports.contextresolve.ConvergedStackCom
  *
  */
 public class SparkConvergedStackBuilder implements ConvergedStackComponentBuilderIf {
-
-	private final static String testPlace = "London";
-
 	/**
 	 * Overridden method from SDK
 	 *
@@ -51,10 +48,9 @@ public class SparkConvergedStackBuilder implements ConvergedStackComponentBuilde
 		// Test connectivity to cloud
 		boolean ok = false;
 		try {
-			// Get a spark report and check it has a valid
-			// temperature:
-			SparkReport rep = Spark.getSpark(account, testPlace);
-			if (testPlace.equals(rep.getName())) {
+			// Check we can reach the Spark API:
+			SparkPersonDetails me = SparkApi.getSparkDetails(account);
+			if (!"".equals(me.getId())) {
 				ok = true;
 			}
 		}

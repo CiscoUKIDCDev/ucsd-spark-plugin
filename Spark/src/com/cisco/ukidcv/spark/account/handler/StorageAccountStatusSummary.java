@@ -15,8 +15,8 @@ import org.apache.log4j.Logger;
 import com.cisco.cuic.api.client.JSON;
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.SparkAccountDB;
-import com.cisco.ukidcv.spark.api.Spark;
-import com.cisco.ukidcv.spark.api.json.SparkReport;
+import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkReportException;
 import com.cloupia.fw.objstore.ObjStoreHelper;
@@ -29,7 +29,7 @@ import com.cloupia.lib.connector.account.PhysicalInfraAccount;
 /**
  * This periodically polls the account to ensure everything is working. It tests
  * the spark in London to do so
- * 
+ *
  * @author Matt Day
  *
  */
@@ -43,7 +43,6 @@ public class StorageAccountStatusSummary {
 	 * @throws Exception
 	 */
 	public static void accountSummary(String accountName) throws Exception {
-		final String testPlace = "London";
 		PhysicalInfraAccount acc = AccountUtil.getAccountByName(accountName);
 
 		// Obtain internal account database to get the pod type
@@ -60,10 +59,9 @@ public class StorageAccountStatusSummary {
 		SparkAccount account = new SparkAccount(accountName);
 
 		try {
-			// Get a spark report and check it has a valid
-			// temperature:
-			SparkReport rep = Spark.getSpark(account, testPlace);
-			if (testPlace.equals(rep.getName())) {
+			// Check we can reach the Spark API:
+			SparkPersonDetails me = SparkApi.getSparkDetails(account);
+			if (!"".equals(me.getId())) {
 				accStatus.setReachable(true);
 				accStatus.setLastMessage("Connection OK");
 				status.setConnectionOK(true);
