@@ -80,7 +80,7 @@ public class SparkConstants {
 	/**
 	 * Label for inventory task
 	 */
-	public static final String INVENTORY_TASK_LABEL = "Collect Inventory";
+	public static final String INVENTORY_TASK_LABEL = "Collect Spark Inventory";
 	/**
 	 * Label for create room task
 	 */
