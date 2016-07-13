@@ -7,6 +7,9 @@
 package com.cisco.ukidcv.spark.reports.rooms.drilldowns;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.AddMemberAction;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.DeleteMembershipAction;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.EditMembershipAction;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
@@ -26,6 +29,10 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.DrillableReportWithAc
 public class RoomMembersReport extends DrillableReportWithActions {
 
 	private final static String REPORT_NAME = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomMembersReport";
+
+	private CloupiaReportAction[] actionButtons = {
+			new AddMemberAction(), new EditMembershipAction(), new DeleteMembershipAction(),
+	};
 
 	/**
 	 * Creates the account summary report and passes the account name, magic
@@ -82,7 +89,7 @@ public class RoomMembersReport extends DrillableReportWithActions {
 
 	@Override
 	public CloupiaReportAction[] getActions() {
-		return null;
+		return this.actionButtons;
 	}
 
 	@Override

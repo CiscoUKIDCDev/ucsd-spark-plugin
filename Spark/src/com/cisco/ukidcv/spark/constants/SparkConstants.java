@@ -72,6 +72,19 @@ public class SparkConstants {
 	 * Label for new room name
 	 */
 	public static final String NEW_ROOM_NAME_LABEL = "New Name";
+	/**
+	 * Label for Email address
+	 */
+	public static final String EMAIL_LABEL = "Email Address";
+	/**
+	 * Label for Email address
+	 */
+	public static final String MEMBERSHIP_ID_LABEL = "Membership ID";
+
+	/**
+	 * Label for Moderator
+	 */
+	public static final String MODERATOR_LABEL = "Moderator";
 
 	/**
 	 * Label for Spark Account Tasks
@@ -89,7 +102,18 @@ public class SparkConstants {
 	 * Label for edit room task
 	 */
 	public static final String EDIT_ROOM_TASK_LABEL = "Edit Room";
-
+	/**
+	 * Label for edit membership task
+	 */
+	public static final String EDIT_MEMBERSHIP_TASK_LABEL = "Edit Member";
+	/**
+	 * Label for edit membership task
+	 */
+	public static final String DELETE_MEMBERSHIP_TASK_LABEL = "Remove Member";
+	/**
+	 * Label for create room task
+	 */
+	public static final String ADD_MEMBERSHIP_TASK_LABEL = "Add Member";
 	/**
 	 * Label for edit room task
 	 */
@@ -145,6 +169,11 @@ public class SparkConstants {
 	 * UCSDs internal gen_text_input type
 	 */
 	public static final String GENERIC_TEXT_INPUT = "gen_text_input";
+
+	/**
+	 * UCSDs internal boolean type
+	 */
+	public static final String BOOLEAN_INPUT = "Boolean";
 
 	// ======== Spark API Constants
 	/**

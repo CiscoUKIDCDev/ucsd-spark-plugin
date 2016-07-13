@@ -49,8 +49,7 @@ public class RoomMembersReportImpl implements TabularReportGeneratorIf {
 		// call and is not cached (and thus may be slower)
 		for (SparkMembership member : SparkApi.getSparkRoomMemberships(account, roomId).getItems()) {
 			// Generate internal ID in the format AccountName;RoomID;Room Name
-			final String internalId = account.getAccountName() + ";" + member.getId() + ";"
-					+ member.getPersonDisplayName();
+			final String internalId = account.getAccountName() + ";" + member.getId() + ";" + member.getPersonEmail();
 
 			/*
 			 * Now add the various attributes as per above (the number of

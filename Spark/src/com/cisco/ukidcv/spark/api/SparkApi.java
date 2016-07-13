@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.json.SparkErrors;
+import com.cisco.ukidcv.spark.api.json.SparkMembership;
 import com.cisco.ukidcv.spark.api.json.SparkMembershipCreation;
 import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkMessage;
@@ -62,6 +63,42 @@ public class SparkApi {
 	}
 
 	/**
+	 * Requests a specific member from the Spark servers and returns it as a
+	 * Java Object. If the member does not exist (or cannot be found) it returns
+	 * null
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @param roomId
+	 *            Room ID to check
+	 * @param personEmail
+	 *            User's email to check
+	 * @return Membership list in JSON format
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkRooms
+	 */
+	public static String getSparkMemberships(SparkAccount account, String roomId, String personEmail)
+			throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account,
+				SparkConstants.SPARK_MEMBERSHIP_URI + "?roomId=" + roomId + "&personEmail=" + personEmail,
+				httpMethod.GET);
+		req.execute();
+		String json = req.getResponse();
+		Gson gson = new Gson();
+		SparkMemberships members = gson.fromJson(json, SparkMemberships.class);
+		if (members.getItems().size() > 0) {
+			return members.getItems().get(0).getId();
+		}
+		return null;
+	}
+
+	/**
 	 * Requests a list of room memberships from the Spark servers and returns it
 	 * as a Java class.
 	 * <p>
@@ -88,6 +125,27 @@ public class SparkApi {
 		req.execute();
 		Gson gson = new Gson();
 		return gson.fromJson(req.getResponse(), SparkMemberships.class);
+	}
+
+	/**
+	 * Get Spark room details from a Spark Membership ID
+	 *
+	 * @param account
+	 *            Account to check from
+	 * @param memberId
+	 *            Member ID to check
+	 * @return Membership information
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public static SparkMembership getSparkRoomDetails(SparkAccount account, String memberId)
+			throws ClientProtocolException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MEMBERSHIP_URI + "/" + memberId,
+				httpMethod.GET);
+		req.execute();
+		Gson gson = new Gson();
+		return gson.fromJson(req.getResponse(), SparkMembership.class);
 	}
 
 	/**
