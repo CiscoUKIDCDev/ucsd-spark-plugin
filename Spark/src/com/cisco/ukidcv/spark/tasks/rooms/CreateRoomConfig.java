@@ -24,7 +24,7 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
  * @author Matt Day
  * @see CreateRoomTask
  */
-@PersistenceCapable(detachable = "true", table = "Spark_create_room_collection")
+@PersistenceCapable(detachable = "true", table = "Spark_create_room")
 public class CreateRoomConfig implements TaskConfigIf {
 
 	@Persistent

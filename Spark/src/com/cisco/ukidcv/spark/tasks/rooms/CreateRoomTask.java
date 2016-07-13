@@ -11,7 +11,6 @@ import com.cisco.ukidcv.spark.api.SparkAPIStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
-import com.cisco.ukidcv.spark.tasks.inventory.CollectInventoryConfig;
 import com.cloupia.service.cIM.inframgr.AbstractTask;
 import com.cloupia.service.cIM.inframgr.TaskConfigIf;
 import com.cloupia.service.cIM.inframgr.TaskOutputDefinition;
@@ -51,7 +50,7 @@ public class CreateRoomTask extends AbstractTask {
 
 	@Override
 	public TaskConfigIf getTaskConfigImplementation() {
-		return new CollectInventoryConfig();
+		return new CreateRoomConfig();
 	}
 
 	@Override
