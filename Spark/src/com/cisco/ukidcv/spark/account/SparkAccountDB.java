@@ -39,7 +39,7 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
  * @author Matt Day
  *
  */
-@PersistenceCapable(detachable = "true", table = "spark_account")
+@PersistenceCapable(detachable = "true", table = "spark_account_v2")
 public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCredential {
 
 	// Log entries for debugging purposes

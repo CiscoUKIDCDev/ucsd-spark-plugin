@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 import org.apache.log4j.Logger;
 
@@ -28,11 +27,6 @@ import org.apache.log4j.Logger;
 public class SparkInventoryDB {
 
 	private static Logger logger = Logger.getLogger(SparkInventoryDB.class);
-
-	// ID for this entry in the database (make it primary key)
-	@PrimaryKey
-	@Column(name = "ID")
-	private long id;
 
 	// Account name this pertains to
 	@Persistent
@@ -179,25 +173,6 @@ public class SparkInventoryDB {
 	 */
 	public void setMe(String me) {
 		this.me = me;
-	}
-
-	/**
-	 * Get the ID for this store
-	 *
-	 * @return store ID
-	 */
-	public long getId() {
-		return this.id;
-	}
-
-	/**
-	 * Set the ID for this inventory store
-	 *
-	 * @param id
-	 *            Inventory store ID
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	/**
