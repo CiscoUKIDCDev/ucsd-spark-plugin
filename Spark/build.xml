@@ -10,7 +10,7 @@
 	<target name="build" depends="clean, jdoEnhance, verify">
 		<delete dir="${basedir}/build" />
 		<mkdir dir="${basedir}/build" />
-		<jar destfile="${basedir}/build/feature-${moduleID}.jar" update="true">
+		<jar destfile="${basedir}/build/${moduleID}-plugin.jar" update="true">
 	        <fileset dir="${basedir}/bin">
 	        </fileset>
 	    </jar>

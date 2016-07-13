@@ -33,6 +33,7 @@ public class WorkflowInputTypeDeclaration {
 	 */
 	public static void registerWFInputs() {
 		registerAccountPicker();
+		registerRoomPicker();
 	}
 
 	/**
@@ -48,7 +49,23 @@ public class WorkflowInputTypeDeclaration {
 		// First item is what we return to the workflow, second is what we
 		// display in the GUI
 		TabularFieldRegistry.getInstance().registerTabularField(SparkConstants.ACCOUNT_LIST_FORM_NAME,
-				SparkConstants.class, "0", "0");
+				SparkAccountSelector.class, "0", "0");
+	}
+
+	/**
+	 * Register the list of rooms
+	 *
+	 */
+	private static void registerRoomPicker() {
+		WorkflowInputTypeRegistry input = WorkflowInputTypeRegistry.getInstance();
+		input.addDeclaration(new WorkflowInputFieldTypeDeclaration(SparkConstants.ROOM_LIST_FORM_TABLE_NAME,
+				SparkConstants.ROOM_NAME_LABEL, FormFieldDefinition.FIELD_TYPE_TABULAR_POPUP,
+				SparkConstants.ROOM_LIST_FORM_NAME));
+
+		// First item is what we return to the workflow, second is what we
+		// display in the GUI
+		TabularFieldRegistry.getInstance().registerTabularField(SparkConstants.ROOM_LIST_FORM_NAME,
+				SparkRoomSelector.class, "0", "2");
 	}
 
 }

@@ -15,6 +15,7 @@ import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
+import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
@@ -60,7 +61,6 @@ public class SparkInventory {
 	 * @throws Exception
 	 */
 	public static void update(SparkAccount account, String reason, boolean force) throws Exception {
-		logger.info("Updating inventory");
 		Date d = new Date();
 		long c = d.getTime();
 		// SparkInventoryDB invStore = getInventoryStore(account);
@@ -92,9 +92,13 @@ public class SparkInventory {
 			// Get user configured inventory lifespan (TODO fixme)
 			final long inventoryLife = SparkConstants.MAX_POLLING_TIME;
 
+			// If we're not forcing an update and the set time hasn't expired,
+			// don't update
 			if ((!force) && ((d.getTime() - store.getUpdated()) < inventoryLife)) {
 				return;
 			}
+			logger.info("Updating inventory for account " + account);
+
 			store.setUpdated(c);
 
 			// Add room list to inventory
@@ -251,6 +255,46 @@ public class SparkInventory {
 			Gson gson = new Gson();
 			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
 			return rooms;
+		}
+		throw new SparkReportException("Could not parse JSON");
+	}
+
+	/**
+	 * Gets information about a specific Spark room. It will return null if the
+	 * room is not found.
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @param roomId
+	 *            Room ID to search for
+	 * @return List of Spark rooms
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkRooms
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkRoom getRoom(SparkAccount account, String roomId) throws SparkReportException, Exception {
+		// Update inventory if needed:
+		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
+
+		SparkInventoryDB inv = getInventoryStore(account);
+		String json = inv.getRoomList();
+
+		// Check if the response is not empty:
+		if (!"".equals(json)) {
+			Gson gson = new Gson();
+			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
+			for (SparkRoom room : rooms.getItems()) {
+				if (roomId.equals(room.getId())) {
+					return room;
+				}
+			}
+			return null;
 		}
 		throw new SparkReportException("Could not parse JSON");
 	}

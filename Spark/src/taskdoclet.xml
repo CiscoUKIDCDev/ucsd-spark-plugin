@@ -1,0 +1,30 @@
+<TaskDocList>
+
+	<TaskDoc>
+		<Task>Send Email of Datacenters</Task>
+		<Summary>Sends a e-mail containing all datacenter names</Summary>
+		<Description> <![CDATA[
+			This task can be used to send a e-mail containing all datacenter names.			
+			]]>
+		</Description>
+	</TaskDoc>
+	
+	<TaskDoc>
+		<Task>Enable SNMP for Nexus</Task>
+		<Summary>Enable SNMP on a Nexus device</Summary>
+		<Description> <![CDATA[
+			This task can be used to enable SNMP on a Nexus device with read write access on the community string "whitney".					
+			]]>
+		</Description>
+	</TaskDoc>
+	
+	<TaskDoc>
+		<Task>Disable SNMP for Nexus</Task>
+		<Summary>Disable SNMP on a Nexus device</Summary>
+		<Description> <![CDATA[
+			This task can be used to disable SNMP on a Nexus device removing the community string "whitney".				
+			]]>
+		</Description>
+	</TaskDoc>
+	
+</TaskDocList>

@@ -16,6 +16,7 @@ import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.json.SparkErrors;
 import com.cisco.ukidcv.spark.api.json.SparkMembershipCreation;
+import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkMessage;
 import com.cisco.ukidcv.spark.api.json.SparkMessageCreation;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
@@ -58,6 +59,35 @@ public class SparkApi {
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MEMBERSHIP_URI, httpMethod.GET);
 		req.execute();
 		return req.getResponse();
+	}
+
+	/**
+	 * Requests a list of room memberships from the Spark servers and returns it
+	 * as a Java class.
+	 * <p>
+	 * <b>Caution:</b>This method is not cached!
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @param roomId
+	 *            Room ID
+	 * @return Membership list in JSON format
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkRooms
+	 */
+	public static SparkMemberships getSparkRoomMemberships(SparkAccount account, String roomId)
+			throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account,
+				SparkConstants.SPARK_MEMBERSHIP_URI + "?roomId=" + roomId, httpMethod.GET);
+		req.execute();
+		Gson gson = new Gson();
+		return gson.fromJson(req.getResponse(), SparkMemberships.class);
 	}
 
 	/**

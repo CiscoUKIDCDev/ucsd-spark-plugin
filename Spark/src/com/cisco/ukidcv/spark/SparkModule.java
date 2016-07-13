@@ -14,6 +14,7 @@ import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cisco.ukidcv.spark.inputs.SparkAccountSelector;
+import com.cisco.ukidcv.spark.inputs.SparkRoomSelector;
 import com.cisco.ukidcv.spark.inputs.WorkflowInputTypeDeclaration;
 import com.cisco.ukidcv.spark.reports.inventory.InventoryReport;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
@@ -77,10 +78,7 @@ public class SparkModule extends AbstractCloupiaModule {
 			// Register LOV inputs
 			logger.info("Registering List of Value Inputs");
 			cfr.registerTabularField(SparkConstants.ACCOUNT_LIST_FORM_PROVIDER, SparkAccountSelector.class, "0", "0");
-
-			// Register workflow inputs - this is done in a separate file
-			logger.info("Registering Workflow Inputs");
-			WorkflowInputTypeDeclaration.registerWFInputs();
+			cfr.registerTabularField(SparkConstants.ROOM_LIST_FORM_PROVIDER, SparkRoomSelector.class, "0", "2");
 
 			// Register the account type drilldown
 			ReportContextRegistry.getInstance().register(SparkConstants.INFRA_ACCOUNT_TYPE,
@@ -92,6 +90,10 @@ public class SparkModule extends AbstractCloupiaModule {
 					SparkConstants.ROOM_LIST_DRILLDOWN_LABEL);
 			ReportContextRegistry.getInstance().register(SparkConstants.INVENTORY_LIST_DRILLDOWN,
 					SparkConstants.INVENTORY_LIST_DRILLDOWN_LABEL);
+
+			// Register workflow inputs - this is done in a separate file
+			logger.info("Registering Workflow Inputs");
+			WorkflowInputTypeDeclaration.registerWFInputs();
 
 			// Create the Spark account type below
 			this.createAccountType();

@@ -33,11 +33,11 @@ public class SparkConstants {
 	/**
 	 * Category to put all the workflows
 	 */
-	public static final String WORKFLOW_CATEGORY = "Spark";
+	public static final String WORKFLOW_CATEGORY = "Cisco Spark";
 	/**
 	 * Folder to put the tasks in
 	 */
-	public static final String TASK_PREFIX = "Spark Tasks";
+	public static final String TASK_PREFIX = "Cisco Spark Tasks";
 
 	// ======== Spark GUI Constants
 	/**
@@ -55,6 +55,10 @@ public class SparkConstants {
 	/**
 	 * Label for overview reports
 	 */
+	public static final String ROOM_MEMBERS_LABEL = "Room Members";
+	/**
+	 * Label for overview reports
+	 */
 	public static final String INVENTORY_LABEL = "Polling";
 	/**
 	 * Label for overview reports
@@ -65,6 +69,11 @@ public class SparkConstants {
 	 */
 	public static final String ROOM_NAME_LABEL = "Room Name";
 	/**
+	 * Label for new room name
+	 */
+	public static final String NEW_ROOM_NAME_LABEL = "New Name";
+
+	/**
 	 * Label for Spark Account Tasks
 	 */
 	public static final String ACCOUNT_LIST_FORM_LABEL = "Spark Account";
@@ -73,9 +82,18 @@ public class SparkConstants {
 	 */
 	public static final String INVENTORY_TASK_LABEL = "Collect Inventory";
 	/**
-	 * Label for room task
+	 * Label for create room task
 	 */
 	public static final String CREATE_ROOM_TASK_LABEL = "Create Room";
+	/**
+	 * Label for edit room task
+	 */
+	public static final String EDIT_ROOM_TASK_LABEL = "Edit Room";
+
+	/**
+	 * Label for edit room task
+	 */
+	public static final String DELETE_ROOM_TASK_LABEL = "Delete Room";
 
 	// ======== Report Constants
 	/**
@@ -107,7 +125,22 @@ public class SparkConstants {
 	/**
 	 * Account list form name
 	 */
-	public static final String ACCOUNT_LIST_FORM_NAME = "HP3ParAccountList";
+	public static final String ACCOUNT_LIST_FORM_NAME = "SparkAccountList";
+	/**
+	 * Room list UCS Director internal name
+	 */
+	public static final String ROOM_LIST_FORM_PROVIDER = "spark_room_list_provider";
+
+	/**
+	 * Room list data type name
+	 */
+	public static final String ROOM_LIST_FORM_TABLE_NAME = "spark_room_list_table";
+
+	/**
+	 * Room list form name
+	 */
+	public static final String ROOM_LIST_FORM_NAME = "SparkRoomList";
+
 	/**
 	 * UCSDs internal gen_text_input type
 	 */

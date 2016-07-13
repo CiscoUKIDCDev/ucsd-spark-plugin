@@ -16,16 +16,16 @@ import com.cloupia.service.cIM.inframgr.customactions.UserInputField;
 import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
 
 /**
- * Configuration task to create a new Spark room
+ * Configuration task to delete a new Spark room
  * <p>
  * This provides the GUI and configuration elements to execute this task. It can
  * be used via an action button or as a workflow task.
  *
  * @author Matt Day
- * @see CreateRoomTask
+ * @see DeleteRoomTask
  */
-@PersistenceCapable(detachable = "true", table = "Spark_create_room_collection")
-public class CreateRoomConfig implements TaskConfigIf {
+@PersistenceCapable(detachable = "true", table = "Spark_delete_room_collection")
+public class DeleteRoomConfig implements TaskConfigIf {
 
 	@Persistent
 	private long configEntryId;
@@ -33,13 +33,8 @@ public class CreateRoomConfig implements TaskConfigIf {
 	@Persistent
 	private long actionId;
 
-	@FormField(label = SparkConstants.ACCOUNT_LIST_FORM_LABEL, help = SparkConstants.ACCOUNT_LIST_FORM_LABEL, mandatory = true, type = FormFieldDefinition.FIELD_TYPE_TABULAR_POPUP, table = SparkConstants.ACCOUNT_LIST_FORM_PROVIDER)
-	@UserInputField(type = SparkConstants.ACCOUNT_LIST_FORM_TABLE_NAME)
-	@Persistent
-	private String account;
-
-	@FormField(label = SparkConstants.ROOM_NAME_LABEL, help = SparkConstants.ROOM_NAME_LABEL, mandatory = true, type = FormFieldDefinition.FIELD_TYPE_TEXT)
-	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
+	@FormField(label = SparkConstants.ROOM_NAME_LABEL, help = SparkConstants.ROOM_NAME_LABEL, mandatory = true, type = FormFieldDefinition.FIELD_TYPE_TABULAR_POPUP, table = SparkConstants.ROOM_LIST_FORM_PROVIDER)
+	@UserInputField(type = SparkConstants.ROOM_LIST_FORM_TABLE_NAME)
 	@Persistent
 	private String roomName;
 
@@ -47,7 +42,7 @@ public class CreateRoomConfig implements TaskConfigIf {
 	 * Empty default constructor - you could initialise default values here if
 	 * you wanted
 	 */
-	public CreateRoomConfig() {
+	public DeleteRoomConfig() {
 		super();
 
 	}
@@ -57,17 +52,7 @@ public class CreateRoomConfig implements TaskConfigIf {
 	 */
 	public String getAccount() {
 		// We're only interested in the first part, remove anything after ;
-		return this.account.split(";")[0];
-	}
-
-	/**
-	 * Set the account
-	 *
-	 * @param account
-	 *            Account to set
-	 */
-	public void setAccount(String account) {
-		this.account = account;
+		return this.roomName.split(";")[0];
 	}
 
 	/**
@@ -81,10 +66,10 @@ public class CreateRoomConfig implements TaskConfigIf {
 	}
 
 	/**
-	 * @return The user provided room name
+	 * @return The room ID
 	 */
-	public String getRoomName() {
-		return this.roomName;
+	public String getRoomId() {
+		return this.roomName.split(";")[1];
 	}
 
 	@Override
@@ -99,7 +84,7 @@ public class CreateRoomConfig implements TaskConfigIf {
 
 	@Override
 	public String getDisplayLabel() {
-		return SparkConstants.CREATE_ROOM_TASK_LABEL;
+		return SparkConstants.DELETE_ROOM_TASK_LABEL;
 	}
 
 	@Override

@@ -8,6 +8,10 @@ package com.cisco.ukidcv.spark.reports.rooms;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction;
+import com.cisco.ukidcv.spark.reports.rooms.actions.DeleteRoomAction;
+import com.cisco.ukidcv.spark.reports.rooms.actions.EditRoomAction;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomMembersReport;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomSummaryReport;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
@@ -32,11 +36,11 @@ public class SparkRoomReport extends DrillableReportWithActions {
 	// Drilldown reports MUST be defined like this (i.e. not in the
 	// getDrilldownReports method)
 	private CloupiaReport[] drillable = new CloupiaReport[] {
-
+			new RoomSummaryReport(), new RoomMembersReport(),
 	};
 
 	private CloupiaReportAction[] actions = new CloupiaReportAction[] {
-			new CreateRoomAction(), new DrillDownAction(),
+			new CreateRoomAction(), new EditRoomAction(), new DeleteRoomAction(), new DrillDownAction(),
 	};
 
 	/**
@@ -48,7 +52,7 @@ public class SparkRoomReport extends DrillableReportWithActions {
 		// is selected or for drilldown reports
 		this.setMgmtColumnIndex(0);
 		// This sets what column will show in the GUI when anything is selected
-		this.setMgmtDisplayColumnIndex(2);
+		this.setMgmtDisplayColumnIndex(1);
 	}
 
 	@Override

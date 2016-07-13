@@ -63,8 +63,8 @@ public class SparkRoomReportImpl implements TabularReportGeneratorIf {
 		SparkAccount account = new SparkAccount(context);
 
 		for (SparkRoom room : SparkInventory.getRooms(account).getItems()) {
-			// Generate internal ID in the format AccountName;RoomID
-			final String internalId = account.getAccountName() + ";" + room.getId();
+			// Generate internal ID in the format AccountName;RoomID;Room Name
+			final String internalId = account.getAccountName() + ";" + room.getId() + ";" + room.getTitle();
 
 			/*
 			 * Now add the various attributes as per above (the number of
