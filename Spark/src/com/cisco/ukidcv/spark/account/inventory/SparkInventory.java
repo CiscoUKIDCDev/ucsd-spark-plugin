@@ -97,7 +97,7 @@ public class SparkInventory {
 			if ((!force) && ((d.getTime() - store.getUpdated()) < inventoryLife)) {
 				return;
 			}
-			logger.info("Updating inventory for account " + account);
+			logger.info("Updating inventory for account " + accountName);
 
 			store.setUpdated(c);
 

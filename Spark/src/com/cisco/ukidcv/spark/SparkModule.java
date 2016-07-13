@@ -21,6 +21,8 @@ import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
 import com.cisco.ukidcv.spark.reports.summary.AccountReport;
 import com.cisco.ukidcv.spark.tasks.inventory.CollectInventoryTask;
 import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomTask;
+import com.cisco.ukidcv.spark.tasks.rooms.DeleteRoomTask;
+import com.cisco.ukidcv.spark.tasks.rooms.EditRoomTask;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.ConfigItemDef;
@@ -67,7 +69,7 @@ public class SparkModule extends AbstractCloupiaModule {
 	@Override
 	public AbstractTask[] getTasks() {
 		return new AbstractTask[] {
-				new CreateRoomTask(), new CollectInventoryTask(),
+				new CreateRoomTask(), new EditRoomTask(), new DeleteRoomTask(), new CollectInventoryTask(),
 		};
 	}
 
