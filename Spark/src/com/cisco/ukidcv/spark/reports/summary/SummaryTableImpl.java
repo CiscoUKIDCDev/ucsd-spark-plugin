@@ -59,6 +59,7 @@ public class SummaryTableImpl implements TabularReportGeneratorIf {
 		for (String email : me.getEmails()) {
 			model.addText("Email", email);
 		}
+		model.addText("Created", me.getCreated());
 
 		// finally perform last clean up steps
 		model.setGroupOrder(GROUP_ORDER);

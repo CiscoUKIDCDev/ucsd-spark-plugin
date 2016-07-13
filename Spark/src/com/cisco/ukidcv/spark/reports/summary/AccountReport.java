@@ -7,6 +7,7 @@
 package com.cisco.ukidcv.spark.reports.summary;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.reports.summary.graphs.SparkRoomTypesPieChart;
 import com.cloupia.model.cIM.InfraAccountTypes;
 import com.cloupia.service.cIM.inframgr.collector.impl.GenericInfraAccountReport;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaReport;
@@ -26,7 +27,7 @@ public class AccountReport extends GenericInfraAccountReport {
 	// Drilldown reports MUST be defined like this (i.e. not in the
 	// getDrilldownReports method)
 	private CloupiaReport[] drilldown = new CloupiaReport[] {
-			new SummaryTable(),
+			new SummaryTable(), new SparkRoomTypesPieChart(),
 	};
 
 	/**

@@ -48,6 +48,25 @@ public class SparkConstants {
 	 * Label for overview reports
 	 */
 	public static final String OVERVIEW_LABEL = "Overview";
+	/**
+	 * Label for overview reports
+	 */
+	public static final String ROOM_LABEL = "Rooms";
+
+	/**
+	 * Label for overview reports
+	 */
+	public static final String ROOM_TYPE_LABEL = "Room Types";
+
+	// ======== Report Constants
+	/**
+	 * Context for room drilldowns
+	 */
+	public static final String ROOM_LIST_DRILLDOWN = "com.cisco.ukidcv.spark.reports.rooms.SparkRoomList";
+	/**
+	 * Label for room drilldowns
+	 */
+	public static final String ROOM_LIST_DRILLDOWN_LABEL = "Spark Room List";
 
 	// ======== Spark API Constants
 	/**
@@ -91,16 +110,26 @@ public class SparkConstants {
 	public static final String SPARK_SERVER_PROTOCOL = "https";
 
 	/**
-	 * URI for spark report
+	 * URI for room report
 	 */
 	public final static String SPARK_ROOM_URI = "/v1/rooms";
 
 	/**
-	 * URI for spark report
+	 * URI for membership report
+	 */
+	public final static String SPARK_MEMBERSHIP_URI = "/v1/memberships";
+
+	/**
+	 * URI teams report
+	 */
+	public final static String SPARK_TEAMS_URI = "/v1/teams";
+
+	/**
+	 * URI for people report
 	 */
 	public final static String SPARK_PEOPLE_URI = "/v1/people/";
 	/**
-	 * URI for spark report
+	 * URI for 'me' report
 	 */
 	public final static String SPARK_ME_URI = "/v1/people/me";
 
@@ -109,6 +138,10 @@ public class SparkConstants {
 	 * Log message for periodic inventory updates
 	 */
 	public final static String INVENTORY_REASON_PERIODIC = "Periodic inventory update";
+	/**
+	 * Log message for initial startup
+	 */
+	public final static String INVENTORY_REASON_INITIAL = "Initial inventory collection";
 
 	/**
 	 * Maximum number of log entries

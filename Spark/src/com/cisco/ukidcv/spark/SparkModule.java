@@ -4,13 +4,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.SparkAccountDB;
 import com.cisco.ukidcv.spark.account.SparkConvergedStackBuilder;
 import com.cisco.ukidcv.spark.account.handler.SparkConnectionHandler;
 import com.cisco.ukidcv.spark.account.handler.SparkInventoryItemHandler;
 import com.cisco.ukidcv.spark.account.handler.SparkInventoryListener;
+import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
+import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
 import com.cisco.ukidcv.spark.reports.summary.AccountReport;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
@@ -29,7 +32,10 @@ import com.cloupia.service.cIM.inframgr.collector.controller.CollectorFactory;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaReport;
 
 /**
- *
+ * This is the main entry point for the plugin.
+ * <p>
+ * Everything it can do is initialised here including tasks, reports, list of
+ * values and so on.
  *
  * @author Matt Day
  *
@@ -38,18 +44,23 @@ public class SparkModule extends AbstractCloupiaModule {
 
 	private static Logger logger = Logger.getLogger(SparkModule.class);
 
+	/**
+	 * Provide a list of top-level reports to show in the summary/converged
+	 * view. The order here is the order they'll show up in the GUI
+	 */
 	@Override
 	public CloupiaReport[] getReports() {
-		// TODO Auto-generated method stub
 		final CloupiaReport[] reports = {
-				new AccountReport(),
+				new AccountReport(), new SparkRoomReport(),
 		};
 		return reports;
 	}
 
+	/**
+	 * Provide a list of tasks to add to the orchestration engine
+	 */
 	@Override
 	public AbstractTask[] getTasks() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -67,10 +78,23 @@ public class SparkModule extends AbstractCloupiaModule {
 			ReportContextRegistry.getInstance().register(SparkConstants.INFRA_ACCOUNT_TYPE,
 					SparkConstants.INFRA_ACCOUNT_LABEL);
 
+			// You have to register each kind of report you want to use here or
+			// they won't be able to drilldown
+			ReportContextRegistry.getInstance().register(SparkConstants.ROOM_LIST_DRILLDOWN,
+					SparkConstants.ROOM_LIST_DRILLDOWN_LABEL);
+
 			// Create the Spark account type below
 			this.createAccountType();
 
-			//
+			/*
+			 * Initialise account inventory. This is a bit convoluted.
+			 *
+			 * Step one is to loop through all accounts in UCS Director and find
+			 * any that are Spark accounts.
+			 *
+			 * Step two is to initialise the SparkInventory which will do an
+			 * initial pull from the API server and cache it for reports
+			 */
 			try {
 				final ObjStore<InfraAccount> store = ObjStoreHelper.getStore(InfraAccount.class);
 				final List<InfraAccount> objs = store.queryAll();
@@ -79,10 +103,10 @@ public class SparkModule extends AbstractCloupiaModule {
 					// Important to check if the account type is null first
 					if ((acc != null) && (acc.getAccountType() != null)
 							&& (acc.getAccountType().equals(SparkConstants.INFRA_ACCOUNT_TYPE))) {
-						@SuppressWarnings("unused")
-						final String accountName = acc.getAccountName();
-						// HP3ParInventory.init(new
-						// HP3ParCredentials(accountName));
+
+						// Collect inventory
+						final SparkAccount account = new SparkAccount(acc.getAccountName());
+						SparkInventory.update(account, SparkConstants.INVENTORY_REASON_INITIAL, true);
 					}
 
 				}

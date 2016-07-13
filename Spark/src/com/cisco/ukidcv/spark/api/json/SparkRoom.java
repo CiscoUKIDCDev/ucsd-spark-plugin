@@ -19,7 +19,7 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("javadoc")
-public class SparkRoomItem {
+public class SparkRoom {
 
 	private String id;
 	private String title;

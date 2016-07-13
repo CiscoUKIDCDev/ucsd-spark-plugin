@@ -21,16 +21,16 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("javadoc")
-public class SparkRooms {
+public class SparkMemberships {
 
-	private List<SparkRoom> items = new ArrayList<>();
+	private List<SparkMembership> items = new ArrayList<>();
 	private Map<String, Object> additionalProperties = new HashMap<>();
 
 	/**
 	 *
 	 * @return The items
 	 */
-	public List<SparkRoom> getItems() {
+	public List<SparkMembership> getItems() {
 		return this.items;
 	}
 
@@ -39,7 +39,7 @@ public class SparkRooms {
 	 * @param items
 	 *            The items
 	 */
-	public void setItems(List<SparkRoom> items) {
+	public void setItems(List<SparkMembership> items) {
 		this.items = items;
 	}
 

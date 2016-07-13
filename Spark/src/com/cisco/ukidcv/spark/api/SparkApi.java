@@ -51,6 +51,51 @@ public class SparkApi {
 	}
 
 	/**
+	 * Requests a list of room memberships from the Spark servers and returns it
+	 * in JSON format
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @return Membership list in JSON format
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkRooms
+	 */
+	public static String getSparkMemberships(SparkAccount account)
+			throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MEMBERSHIP_URI, httpMethod.GET);
+		req.execute();
+		return req.getResponse();
+	}
+
+	/**
+	 * Requests a list of teams from the Spark servers and returns it in JSON
+	 * format
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @return Team list in JSON format
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkRooms
+	 */
+	public static String getSparkTeams(SparkAccount account) throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_TEAMS_URI, httpMethod.GET);
+		req.execute();
+		return req.getResponse();
+	}
+
+	/**
 	 * Returns JSON information on the signed-in user
 	 *
 	 * @param account
@@ -93,35 +138,6 @@ public class SparkApi {
 				httpMethod.GET);
 		req.execute();
 		return req.getResponse();
-
-	}
-
-	/**
-	 * Takes a JSON response for Spark a spark user and turns it in to a
-	 * SparkPersonDetails class
-	 *
-	 * @param json
-	 *            JSON to parse
-	 * @return Spark report
-	 * @throws SparkReportException
-	 *             if the report fails
-	 * @throws HttpException
-	 *             if there's a problem accessing the report
-	 * @throws IOException
-	 *             if there's a problem accessing the report
-	 * @see SparkPersonDetails
-	 */
-	@Deprecated
-	public static SparkPersonDetails getSparkDetails(String json)
-			throws SparkReportException, HttpException, IOException {
-
-		// Check if the response is not empty:
-		if (!"".equals(json)) {
-			Gson gson = new Gson();
-			SparkPersonDetails person = gson.fromJson(json, SparkPersonDetails.class);
-			return person;
-		}
-		throw new SparkReportException("Could not parse JSON");
 	}
 
 	/**
@@ -148,20 +164,5 @@ public class SparkApi {
 		}
 		return false;
 	}
-
-	// Set up a basic http request (no method type)
-	/*
-	 * private static SparkHttpConnection basicRequest(SparkAccount account) {
-	 * SparkHttpConnection req = new SparkHttpConnection(account, ); // Set the
-	 * request type to get:
-	 *
-	 * req.setContentTypeHeaders("application/json; charset=utf-8");
-	 *
-	 * // Set up proxy if it's needed: if (account.getProxy().isProxy()) {
-	 * req.setProxyServer(account.getProxy().getProxyServer());
-	 * req.setProxyPort(account.getProxy().getProxyPort()); }
-	 * req.addRequestHeaders("Authorization", account.getApiKey()); return req;
-	 * }
-	 */
 
 }

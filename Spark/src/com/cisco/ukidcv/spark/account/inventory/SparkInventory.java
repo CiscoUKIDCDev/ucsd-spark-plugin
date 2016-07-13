@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
@@ -78,15 +79,13 @@ public class SparkInventory {
 			catch (Exception e) {
 				logger.warn("Possibly stale entry from older API - deleting & re-creating. " + e.getMessage());
 				invStoreCollection.delete(queryString);
-				create(account);
-				return;
+				store = create(account);
 			}
 
 			if (store == null) {
 				logger.warn("Cannot find " + accountName + " in inventory! Rolling back and creating new");
 				// Attempt to create it:
-				create(account);
-				return;
+				store = create(account);
 			}
 
 			// Get user configured inventory lifespan (TODO fixme)
@@ -100,9 +99,18 @@ public class SparkInventory {
 			// Add room list to inventory
 			logger.info("Updating room list");
 			store.setRoomList(SparkApi.getSparkRooms(account));
+
 			// Add user info to inventory
 			logger.info("Updating user info");
 			store.setMe(SparkApi.getSparkPerson(account));
+
+			// Add membership inventory
+			logger.info("Updating memberships");
+			store.setMembershipList(SparkApi.getSparkMemberships(account));
+
+			// Add membership inventory
+			logger.info("Updating teams");
+			store.setTeamList(SparkApi.getSparkTeams(account));
 
 			d = new Date();
 			final String update = c + "@" + d.getTime() + "@" + force + "@" + reason;
@@ -230,6 +238,39 @@ public class SparkInventory {
 			Gson gson = new Gson();
 			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
 			return rooms;
+		}
+		throw new SparkReportException("Could not parse JSON");
+	}
+
+	/**
+	 * Gets a list of Spark memberships for the account requested. It will first
+	 * check the cache needs updating.
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @return List of Spark memberships
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkRooms
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkMemberships getMemberships(SparkAccount account) throws SparkReportException, Exception {
+		// Update inventory if needed:
+		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
+
+		SparkInventoryDB inv = getInventoryStore(account);
+		String json = inv.getMembershipList();
+
+		// Check if the response is not empty:
+		if (!"".equals(json)) {
+			Gson gson = new Gson();
+			SparkMemberships memberships = gson.fromJson(json, SparkMemberships.class);
+			return memberships;
 		}
 		throw new SparkReportException("Could not parse JSON");
 	}
