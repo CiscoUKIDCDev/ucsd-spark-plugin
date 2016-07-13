@@ -58,6 +58,7 @@ public class SparkInventory {
 	 * @throws Exception
 	 */
 	public static void update(SparkAccount account, String reason, boolean force) throws Exception {
+		logger.info("Updating inventory");
 		Date d = new Date();
 		long c = d.getTime();
 		// SparkInventoryDB invStore = getInventoryStore(account);
@@ -97,8 +98,10 @@ public class SparkInventory {
 			store.setUpdated(c);
 
 			// Add room list to inventory
+			logger.info("Updating room list");
 			store.setRoomList(SparkApi.getSparkRooms(account));
 			// Add user info to inventory
+			logger.info("Updating user info");
 			store.setMe(SparkApi.getSparkPerson(account));
 
 			d = new Date();
@@ -180,7 +183,7 @@ public class SparkInventory {
 		final String accountName = account.getAccountName();
 		try {
 			// Check we can reach the Spark API:
-			if (SparkApi.testConnection(account)) {
+			if (!SparkApi.testConnection(account)) {
 				status.setConnectionOK(false);
 				logger.warn("Could not get valid token - marking connection as invalid");
 				throw new SparkAccountException("Could not get valid token");

@@ -23,7 +23,7 @@ public class SparkProxySettings {
 	/**
 	 * @return If the proxy is set
 	 */
-	public boolean isProxy() {
+	public boolean isEnabled() {
 		return this.proxy;
 	}
 

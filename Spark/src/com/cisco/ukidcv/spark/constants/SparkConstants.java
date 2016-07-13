@@ -39,6 +39,16 @@ public class SparkConstants {
 	 */
 	public static final String TASK_PREFIX = "Spark Tasks";
 
+	// ======== Spark GUI Constants
+	/**
+	 * Label for summary reports
+	 */
+	public static final String SUMMARY_LABEL = "Summary";
+	/**
+	 * Label for overview reports
+	 */
+	public static final String OVERVIEW_LABEL = "Overview";
+
 	// ======== Spark API Constants
 	/**
 	 * Enum type for http method

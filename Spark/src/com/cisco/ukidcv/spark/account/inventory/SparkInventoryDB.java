@@ -77,11 +77,7 @@ public class SparkInventoryDB {
 	public SparkInventoryDB(String accountName) {
 		this.accountName = accountName;
 		logger.info("Created persistent entry for account " + accountName);
-
-		// Populate all fields
-
 		try {
-
 			logger.info("Setting up polling history");
 			this.polling = new LinkedList<>();
 		}

@@ -11,6 +11,7 @@ import com.cisco.ukidcv.spark.account.handler.SparkInventoryItemHandler;
 import com.cisco.ukidcv.spark.account.handler.SparkInventoryListener;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
+import com.cisco.ukidcv.spark.reports.summary.AccountReport;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.ConfigItemDef;
@@ -40,7 +41,10 @@ public class SparkModule extends AbstractCloupiaModule {
 	@Override
 	public CloupiaReport[] getReports() {
 		// TODO Auto-generated method stub
-		return null;
+		final CloupiaReport[] reports = {
+				new AccountReport(),
+		};
+		return reports;
 	}
 
 	@Override

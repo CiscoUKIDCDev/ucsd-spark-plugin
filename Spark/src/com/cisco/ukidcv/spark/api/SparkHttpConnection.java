@@ -70,7 +70,11 @@ public class SparkHttpConnection {
 
 	/**
 	 * Create a new http entry with no configuration. You will need to call
-	 * setServer() etc yourself
+	 * setUri() etc yourself
+	 *
+	 * @see #setUri
+	 * @see #setProxy
+	 * @see #setHeader
 	 */
 	public SparkHttpConnection() {
 		super();
@@ -83,7 +87,8 @@ public class SparkHttpConnection {
 	 *            Proxy settings
 	 */
 	public void setProxy(SparkProxySettings proxy) {
-		if (proxy.isProxy()) {
+		// If the proxy is set:
+		if (proxy.isEnabled()) {
 			this.httpclient.getHostConfiguration().setProxy(proxy.getProxyServer(), proxy.getProxyPort());
 			if (proxy.isProxyAuth()) {
 				this.httpclient.getState().setProxyCredentials(AuthScope.ANY,
