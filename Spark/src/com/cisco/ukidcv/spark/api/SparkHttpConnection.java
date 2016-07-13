@@ -13,9 +13,11 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.log4j.Logger;
 
@@ -41,8 +43,11 @@ public class SparkHttpConnection {
 	private static Logger logger = Logger.getLogger(SparkHttpConnection.class);
 
 	private HttpMethod request;
+
 	private String response = null;
+	private int httpCode;
 	private HttpClient httpclient = new HttpClient();
+	private httpMethod method;
 
 	/**
 	 * Create a connection to the Spark API using the specified account.
@@ -57,12 +62,17 @@ public class SparkHttpConnection {
 	 *            Method to use (i.e. GET, POST, DELETE, PUT)
 	 */
 	public SparkHttpConnection(SparkAccount account, String uri, httpMethod method) {
+		// Store the method type
+		this.method = method;
+
 		// Set the http target to the Spark server:
 		String fullUri = SparkConstants.SPARK_SERVER_PROTOCOL + "://" + SparkConstants.SPARK_SERVER_HOSTNAME + uri;
-		this.setUri(fullUri, method);
+		this.setUri(fullUri, this.method);
 
 		// Add Spark token
 		this.setHeader("Authorization", account.getApiKey());
+
+		this.setHeader("Content-type", "application/json; charset=utf-8");
 
 		// Do we need a proxy?
 		this.setProxy(account.getProxy());
@@ -110,6 +120,23 @@ public class SparkHttpConnection {
 	}
 
 	/**
+	 * Sets a body parameter
+	 *
+	 * @param body
+	 */
+	public void setBody(String body) {
+		try {
+			// Attempt to cast it to an EntityEnclosingMethod which supports
+			// body elements (i.e. POST, PUT methods) and set the body
+			((EntityEnclosingMethod) this.request)
+					.setRequestEntity(new StringRequestEntity(body, "application/json", "utf-8"));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Set the URI and method to use
 	 *
 	 * @param uri
@@ -149,6 +176,7 @@ public class SparkHttpConnection {
 		try {
 			this.httpclient.executeMethod(this.request);
 			this.response = this.request.getResponseBodyAsString();
+			this.httpCode = this.request.getStatusCode();
 		}
 		finally {
 			this.request.releaseConnection();
@@ -162,6 +190,15 @@ public class SparkHttpConnection {
 	 */
 	public String getResponse() {
 		return this.response;
+	}
+
+	/**
+	 * Return the http response code
+	 *
+	 * @return http response code
+	 */
+	public int getCode() {
+		return this.httpCode;
 	}
 
 }

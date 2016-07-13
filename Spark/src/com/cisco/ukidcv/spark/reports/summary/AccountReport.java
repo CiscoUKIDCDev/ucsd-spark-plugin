@@ -17,7 +17,7 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaReport;
  * on it.
  * <p>
  * Each graph is actually added as a drilldown report, but is rendered on this
- * page. Anything not in here will show up in the More Reports tab.
+ * page if it has showInSummary() set to true.
  *
  * @author Matt Day
  *

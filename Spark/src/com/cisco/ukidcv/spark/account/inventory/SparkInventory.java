@@ -7,6 +7,7 @@
 package com.cisco.ukidcv.spark.account.inventory;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -207,6 +208,18 @@ public class SparkInventory {
 			logger.warn("Exeption when doing this! " + e.getMessage());
 		}
 		throw new SparkAccountException("Could not create inventory store!");
+	}
+
+	/**
+	 * Returns the polling log (when things have been updated and why)
+	 *
+	 * @param account
+	 *            Account from which to obtain the log
+	 * @return the log file
+	 * @throws Exception
+	 */
+	public static List<String> getLog(SparkAccount account) throws Exception {
+		return getInventoryStore(account).getPolling();
 	}
 
 	/**

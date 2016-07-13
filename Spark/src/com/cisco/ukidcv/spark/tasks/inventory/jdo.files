@@ -1,0 +1,4 @@
+//Each package with config classes should have a file called jdo.files
+//Each config class should be listed in the format below
+//This file informs the build file which classes need to go through JDO enhancement
++CollectInventoryConfig

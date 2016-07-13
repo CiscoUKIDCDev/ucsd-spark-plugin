@@ -52,11 +52,22 @@ public class SparkConstants {
 	 * Label for overview reports
 	 */
 	public static final String ROOM_LABEL = "Rooms";
-
+	/**
+	 * Label for overview reports
+	 */
+	public static final String INVENTORY_LABEL = "Polling";
 	/**
 	 * Label for overview reports
 	 */
 	public static final String ROOM_TYPE_LABEL = "Room Types";
+	/**
+	 * Label for Spark Account Tasks
+	 */
+	public static final String ACCOUNT_LIST_FORM_LABEL = "Spark Account";
+	/**
+	 * Label for room task
+	 */
+	public static final String INVENTORY_TASK_LABEL = "Collect Inventory";
 
 	// ======== Report Constants
 	/**
@@ -67,6 +78,29 @@ public class SparkConstants {
 	 * Label for room drilldowns
 	 */
 	public static final String ROOM_LIST_DRILLDOWN_LABEL = "Spark Room List";
+	/**
+	 * Context for room drilldowns
+	 */
+	public static final String INVENTORY_LIST_DRILLDOWN = "com.cisco.ukidcv.spark.reports.inventory.SparkInventoryList";
+	/**
+	 * Label for room drilldowns
+	 */
+	public static final String INVENTORY_LIST_DRILLDOWN_LABEL = "Spark Inventory List";
+
+	/**
+	 * Account list UCS Director internal name
+	 */
+	public static final String ACCOUNT_LIST_FORM_PROVIDER = "spark_account_list_provider";
+
+	/**
+	 * Account list data type name
+	 */
+	public static final String ACCOUNT_LIST_FORM_TABLE_NAME = "spark_account_list_table";
+
+	/**
+	 * Account list form name
+	 */
+	public static final String ACCOUNT_LIST_FORM_NAME = "HP3ParAccountList";
 
 	// ======== Spark API Constants
 	/**
@@ -120,9 +154,19 @@ public class SparkConstants {
 	public final static String SPARK_MEMBERSHIP_URI = "/v1/memberships";
 
 	/**
+	 * URI for messages
+	 */
+	public final static String SPARK_MESSAGES_URI = "/v1/messages";
+
+	/**
 	 * URI teams report
 	 */
 	public final static String SPARK_TEAMS_URI = "/v1/teams";
+
+	/**
+	 * URI teams membership
+	 */
+	public final static String SPARK_TEAMS_MEMBERSHIP_URI = "/v1/team/memberships";
 
 	/**
 	 * URI for people report
@@ -142,6 +186,10 @@ public class SparkConstants {
 	 * Log message for initial startup
 	 */
 	public final static String INVENTORY_REASON_INITIAL = "Initial inventory collection";
+	/**
+	 * Log message for initial startup
+	 */
+	public final static String INVENTORY_REASON_USER = "User requested collection";
 
 	/**
 	 * Maximum number of log entries
@@ -151,6 +199,6 @@ public class SparkConstants {
 	/**
 	 * Time between polling (miliseconds)
 	 */
-	public final static long MAX_POLLING_TIME = 900000;
+	public final static long MAX_POLLING_TIME = 9000000;
 
 }

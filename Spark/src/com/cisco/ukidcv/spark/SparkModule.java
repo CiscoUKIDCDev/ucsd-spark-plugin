@@ -13,6 +13,9 @@ import com.cisco.ukidcv.spark.account.handler.SparkInventoryListener;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
+import com.cisco.ukidcv.spark.inputs.SparkAccountSelector;
+import com.cisco.ukidcv.spark.inputs.WorkflowInputTypeDeclaration;
+import com.cisco.ukidcv.spark.reports.inventory.InventoryReport;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
 import com.cisco.ukidcv.spark.reports.summary.AccountReport;
 import com.cloupia.fw.objstore.ObjStore;
@@ -51,7 +54,7 @@ public class SparkModule extends AbstractCloupiaModule {
 	@Override
 	public CloupiaReport[] getReports() {
 		final CloupiaReport[] reports = {
-				new AccountReport(), new SparkRoomReport(),
+				new AccountReport(), new SparkRoomReport(), new InventoryReport(),
 		};
 		return reports;
 	}
@@ -69,10 +72,12 @@ public class SparkModule extends AbstractCloupiaModule {
 
 		try {
 			// Register LOV inputs
-			// None :(
+			logger.info("Registering List of Value Inputs");
+			cfr.registerTabularField(SparkConstants.ACCOUNT_LIST_FORM_PROVIDER, SparkAccountSelector.class, "0", "0");
 
-			// Register workflow inputs
-			// None :(
+			// Register workflow inputs - this is done in a separate file
+			logger.info("Registering Workflow Inputs");
+			WorkflowInputTypeDeclaration.registerWFInputs();
 
 			// Register the account type drilldown
 			ReportContextRegistry.getInstance().register(SparkConstants.INFRA_ACCOUNT_TYPE,
@@ -82,6 +87,8 @@ public class SparkModule extends AbstractCloupiaModule {
 			// they won't be able to drilldown
 			ReportContextRegistry.getInstance().register(SparkConstants.ROOM_LIST_DRILLDOWN,
 					SparkConstants.ROOM_LIST_DRILLDOWN_LABEL);
+			ReportContextRegistry.getInstance().register(SparkConstants.INVENTORY_LIST_DRILLDOWN,
+					SparkConstants.INVENTORY_LIST_DRILLDOWN_LABEL);
 
 			// Create the Spark account type below
 			this.createAccountType();

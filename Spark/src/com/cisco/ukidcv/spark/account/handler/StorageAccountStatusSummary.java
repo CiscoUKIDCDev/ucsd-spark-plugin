@@ -26,7 +26,7 @@ import com.cloupia.lib.connector.account.PhysicalInfraAccount;
 
 /**
  * This periodically polls the account to ensure everything is working. It tests
- * the spark in London to do so
+ * the /people/me API call to ensure it gets a response
  *
  * @author Matt Day
  *
