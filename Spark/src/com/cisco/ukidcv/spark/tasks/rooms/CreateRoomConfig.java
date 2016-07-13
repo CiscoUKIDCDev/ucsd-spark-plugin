@@ -4,7 +4,7 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.tasks.inventory;
+package com.cisco.ukidcv.spark.tasks.rooms;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -16,16 +16,16 @@ import com.cloupia.service.cIM.inframgr.customactions.UserInputField;
 import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
 
 /**
- * Configuration task to collect inventory.
+ * Configuration task to create a new Spark room
  * <p>
  * This provides the GUI and configuration elements to execute this task. It can
  * be used via an action button or as a workflow task.
  *
  * @author Matt Day
- *
+ * @see CreateRoomTask
  */
-@PersistenceCapable(detachable = "true", table = "Spark_inventory_collection")
-public class CollectInventoryConfig implements TaskConfigIf {
+@PersistenceCapable(detachable = "true", table = "Spark_create_room_collection")
+public class CreateRoomConfig implements TaskConfigIf {
 
 	@Persistent
 	private long configEntryId;
@@ -38,12 +38,53 @@ public class CollectInventoryConfig implements TaskConfigIf {
 	@Persistent
 	private String account;
 
+	@FormField(label = SparkConstants.ROOM_NAME_LABEL, help = SparkConstants.ROOM_NAME_LABEL, mandatory = true, type = FormFieldDefinition.FIELD_TYPE_TEXT)
+	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
+	@Persistent
+	private String roomName;
+
 	/**
 	 * Empty default constructor - you could initialise default values here if
 	 * you wanted
 	 */
-	public CollectInventoryConfig() {
+	public CreateRoomConfig() {
+		super();
 
+	}
+
+	/**
+	 * @return the selected account
+	 */
+	public String getAccount() {
+		// We're only interested in the first part, remove anything after ;
+		return this.account.split(";")[0];
+	}
+
+	/**
+	 * Set the account
+	 *
+	 * @param account
+	 *            Account to set
+	 */
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	/**
+	 * Set the room name
+	 *
+	 * @param roomName
+	 *            room name to set
+	 */
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	/**
+	 * @return The user provided room name
+	 */
+	public String getRoomName() {
+		return this.roomName;
 	}
 
 	@Override
@@ -58,26 +99,7 @@ public class CollectInventoryConfig implements TaskConfigIf {
 
 	@Override
 	public String getDisplayLabel() {
-		return SparkConstants.INVENTORY_TASK_LABEL;
-	}
-
-	/**
-	 * Get the account name
-	 *
-	 * @return Account name to do this on
-	 */
-	public String getAccount() {
-		return this.account;
-	}
-
-	/**
-	 * Set the account name
-	 *
-	 * @param account
-	 *            The host to be created
-	 */
-	public void setAccount(String account) {
-		this.account = account;
+		return SparkConstants.CREATE_ROOM_TASK_LABEL;
 	}
 
 	@Override
@@ -89,4 +111,5 @@ public class CollectInventoryConfig implements TaskConfigIf {
 	public void setConfigEntryId(long configEntryId) {
 		this.configEntryId = configEntryId;
 	}
+
 }

@@ -61,13 +61,21 @@ public class SparkConstants {
 	 */
 	public static final String ROOM_TYPE_LABEL = "Room Types";
 	/**
+	 * Label for room name
+	 */
+	public static final String ROOM_NAME_LABEL = "Room Name";
+	/**
 	 * Label for Spark Account Tasks
 	 */
 	public static final String ACCOUNT_LIST_FORM_LABEL = "Spark Account";
 	/**
-	 * Label for room task
+	 * Label for inventory task
 	 */
 	public static final String INVENTORY_TASK_LABEL = "Collect Inventory";
+	/**
+	 * Label for room task
+	 */
+	public static final String CREATE_ROOM_TASK_LABEL = "Create Room";
 
 	// ======== Report Constants
 	/**
@@ -86,7 +94,6 @@ public class SparkConstants {
 	 * Label for room drilldowns
 	 */
 	public static final String INVENTORY_LIST_DRILLDOWN_LABEL = "Spark Inventory List";
-
 	/**
 	 * Account list UCS Director internal name
 	 */
@@ -101,6 +108,10 @@ public class SparkConstants {
 	 * Account list form name
 	 */
 	public static final String ACCOUNT_LIST_FORM_NAME = "HP3ParAccountList";
+	/**
+	 * UCSDs internal gen_text_input type
+	 */
+	public static final String GENERIC_TEXT_INPUT = "gen_text_input";
 
 	// ======== Spark API Constants
 	/**
@@ -190,6 +201,11 @@ public class SparkConstants {
 	 * Log message for initial startup
 	 */
 	public final static String INVENTORY_REASON_USER = "User requested collection";
+
+	/**
+	 * Log message for initial startup
+	 */
+	public final static String INVENTORY_REASON_CRUD = "Performed a Spark operation";
 
 	/**
 	 * Maximum number of log entries

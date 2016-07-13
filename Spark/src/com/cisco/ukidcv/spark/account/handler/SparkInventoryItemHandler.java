@@ -8,6 +8,9 @@ package com.cisco.ukidcv.spark.account.handler;
 
 import java.util.Map;
 
+import com.cisco.ukidcv.spark.account.SparkAccount;
+import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
+import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cloupia.lib.connector.AbstractInventoryItemHandler;
 import com.cloupia.lib.connector.InventoryContext;
 import com.cloupia.service.cIM.inframgr.collector.controller.PersistenceListener;
@@ -75,8 +78,7 @@ public class SparkInventoryItemHandler extends AbstractInventoryItemHandler {
 
 		// String jsonData = api.getInventoryData(getUrl());
 
-		// SparkInventory.update(new SparkCredentials(accountName), true,
-		// "Periodic inventory collection");
+		SparkInventory.update(new SparkAccount(accountName), SparkConstants.INVENTORY_REASON_PERIODIC, true);
 
 		final String jsonData = null;
 		final ItemResponse bindableResponse = new ItemResponse();
@@ -108,8 +110,8 @@ public class SparkInventoryItemHandler extends AbstractInventoryItemHandler {
 	}
 
 	/**
-	 * Method used to get object of SparkAccountJSONBinder Binder will bind
-	 * the respective object as JSON.
+	 * Method used to get object of SparkAccountJSONBinder Binder will bind the
+	 * respective object as JSON.
 	 *
 	 * @return SparkAccountJSONBinder
 	 */

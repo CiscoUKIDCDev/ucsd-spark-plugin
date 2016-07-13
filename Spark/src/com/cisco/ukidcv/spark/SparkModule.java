@@ -18,6 +18,8 @@ import com.cisco.ukidcv.spark.inputs.WorkflowInputTypeDeclaration;
 import com.cisco.ukidcv.spark.reports.inventory.InventoryReport;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
 import com.cisco.ukidcv.spark.reports.summary.AccountReport;
+import com.cisco.ukidcv.spark.tasks.inventory.CollectInventoryTask;
+import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomTask;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.ConfigItemDef;
@@ -53,10 +55,9 @@ public class SparkModule extends AbstractCloupiaModule {
 	 */
 	@Override
 	public CloupiaReport[] getReports() {
-		final CloupiaReport[] reports = {
+		return new CloupiaReport[] {
 				new AccountReport(), new SparkRoomReport(), new InventoryReport(),
 		};
-		return reports;
 	}
 
 	/**
@@ -64,7 +65,9 @@ public class SparkModule extends AbstractCloupiaModule {
 	 */
 	@Override
 	public AbstractTask[] getTasks() {
-		return null;
+		return new AbstractTask[] {
+				new CreateRoomTask(), new CollectInventoryTask(),
+		};
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
+import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.json.SparkErrors;
 import com.cisco.ukidcv.spark.api.json.SparkMembershipCreation;
 import com.cisco.ukidcv.spark.api.json.SparkMessage;
@@ -35,28 +36,6 @@ import com.google.gson.Gson;
  */
 public class SparkApi {
 	private static Logger logger = Logger.getLogger(SparkApi.class);
-
-	/**
-	 * Requests a list of rooms from the Spark servers and returns it in JSON
-	 * format
-	 *
-	 * @param account
-	 *            Account to request from
-	 * @return List of rooms in JSON format
-	 * @throws SparkReportException
-	 *             if the report fails
-	 * @throws HttpException
-	 *             if there's a problem accessing the report
-	 * @throws IOException
-	 *             if there's a problem accessing the report
-	 * @see SparkRooms
-	 */
-	public static String getSparkRooms(SparkAccount account) throws SparkReportException, HttpException, IOException {
-		// Set up a request to the spark server
-		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI, httpMethod.GET);
-		req.execute();
-		return req.getResponse();
-	}
 
 	/**
 	 * Requests a list of room memberships from the Spark servers and returns it
@@ -118,6 +97,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -156,6 +137,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -185,6 +168,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -242,6 +227,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -280,6 +267,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -309,6 +298,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -349,6 +340,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -387,6 +380,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -416,7 +411,31 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
+	}
+
+	/**
+	 * Requests a list of rooms from the Spark servers and returns it in JSON
+	 * format
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @return List of rooms in JSON format
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkRooms
+	 */
+	public static String getSparkRooms(SparkAccount account) throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI, httpMethod.GET);
+		req.execute();
+		return req.getResponse();
 	}
 
 	/**
@@ -451,6 +470,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -489,6 +510,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -518,6 +541,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -559,6 +584,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -600,6 +627,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -629,6 +658,8 @@ public class SparkApi {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkAPIStatus(false, error.getMessage());
 		}
+		// Update inventory after this operation
+		updateInventory(account);
 		return new SparkAPIStatus(true, null);
 	}
 
@@ -700,6 +731,22 @@ public class SparkApi {
 			logger.warn("Connection test failed: " + e.getMessage());
 		}
 		return false;
+	}
+
+	/**
+	 * Perform a full inventory collection after any changes made
+	 *
+	 * @param account
+	 *            Account to perform inventory from
+	 */
+	private static void updateInventory(SparkAccount account) {
+
+		try {
+			SparkInventory.update(account, SparkConstants.INVENTORY_REASON_CRUD, true);
+		}
+		catch (@SuppressWarnings("unused") Exception e) {
+			// Do nothing
+		}
 	}
 
 }

@@ -7,6 +7,7 @@
 package com.cisco.ukidcv.spark.reports.rooms;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
@@ -35,7 +36,7 @@ public class SparkRoomReport extends DrillableReportWithActions {
 	};
 
 	private CloupiaReportAction[] actions = new CloupiaReportAction[] {
-			new DrillDownAction(),
+			new CreateRoomAction(), new DrillDownAction(),
 	};
 
 	/**
