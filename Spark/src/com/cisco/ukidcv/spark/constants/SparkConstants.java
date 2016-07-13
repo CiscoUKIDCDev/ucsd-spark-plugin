@@ -38,15 +38,47 @@ public class SparkConstants {
 	 * Folder to put the tasks in
 	 */
 	public static final String TASK_PREFIX = "Spark Tasks";
+
 	// ======== Spark API Constants
+	/**
+	 * Enum type for http method
+	 */
+	public enum httpMethod {
+		/**
+		 * http POST method
+		 */
+		POST,
+		/**
+		 * http GET method
+		 */
+		GET,
+		/**
+		 * http DELETE method
+		 */
+		DELETE,
+		/**
+		 * http PUT method
+		 */
+		PUT
+	}
+
 	/**
 	 * API Version
 	 */
 	public static final String API_VERSION = "1";
 	/**
-	 * Spark report server
+	 * Spark server hostname
 	 */
-	public static final String SPARK_SERVER = "api.ciscospark.com";
+	public static final String SPARK_SERVER_HOSTNAME = "api.ciscospark.com";
+	/**
+	 * Spark server port
+	 */
+	public static final int SPARK_SERVER_PORT = 443;
+
+	/**
+	 * Spark server protocol
+	 */
+	public static final String SPARK_SERVER_PROTOCOL = "https";
 
 	/**
 	 * URI for spark report

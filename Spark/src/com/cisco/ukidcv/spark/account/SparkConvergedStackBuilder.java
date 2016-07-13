@@ -4,9 +4,12 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.account.handler;
+package com.cisco.ukidcv.spark.account;
 
-import com.cisco.ukidcv.spark.account.SparkAccount;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
@@ -63,7 +66,7 @@ public class SparkConvergedStackBuilder implements ConvergedStackComponentBuilde
 		detail.setModel(SparkConstants.INFRA_ACCOUNT_LABEL);
 		detail.setOsVersion(SparkConstants.API_VERSION);
 		detail.setVendorLogoUrl("/app/uploads/openauto/cloud.png");
-		detail.setMgmtIPAddr(SparkConstants.SPARK_SERVER);
+		detail.setMgmtIPAddr(SparkConstants.SPARK_SERVER_HOSTNAME);
 		detail.setStatus(ok ? "OK" : "Down");
 		detail.setVendorName("Spark");
 		detail.setIconUrl("/app/uploads/openauto/cloud.png");
@@ -77,16 +80,11 @@ public class SparkConvergedStackBuilder implements ConvergedStackComponentBuilde
 		// Not sure what '3' is here, guessing it's storage
 		detail.setLayerType(3);
 
-		/*
-		 * If you want to add extra items to the list, create a
-		 * java.util.List<String> like this:
-		 *
-		 * java.util.List list<String> = new ArrayList<>();
-		 *
-		 * list.add("Number of clouds, 5");
-		 *
-		 * detail.setComponentSummaryList(list);
-		 */
+		// You can add arbitrary fields to this view like this:
+		List<String> detailList = new ArrayList<>(2);
+		detailList.add("User, " + SparkInventory.getMe(account).getDisplayName());
+		detailList.add("Created, " + SparkInventory.getMe(account).getCreated());
+		detail.setComponentSummaryList(detailList);
 
 		return detail;
 	}

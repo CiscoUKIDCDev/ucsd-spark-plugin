@@ -52,8 +52,8 @@ public class SparkAccount {
 	/**
 	 * Obtain credentials from the account name
 	 * <p>
-	 * For example, if a user creates an account 'Spark-1' then this will
-	 * obtain the credentials for that account
+	 * For example, if a user creates an account 'Spark-1' then this will obtain
+	 * the credentials for that account
 	 *
 	 * @param accountName
 	 *            Name of the Spark account
@@ -152,6 +152,16 @@ public class SparkAccount {
 	 */
 	public SparkProxySettings getProxy() {
 		return this.proxy;
+	}
+
+	/**
+	 * Set Proxy information for this account
+	 *
+	 * @param proxySettings
+	 *            proxy settings to use
+	 */
+	public void setProxy(SparkProxySettings proxySettings) {
+		this.proxy = proxySettings;
 	}
 
 }

@@ -9,15 +9,15 @@ package com.cisco.ukidcv.spark.api;
 import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpException;
+import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.constants.SparkConstants.httpMethod;
 import com.cisco.ukidcv.spark.exceptions.SparkReportException;
 import com.google.gson.Gson;
-import com.rwhitear.ucsdHttpRequest.UCSDHttpRequest;
-import com.rwhitear.ucsdHttpRequest.constants.HttpRequestConstants;
 
 /**
  * Spark API requests - obtains raw JSON
@@ -26,6 +26,7 @@ import com.rwhitear.ucsdHttpRequest.constants.HttpRequestConstants;
  *
  */
 public class SparkApi {
+	private static Logger logger = Logger.getLogger(SparkApi.class);
 
 	/**
 	 * Requests a list of rooms from the Spark servers and returns it in JSON
@@ -44,17 +45,9 @@ public class SparkApi {
 	 */
 	public static String getSparkRooms(SparkAccount account) throws SparkReportException, HttpException, IOException {
 		// Set up a request to the spark server
-		UCSDHttpRequest req = basicRequest(account);
-
-		// Set URI to the current Spark API version:
-		req.setUri(SparkConstants.SPARK_ROOM_URI);
-
-		// Set method type to GET
-		req.setMethodType(HttpRequestConstants.METHOD_TYPE_GET);
-		// Execute the request:
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI, httpMethod.GET);
 		req.execute();
-
-		return req.getHttpResponse();
+		return req.getResponse();
 	}
 
 	/**
@@ -73,17 +66,9 @@ public class SparkApi {
 	public static String getSparkPerson(SparkAccount account) throws SparkReportException, HttpException, IOException {
 
 		// Set up a request to the spark server
-		UCSDHttpRequest req = basicRequest(account);
-
-		// Set URI to the current Spark API version:
-		req.setUri(SparkConstants.SPARK_ME_URI);
-
-		// Set method type to GET
-		req.setMethodType(HttpRequestConstants.METHOD_TYPE_GET);
-		// Execute the request:
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ME_URI, httpMethod.GET);
 		req.execute();
-
-		return req.getHttpResponse();
+		return req.getResponse();
 	}
 
 	/**
@@ -104,18 +89,10 @@ public class SparkApi {
 	public static String getSparkPerson(SparkAccount account, String userId)
 			throws SparkReportException, HttpException, IOException {
 
-		// Set up a request to the spark server
-		UCSDHttpRequest req = basicRequest(account);
-
-		// Set URI to the current Spark API version:
-		req.setUri(SparkConstants.SPARK_PEOPLE_URI + userId);
-
-		// Set method type to GET
-		req.setMethodType(HttpRequestConstants.METHOD_TYPE_GET);
-		// Execute the request:
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_PEOPLE_URI + userId,
+				httpMethod.GET);
 		req.execute();
-
-		return req.getHttpResponse();
+		return req.getResponse();
 
 	}
 
@@ -166,30 +143,25 @@ public class SparkApi {
 				}
 			}
 		}
-		catch (@SuppressWarnings("unused") SparkReportException | IOException e) {
-			// Don't do anything
+		catch (SparkReportException | IOException e) {
+			logger.warn("Connection test failed: " + e.getMessage());
 		}
 		return false;
 	}
 
 	// Set up a basic http request (no method type)
-	private static UCSDHttpRequest basicRequest(SparkAccount account) {
-		UCSDHttpRequest req = new UCSDHttpRequest(SparkConstants.SPARK_SERVER, "https", 443);
-		// Set the request type to get:
-
-		req.setContentTypeHeaders("application/json; charset=utf-8");
-
-		// Set up proxy if it's needed:
-		if (account.getProxy().isProxy()) {
-			req.setProxyServer(account.getProxy().getProxyServer());
-			req.setProxyPort(account.getProxy().getProxyPort());
-			if (account.getProxy().isProxyAuth()) {
-				req.setProxyUser(account.getProxy().getProxyUser());
-				req.setProxyPass(account.getProxy().getProxyPass());
-			}
-		}
-		req.addRequestHeaders("Authorization", account.getApiKey());
-		return req;
-	}
+	/*
+	 * private static SparkHttpConnection basicRequest(SparkAccount account) {
+	 * SparkHttpConnection req = new SparkHttpConnection(account, ); // Set the
+	 * request type to get:
+	 *
+	 * req.setContentTypeHeaders("application/json; charset=utf-8");
+	 *
+	 * // Set up proxy if it's needed: if (account.getProxy().isProxy()) {
+	 * req.setProxyServer(account.getProxy().getProxyServer());
+	 * req.setProxyPort(account.getProxy().getProxyPort()); }
+	 * req.addRequestHeaders("Authorization", account.getApiKey()); return req;
+	 * }
+	 */
 
 }

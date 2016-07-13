@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
@@ -95,7 +96,10 @@ public class SparkInventory {
 			}
 			store.setUpdated(c);
 
+			// Add room list to inventory
 			store.setRoomList(SparkApi.getSparkRooms(account));
+			// Add user info to inventory
+			store.setMe(SparkApi.getSparkPerson(account));
 
 			d = new Date();
 			final String update = c + "@" + d.getTime() + "@" + force + "@" + reason;
@@ -162,7 +166,7 @@ public class SparkInventory {
 
 	/**
 	 * Create a new inventory store
-	 * 
+	 *
 	 * @param account
 	 *            Account to create it for
 	 * @return New inventory store
@@ -223,6 +227,38 @@ public class SparkInventory {
 			Gson gson = new Gson();
 			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
 			return rooms;
+		}
+		throw new SparkReportException("Could not parse JSON");
+	}
+
+	/**
+	 * Gets information about the user account
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @return Information about the user
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkPersonDetails
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkPersonDetails getMe(SparkAccount account) throws SparkReportException, Exception {
+		// Update inventory if needed:
+		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
+
+		SparkInventoryDB inv = getInventoryStore(account);
+		String json = inv.getMe();
+
+		// Check if the response is not empty:
+		if (!"".equals(json)) {
+			Gson gson = new Gson();
+			SparkPersonDetails me = gson.fromJson(json, SparkPersonDetails.class);
+			return me;
 		}
 		throw new SparkReportException("Could not parse JSON");
 	}

@@ -16,6 +16,7 @@ import javax.jdo.annotations.Persistent;
 
 import org.apache.log4j.Logger;
 
+import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.account.AbstractInfraAccount;
@@ -150,6 +151,16 @@ public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCre
 	public void setUsername(String arg0) {
 		// Do nothing
 
+	}
+
+	/**
+	 * Set this to avoid UCSD showing 'null' under server/filer (cosmetic)
+	 *
+	 * @return Spark API IP Address
+	 */
+	@Override
+	public String getServerIp() {
+		return SparkConstants.SPARK_SERVER_HOSTNAME;
 	}
 
 	/*

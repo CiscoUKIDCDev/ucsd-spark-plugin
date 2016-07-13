@@ -63,6 +63,66 @@ public class SparkProxySettings {
 	}
 
 	/**
+	 * Set if a proxy should be used
+	 *
+	 * @param proxy
+	 *            true to use a proxy
+	 */
+	public void setProxy(boolean proxy) {
+		this.proxy = proxy;
+	}
+
+	/**
+	 * Set the proxy server to be used
+	 *
+	 * @param proxyServer
+	 *            proxy server
+	 */
+	public void setProxyServer(String proxyServer) {
+		this.proxyServer = proxyServer;
+	}
+
+	/**
+	 * Set the proxy port to be used
+	 *
+	 * @param proxyPort
+	 *            proxy tcp port
+	 */
+	public void setProxyPort(int proxyPort) {
+		this.proxyPort = proxyPort;
+	}
+
+	/**
+	 * Set if proxy authentication should be used
+	 *
+	 * @param proxyAuth
+	 *            true to use authentication
+	 */
+	public void setProxyAuth(boolean proxyAuth) {
+		this.proxyAuth = proxyAuth;
+	}
+
+	/**
+	 * Set the proxy user to be used
+	 *
+	 * @param proxyUser
+	 *            proxy username to use
+	 */
+	public void setProxyUser(String proxyUser) {
+		this.proxyUser = proxyUser;
+	}
+
+	/**
+	 * Set the proxy password to be used
+	 *
+	 * @param proxyPass
+	 *            proxy password
+	 */
+	public void setProxyPass(String proxyPass) {
+		this.proxyPass = proxyPass;
+	}
+
+	/**
 	 * Stores proxy information - should not normally be called directly,
 	 * instead obtain it from the SparkAccount
 	 *
@@ -82,5 +142,16 @@ public class SparkProxySettings {
 		this.proxyPass = account.getProxyPass();
 		this.proxyUser = account.getProxyUser();
 		this.proxyPort = account.getProxyPort();
+	}
+
+	/**
+	 * Stores proxy information - can be used for test purposes
+	 *
+	 * @see com.cisco.ukidcv.spark.account.SparkAccount#setProxy
+	 *
+	 */
+	public SparkProxySettings() {
+		this.proxy = false;
+		this.proxyAuth = false;
 	}
 }
