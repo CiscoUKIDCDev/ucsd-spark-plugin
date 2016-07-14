@@ -56,13 +56,18 @@ public class PostMessageTask extends AbstractTask {
 			throw new SparkTaskFailedException(s.getError());
 		}
 		ucsdLogger.addInfo("Posted Message");
+
 		// Get message ID for rollback:
 		try {
 			SparkMessageResponse r = SparkApi.getMessageResponse(s.getJson());
 			if (r.getId() != null) {
 				// Format the message the same as the SparkMessageSelector
-				final String messageId = account.getAccountName() + ";" + r.getRoomId() + ";" + r.getId();
+				final String messageId = r.getId();
 				context.saveOutputValue(SparkConstants.MESSAGE_LIST_FORM_LABEL, messageId);
+
+				context.getChangeTracker().undoableResourceAdded("Message", r.getId(), "Message Posted",
+						"Undo message post", SparkConstants.DELETE_MESSAGE_TASK_LABEL,
+						new DeleteMessageConfig(config, r.getId()));
 			}
 		}
 		catch (Exception e) {
@@ -85,8 +90,8 @@ public class PostMessageTask extends AbstractTask {
 	public TaskOutputDefinition[] getTaskOutputDefinitions() {
 		TaskOutputDefinition[] ops = {
 				// Register output type for the volume created
-				new TaskOutputDefinition(SparkConstants.MESSAGE_LIST_FORM_LABEL,
-						SparkConstants.MESSAGE_LIST_FORM_TABLE_NAME, SparkConstants.MESSAGE_LIST_FORM_LABEL),
+				new TaskOutputDefinition(SparkConstants.MESSAGE_LIST_FORM_LABEL, SparkConstants.GENERIC_TEXT_INPUT,
+						SparkConstants.MESSAGE_LIST_FORM_LABEL),
 		};
 		return ops;
 	}

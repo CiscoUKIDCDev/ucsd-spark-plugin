@@ -44,7 +44,22 @@ public class DeleteRoomConfig implements TaskConfigIf {
 	 */
 	public DeleteRoomConfig() {
 		super();
+	}
 
+	/**
+	 * Rollback constructor. This is used from the CreateRoomTask to allow UCS
+	 * Director to undo the room creation.
+	 * 
+	 * @param config
+	 *            Original configuration to create the room
+	 * @param roomId
+	 *            Room ID from created room
+	 *
+	 * @see CreateRoomTask
+	 */
+	public DeleteRoomConfig(CreateRoomConfig config, String roomId) {
+		// Set the room name in the same format as UCS Director
+		this.setRoomName(config.getAccount() + ";" + roomId + ";" + config.getRoomName());
 	}
 
 	/**

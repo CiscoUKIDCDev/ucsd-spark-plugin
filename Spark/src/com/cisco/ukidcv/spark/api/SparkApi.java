@@ -22,6 +22,7 @@ import com.cisco.ukidcv.spark.api.json.SparkMessage;
 import com.cisco.ukidcv.spark.api.json.SparkMessageFormat;
 import com.cisco.ukidcv.spark.api.json.SparkMessageResponse;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
+import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.api.json.SparkRoomCreation;
 import com.cisco.ukidcv.spark.api.json.SparkRoomMessages;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
@@ -563,7 +564,22 @@ public class SparkApi {
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkApiStatus(true, null);
+		return new SparkApiStatus(true, null, req.getResponse());
+	}
+
+	/**
+	 * Takes a Spark room response (typically via a SparkApiStatus response) and
+	 * parses the responmse
+	 *
+	 * @param json
+	 *            JSON response from a createRoom
+	 * @return SparkRoom
+	 * @see SparkRoom
+	 * @see #createRoom
+	 */
+	public static SparkRoom getRoomResponse(String json) {
+		Gson gson = new Gson();
+		return gson.fromJson(json, SparkRoom.class);
 	}
 
 	/**

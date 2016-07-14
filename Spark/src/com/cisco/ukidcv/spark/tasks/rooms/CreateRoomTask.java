@@ -7,8 +7,9 @@
 package com.cisco.ukidcv.spark.tasks.rooms;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
+import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cloupia.service.cIM.inframgr.AbstractTask;
@@ -46,6 +47,23 @@ public class CreateRoomTask extends AbstractTask {
 		}
 		ucsdLogger.addInfo("Created room: " + config.getRoomName());
 
+		// Save room ID as an output for other tasks and register rollback task
+		try {
+			SparkRoom room = SparkApi.getRoomResponse(s.getJson());
+			if (room.getId() != null) {
+				// Format the message the same as the SparkRoomSelector
+				final String internalId = account.getAccountName() + ";" + room.getId() + ";" + room.getTitle();
+				context.saveOutputValue(SparkConstants.ROOM_NAME_LABEL, internalId);
+
+				context.getChangeTracker().undoableResourceAdded("Room", room.getId(), "Room created",
+						"Undo creation of room: " + config.getRoomName(), SparkConstants.DELETE_ROOM_TASK_LABEL,
+						new DeleteRoomConfig(config, room.getId()));
+
+			}
+		}
+		catch (Exception e) {
+			ucsdLogger.addWarning("Could not register outputs for task: " + e.getMessage());
+		}
 	}
 
 	@Override
@@ -60,7 +78,11 @@ public class CreateRoomTask extends AbstractTask {
 
 	@Override
 	public TaskOutputDefinition[] getTaskOutputDefinitions() {
-		TaskOutputDefinition[] ops = {};
+		TaskOutputDefinition[] ops = {
+				// Register output type for the volume created
+				new TaskOutputDefinition(SparkConstants.ROOM_NAME_LABEL, SparkConstants.ROOM_LIST_FORM_TABLE_NAME,
+						SparkConstants.ROOM_NAME_LABEL),
+		};
 		return ops;
 	}
 }
