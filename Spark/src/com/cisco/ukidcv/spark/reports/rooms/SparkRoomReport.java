@@ -11,6 +11,7 @@ import com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction;
 import com.cisco.ukidcv.spark.reports.rooms.actions.DeleteRoomAction;
 import com.cisco.ukidcv.spark.reports.rooms.actions.EditRoomAction;
 import com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomMembersReport;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomMessagesReport;
 import com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomSummaryReport;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
@@ -36,7 +37,7 @@ public class SparkRoomReport extends DrillableReportWithActions {
 	// Drilldown reports MUST be defined like this (i.e. not in the
 	// getDrilldownReports method)
 	private CloupiaReport[] drillable = new CloupiaReport[] {
-			new RoomSummaryReport(), new RoomMembersReport(),
+			new RoomSummaryReport(), new RoomMembersReport(), new RoomMessagesReport(),
 	};
 
 	private CloupiaReportAction[] actions = new CloupiaReportAction[] {

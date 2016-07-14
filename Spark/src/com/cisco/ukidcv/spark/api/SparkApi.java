@@ -19,9 +19,10 @@ import com.cisco.ukidcv.spark.api.json.SparkMembership;
 import com.cisco.ukidcv.spark.api.json.SparkMembershipCreation;
 import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkMessage;
-import com.cisco.ukidcv.spark.api.json.SparkMessageCreation;
+import com.cisco.ukidcv.spark.api.json.SparkMessageFormat;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRoomCreation;
+import com.cisco.ukidcv.spark.api.json.SparkRoomMessages;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.api.json.SparkTeamCreation;
 import com.cisco.ukidcv.spark.api.json.SparkTeamMembershipCreation;
@@ -108,14 +109,14 @@ public class SparkApi {
 	 *            Account to request from
 	 * @param roomId
 	 *            Room ID
-	 * @return Membership list in JSON format
+	 * @return SparkMemberships
 	 * @throws SparkReportException
 	 *             if the report fails
 	 * @throws HttpException
 	 *             if there's a problem accessing the report
 	 * @throws IOException
 	 *             if there's a problem accessing the report
-	 * @see SparkRooms
+	 * @see SparkMemberships
 	 */
 	public static SparkMemberships getSparkRoomMemberships(SparkAccount account, String roomId)
 			throws SparkReportException, HttpException, IOException {
@@ -655,7 +656,7 @@ public class SparkApi {
 
 		Gson gson = new Gson();
 
-		SparkMessageCreation newMessage = new SparkMessageCreation(message);
+		SparkMessageFormat newMessage = new SparkMessageFormat(message);
 
 		newMessage.setRoomId(roomId);
 
@@ -698,7 +699,7 @@ public class SparkApi {
 
 		Gson gson = new Gson();
 
-		SparkMessageCreation newMessage = new SparkMessageCreation(message);
+		SparkMessageFormat newMessage = new SparkMessageFormat(message);
 
 		newMessage.setToPersonEmail(emailAddress);
 
@@ -749,6 +750,55 @@ public class SparkApi {
 		// Update inventory after this operation
 		updateInventory(account);
 		return new SparkAPIStatus(true, null);
+	}
+
+	/**
+	 * Returns a list of messages from a spark room
+	 *
+	 * @param account
+	 *            Account to check from
+	 * @param roomId
+	 *            Room ID to get messages from
+	 * @param max
+	 *            Maximum number of messages to return
+	 * @return Specified spark messages
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 */
+	public static SparkRoomMessages getMessages(SparkAccount account, String roomId, int max)
+			throws SparkReportException, HttpException, IOException {
+
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account,
+				SparkConstants.SPARK_MESSAGES_URI + "?roomId=" + roomId + "&max=" + max, httpMethod.GET);
+		req.execute();
+		Gson gson = new Gson();
+		return gson.fromJson(req.getResponse(), SparkRoomMessages.class);
+	}
+
+	/**
+	 * Returns a list of messages from a spark room
+	 *
+	 * @param account
+	 *            Account to check from
+	 * @param roomId
+	 *            Room ID to get messages from
+	 * @return Specified spark messages
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 */
+	public static SparkRoomMessages getMessages(SparkAccount account, String roomId)
+			throws SparkReportException, HttpException, IOException {
+		// Use default maximum messages
+		return getMessages(account, roomId, SparkConstants.SPARK_MAXIMUM_MESSAGES);
 	}
 
 	/**

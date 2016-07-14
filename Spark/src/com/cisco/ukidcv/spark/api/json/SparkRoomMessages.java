@@ -19,15 +19,14 @@ import java.util.List;
  *
  */
 @SuppressWarnings("javadoc")
-public class SparkRooms {
+public class SparkRoomMessages {
+	private List<SparkMessageFormat> items = new ArrayList<>();
 
-	private List<SparkRoom> items = new ArrayList<>();
-
-	public List<SparkRoom> getItems() {
+	public List<SparkMessageFormat> getItems() {
 		return this.items;
 	}
 
-	public void setItems(List<SparkRoom> items) {
+	public void setItems(List<SparkMessageFormat> items) {
 		this.items = items;
 	}
 

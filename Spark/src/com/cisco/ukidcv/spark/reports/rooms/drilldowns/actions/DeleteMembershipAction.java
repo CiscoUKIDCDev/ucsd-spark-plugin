@@ -24,6 +24,11 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
  * Action button allowing the user to delete an existing membership
+ * <p>
+ * *
+ * <p>
+ * This uses the DeleteMembership task to present the GUI, setting certain
+ * fields read-only if they're known.
  *
  * @author Matt Day
  * @see DeleteMembershipConfig
@@ -74,9 +79,10 @@ public class DeleteMembershipAction extends CloupiaPageAction {
 		form.setEmail(email);
 		form.setRoomName(roomContextId);
 
-		// Set the membership field to read-only
-		// page.getFlist().getByFieldId(FORM_ID +
-		// ".membershipName").setDeleteable(false);
+		// Set the email and room name fields to read-only as this is an action
+		// button
+		page.getFlist().getByFieldId(FORM_ID + ".roomName").setEditable(false);
+		page.getFlist().getByFieldId(FORM_ID + ".email").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);

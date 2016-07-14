@@ -21,9 +21,12 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
  * Action button allowing the user to add a new member
+ * <p>
+ * This uses the AddMembership task to present the GUI, setting certain fields
+ * read-only if they're known.
  *
  * @author Matt Day
- * @see CreateMembershipConfig
+ * @see AddMembershipConfig
  *
  */
 public class AddMemberAction extends CloupiaPageAction {

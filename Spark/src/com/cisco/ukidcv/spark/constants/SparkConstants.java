@@ -53,9 +53,13 @@ public class SparkConstants {
 	 */
 	public static final String ROOM_LABEL = "Rooms";
 	/**
-	 * Label for overview reports
+	 * Label for room member reports
 	 */
 	public static final String ROOM_MEMBERS_LABEL = "Room Members";
+	/**
+	 * Label for recent messages
+	 */
+	public static final String ROOM_RECENT_MESSAGES_LABEL = "Recent Messages";
 	/**
 	 * Label for overview reports
 	 */
@@ -210,6 +214,10 @@ public class SparkConstants {
 	 * Spark server port
 	 */
 	public static final int SPARK_SERVER_PORT = 443;
+	/**
+	 * Maximum number of messages to show in a messages report
+	 */
+	public static final int SPARK_MAXIMUM_MESSAGES = 50;
 
 	/**
 	 * Spark server protocol

@@ -26,19 +26,10 @@ public class SparkMemberships {
 	private List<SparkMembership> items = new ArrayList<>();
 	private Map<String, Object> additionalProperties = new HashMap<>();
 
-	/**
-	 *
-	 * @return The items
-	 */
 	public List<SparkMembership> getItems() {
 		return this.items;
 	}
 
-	/**
-	 *
-	 * @param items
-	 *            The items
-	 */
 	public void setItems(List<SparkMembership> items) {
 		this.items = items;
 	}
