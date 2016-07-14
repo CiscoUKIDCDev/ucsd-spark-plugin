@@ -38,8 +38,8 @@ public class RoomMessagesReportImpl implements TabularReportGeneratorIf {
 		// The internal ID is hidden here. It will set the context for your
 		// action buttons and drilldown reports
 		model.addTextColumn("Internal ID", "Internal ID", true);
-		model.addTextColumn("Name", "Name");
 		model.addTextColumn("Time", "Time");
+		model.addTextColumn("Sender", "Sender");
 		model.addTextColumn("Message", "Message");
 		model.completedHeader();
 
@@ -66,8 +66,8 @@ public class RoomMessagesReportImpl implements TabularReportGeneratorIf {
 			 * an exception)
 			 */
 			model.addTextValue(internalId);
-			model.addTextValue(userMap.get(m.getPersonId()));
 			model.addTextValue(m.getCreated());
+			model.addTextValue(userMap.get(m.getPersonId()));
 			model.addTextValue(m.getMessage());
 			model.completedRow();
 		}

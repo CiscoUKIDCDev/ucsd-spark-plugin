@@ -12,9 +12,10 @@ package com.cisco.ukidcv.spark.api;
  * @author Matt Day
  *
  */
-public class SparkAPIStatus {
-	private boolean success;
-	private String error;
+public class SparkApiStatus {
+	private final boolean success;
+	private final String error;
+	private final String json;
 
 	/**
 	 * Initialise with error and success values
@@ -24,10 +25,28 @@ public class SparkAPIStatus {
 	 * @param error
 	 *            any error message (can be null)
 	 */
-	public SparkAPIStatus(boolean success, String error) {
+	public SparkApiStatus(boolean success, String error) {
 		super();
 		this.success = success;
 		this.error = error;
+		this.json = null;
+	}
+
+	/**
+	 * Initialise with error and success values and the original JSON
+	 *
+	 * @param success
+	 *            if it's a success or not
+	 * @param error
+	 *            any error message (can be null)
+	 * @param json
+	 *            Raw JSON from request
+	 */
+	public SparkApiStatus(boolean success, String error, String json) {
+		super();
+		this.success = success;
+		this.error = error;
+		this.json = json;
 	}
 
 	/**
@@ -44,6 +63,15 @@ public class SparkAPIStatus {
 	 */
 	public String getError() {
 		return this.error;
+	}
+
+	/**
+	 * Return the raw JSON response
+	 *
+	 * @return raw JSON server response
+	 */
+	public String getJson() {
+		return this.json;
 	}
 
 }

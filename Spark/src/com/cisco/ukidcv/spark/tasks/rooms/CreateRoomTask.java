@@ -7,7 +7,7 @@
 package com.cisco.ukidcv.spark.tasks.rooms;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkAPIStatus;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
@@ -37,7 +37,7 @@ public class CreateRoomTask extends AbstractTask {
 		SparkAccount account = new SparkAccount(config.getAccount());
 
 		// Attempt to create the room
-		SparkAPIStatus s = SparkApi.createRoom(account, config.getRoomName());
+		SparkApiStatus s = SparkApi.createRoom(account, config.getRoomName());
 
 		// If there was an error, log it and throw an exception
 		if (!s.isSuccess()) {

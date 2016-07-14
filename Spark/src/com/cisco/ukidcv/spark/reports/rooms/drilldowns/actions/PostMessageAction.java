@@ -7,14 +7,12 @@
 package com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
-import com.cisco.ukidcv.spark.api.json.SparkMembership;
-import com.cisco.ukidcv.spark.api.json.SparkRoom;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
+import com.cisco.ukidcv.spark.api.json.SparkMessage;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
-import com.cisco.ukidcv.spark.tasks.membership.DeleteMembershipConfig;
+import com.cisco.ukidcv.spark.tasks.messages.PostMessageConfig;
 import com.cloupia.model.cIM.ConfigTableAction;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.service.cIM.inframgr.forms.wizard.Page;
@@ -23,28 +21,26 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.WizardSession;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
- * Action button allowing the user to delete an existing membership
+ * Action button to post a new message to a room
  * <p>
- * *
- * <p>
- * This uses the DeleteMembership task to present the GUI, setting certain
- * fields read-only if they're known.
+ * This uses the PostMessage task to present the GUI, setting certain fields
+ * read-only if they're known.
  *
  * @author Matt Day
- * @see DeleteMembershipConfig
+ * @see PostMessageConfig
  *
  */
-public class DeleteMembershipAction extends CloupiaPageAction {
+public class PostMessageAction extends CloupiaPageAction {
 	// need to provide a unique string to identify this form and action
-	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.DeleteMembershipForm";
-	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.DeleteMembershipAction";
-	private static final String LABEL = SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL;
-	private static final String DESCRIPTION = SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL;
+	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.PostMessageForm";
+	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.PostMessageAction";
+	private static final String LABEL = SparkConstants.POST_MESSAGE_TASK_LABEL;
+	private static final String DESCRIPTION = SparkConstants.POST_MESSAGE_TASK_LABEL;
 
 	@Override
 	public void definePage(Page page, ReportContext context) {
-		// Use the same form (config) as the Delete Host custom task
-		page.bind(FORM_ID, DeleteMembershipConfig.class);
+		// Use the same form (config) as the Create Host custom task
+		page.bind(FORM_ID, PostMessageConfig.class);
 	}
 
 	/**
@@ -54,35 +50,13 @@ public class DeleteMembershipAction extends CloupiaPageAction {
 	@Override
 	public void loadDataToPage(Page page, ReportContext context, WizardSession session) throws Exception {
 		String query = context.getId();
-		DeleteMembershipConfig form = new DeleteMembershipConfig();
-		SparkAccount account = new SparkAccount(context);
+		PostMessageConfig form = new PostMessageConfig();
 
-		// Get email address and member ID from context
-		final String memberId = query.split(";")[1];
-		final String email = query.split(";")[2];
+		// Pre-populate the account field:
+		form.setRoomName(query);
 
-		// Get room information from ID:
-		SparkMembership m = SparkApi.getSparkRoomDetails(account, memberId);
-
-		if (m == null) {
-			throw new SparkTaskFailedException("Could not find membership details");
-		}
-
-		// Look up Email address:
-		SparkRoom r = SparkInventory.getRoom(account, m.getRoomId());
-
-		// Create a string to match the SparkRoomSelector internal ID
-		final String roomContextId = account.getAccountName() + ";" + m.getRoomId() + ";" + r.getTitle();
-
-		// Pre-populate the email and roomId field (it has the same context as
-		// the selection):
-		form.setEmail(email);
-		form.setRoomName(roomContextId);
-
-		// Set the email and room name fields to read-only as this is an action
-		// button
+		// Set the account field to read-only
 		page.getFlist().getByFieldId(FORM_ID + ".roomName").setEditable(false);
-		page.getFlist().getByFieldId(FORM_ID + ".email").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);
@@ -99,18 +73,15 @@ public class DeleteMembershipAction extends CloupiaPageAction {
 	public int validatePageData(Page page, ReportContext context, WizardSession session) throws Exception {
 		// Get credentials from the current context
 		Object obj = page.unmarshallToSession(FORM_ID);
-		DeleteMembershipConfig config = (DeleteMembershipConfig) obj;
+		PostMessageConfig config = (PostMessageConfig) obj;
 
 		SparkAccount account = new SparkAccount(context);
 
-		// First obtain the Membership ID
-		String memberId = SparkApi.getSparkMemberships(account, config.getRoomId(), config.getEmail());
-		if (memberId == null) {
-			throw new SparkTaskFailedException("Cannot find email: " + config.getEmail());
-		}
+		// Construct Spark Message:
+		SparkMessage message = new SparkMessage(config.getMessage());
 
-		// Attempt to delete the membership
-		SparkApiStatus s = SparkApi.deleteMembership(account, memberId);
+		// Post message
+		SparkApiStatus s = SparkApi.sendMessageToRoom(account, config.getRoomId(), message);
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI
@@ -118,7 +89,7 @@ public class DeleteMembershipAction extends CloupiaPageAction {
 		}
 
 		// Set the text for the "OK" prompt and return successfully
-		page.setPageMessage("Membership deleteed OK");
+		page.setPageMessage("Message posted OK");
 		return PageIf.STATUS_OK;
 	}
 
@@ -139,7 +110,7 @@ public class DeleteMembershipAction extends CloupiaPageAction {
 
 	@Override
 	public boolean isSelectionRequired() {
-		return true;
+		return false;
 	}
 
 	@Override

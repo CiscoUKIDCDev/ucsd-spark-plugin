@@ -86,6 +86,15 @@ public class SparkConstants {
 	public static final String MEMBERSHIP_ID_LABEL = "Membership ID";
 
 	/**
+	 * Label for new message
+	 */
+	public static final String MESSAGE_TEXT_LABEL = "Message";
+	/**
+	 * Label for file URL
+	 */
+	public static final String MESSAGE_FILE_URL_LABEL = "File URL";
+
+	/**
 	 * Label for Moderator
 	 */
 	public static final String MODERATOR_LABEL = "Moderator";
@@ -123,6 +132,10 @@ public class SparkConstants {
 	 */
 	public static final String DELETE_ROOM_TASK_LABEL = "Delete Room";
 
+	/**
+	 * Label for the post message task
+	 */
+	public static final String POST_MESSAGE_TASK_LABEL = "Send Message";
 	// ======== Report Constants
 	/**
 	 * Context for room drilldowns
@@ -154,6 +167,27 @@ public class SparkConstants {
 	 * Account list form name
 	 */
 	public static final String ACCOUNT_LIST_FORM_NAME = "SparkAccountList";
+
+	/**
+	 * Label for message ID
+	 */
+	public static final String MESSAGE_LIST_FORM_LABEL = "Message ID";
+
+	/**
+	 * Message list UCS Director internal name
+	 */
+	public static final String MESSAGE_LIST_FORM_PROVIDER = "spark_message_list_provider";
+
+	/**
+	 * Label for message ID
+	 */
+	public static final String MESSAGE_LIST_FORM_TABLE_NAME = "spark_message_list_table";
+
+	/**
+	 * Account list form name
+	 */
+	public static final String MESSAGE_LIST_FORM_NAME = "SparkMessageList";
+
 	/**
 	 * Room list UCS Director internal name
 	 */

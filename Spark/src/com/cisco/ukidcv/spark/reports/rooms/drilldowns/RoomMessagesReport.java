@@ -7,6 +7,7 @@
 package com.cisco.ukidcv.spark.reports.rooms.drilldowns;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.PostMessageAction;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
@@ -29,7 +30,7 @@ public class RoomMessagesReport extends DrillableReportWithActions {
 	private final static String REPORT_NAME = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.RoomMessagesReport";
 
 	private CloupiaReportAction[] actionButtons = {
-
+			new PostMessageAction(),
 	};
 
 	/**
@@ -62,8 +63,8 @@ public class RoomMessagesReport extends DrillableReportWithActions {
 	}
 
 	@Override
-	public Class<RoomMembersReportImpl> getImplementationClass() {
-		return RoomMembersReportImpl.class;
+	public Class<RoomMessagesReportImpl> getImplementationClass() {
+		return RoomMessagesReportImpl.class;
 	}
 
 	@Override

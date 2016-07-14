@@ -7,7 +7,7 @@
 package com.cisco.ukidcv.spark.reports.rooms.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkAPIStatus;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
@@ -79,7 +79,7 @@ public class EditRoomAction extends CloupiaPageAction {
 
 		SparkAccount account = new SparkAccount(context);
 
-		SparkAPIStatus s = SparkApi.updateRoom(account, config.getRoomId(), config.getNewRoomName());
+		SparkApiStatus s = SparkApi.updateRoom(account, config.getRoomId(), config.getNewRoomName());
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI

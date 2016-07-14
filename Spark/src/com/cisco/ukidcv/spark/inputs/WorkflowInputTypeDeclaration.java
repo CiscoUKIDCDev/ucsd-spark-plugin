@@ -34,6 +34,7 @@ public class WorkflowInputTypeDeclaration {
 	public static void registerWFInputs() {
 		registerAccountPicker();
 		registerRoomPicker();
+		registerMessagesPicker();
 	}
 
 	/**
@@ -68,4 +69,19 @@ public class WorkflowInputTypeDeclaration {
 				SparkRoomSelector.class, "0", "2");
 	}
 
+	/**
+	 * Register the list of recent messages
+	 *
+	 */
+	private static void registerMessagesPicker() {
+		WorkflowInputTypeRegistry input = WorkflowInputTypeRegistry.getInstance();
+		input.addDeclaration(new WorkflowInputFieldTypeDeclaration(SparkConstants.MESSAGE_LIST_FORM_TABLE_NAME,
+				SparkConstants.ROOM_RECENT_MESSAGES_LABEL, FormFieldDefinition.FIELD_TYPE_TABULAR_POPUP,
+				SparkConstants.MESSAGE_LIST_FORM_NAME));
+
+		// First item is what we return to the workflow, second is what we
+		// display in the GUI
+		TabularFieldRegistry.getInstance().registerTabularField(SparkConstants.MESSAGE_LIST_FORM_NAME,
+				SparkMessageSelector.class, "0", "4");
+	}
 }

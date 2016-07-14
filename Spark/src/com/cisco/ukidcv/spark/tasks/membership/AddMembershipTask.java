@@ -7,7 +7,7 @@
 package com.cisco.ukidcv.spark.tasks.membership;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkAPIStatus;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
@@ -37,7 +37,7 @@ public class AddMembershipTask extends AbstractTask {
 		SparkAccount account = new SparkAccount(config.getAccount());
 
 		// Attempt to create the membership
-		SparkAPIStatus s = SparkApi.createMembership(account, config.getRoomId(), config.getEmail(),
+		SparkApiStatus s = SparkApi.createMembership(account, config.getRoomId(), config.getEmail(),
 				config.isModerator());
 
 		// If there was an error, log it and throw an exception

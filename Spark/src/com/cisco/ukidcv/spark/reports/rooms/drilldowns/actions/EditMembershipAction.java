@@ -8,7 +8,7 @@ package com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
-import com.cisco.ukidcv.spark.api.SparkAPIStatus;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.json.SparkMembership;
 import com.cisco.ukidcv.spark.api.json.SparkRoom;
@@ -108,7 +108,7 @@ public class EditMembershipAction extends CloupiaPageAction {
 		}
 
 		// Attempt to edit the membership
-		SparkAPIStatus s = SparkApi.updateMembership(account, memberId, config.isModerator());
+		SparkApiStatus s = SparkApi.updateMembership(account, memberId, config.isModerator());
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI

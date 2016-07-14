@@ -20,6 +20,7 @@ import com.cisco.ukidcv.spark.api.json.SparkMembershipCreation;
 import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkMessage;
 import com.cisco.ukidcv.spark.api.json.SparkMessageFormat;
+import com.cisco.ukidcv.spark.api.json.SparkMessageResponse;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRoomCreation;
 import com.cisco.ukidcv.spark.api.json.SparkRoomMessages;
@@ -28,6 +29,7 @@ import com.cisco.ukidcv.spark.api.json.SparkTeamCreation;
 import com.cisco.ukidcv.spark.api.json.SparkTeamMembershipCreation;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.constants.SparkConstants.httpMethod;
+import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cisco.ukidcv.spark.exceptions.SparkReportException;
 import com.google.gson.Gson;
 
@@ -165,7 +167,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus createMembership(SparkAccount account, String roomId, String personEmail,
+	public static SparkApiStatus createMembership(SparkAccount account, String roomId, String personEmail,
 			boolean moderator) throws ClientProtocolException, IOException {
 		// Create a new POST request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MEMBERSHIP_URI,
@@ -184,11 +186,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage(), json);
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null, json);
 	}
 
 	/**
@@ -205,7 +207,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus updateMembership(SparkAccount account, String membershipId, boolean moderator)
+	public static SparkApiStatus updateMembership(SparkAccount account, String membershipId, boolean moderator)
 			throws ClientProtocolException, IOException {
 		// Create a new PUT request
 		SparkHttpConnection req = new SparkHttpConnection(account,
@@ -224,11 +226,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage(), json);
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null, json);
 	}
 
 	/**
@@ -242,7 +244,7 @@ public class SparkApi {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static SparkAPIStatus deleteMembership(SparkAccount account, String memberId)
+	public static SparkApiStatus deleteMembership(SparkAccount account, String memberId)
 			throws ClientProtocolException, IOException {
 		// Create a new DELETE request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MEMBERSHIP_URI + "/" + memberId,
@@ -255,11 +257,11 @@ public class SparkApi {
 		if (req.getCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -296,7 +298,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus createTeam(SparkAccount account, String teamName)
+	public static SparkApiStatus createTeam(SparkAccount account, String teamName)
 			throws ClientProtocolException, IOException {
 		// Create a new POST request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_TEAMS_URI, httpMethod.POST);
@@ -314,11 +316,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -335,7 +337,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus updateTeam(SparkAccount account, String teamId, String newName)
+	public static SparkApiStatus updateTeam(SparkAccount account, String teamId, String newName)
 			throws ClientProtocolException, IOException {
 		// Create a new PUT request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_TEAMS_URI + "/" + teamId,
@@ -354,11 +356,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -372,7 +374,7 @@ public class SparkApi {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static SparkAPIStatus deleteTeam(SparkAccount account, String teamId)
+	public static SparkApiStatus deleteTeam(SparkAccount account, String teamId)
 			throws ClientProtocolException, IOException {
 		// Create a new DELETE request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_TEAMS_URI + "/" + teamId,
@@ -385,11 +387,11 @@ public class SparkApi {
 		if (req.getCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -408,7 +410,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus createTeamMembership(SparkAccount account, String teamId, String personEmail,
+	public static SparkApiStatus createTeamMembership(SparkAccount account, String teamId, String personEmail,
 			boolean moderator) throws ClientProtocolException, IOException {
 		// Create a new POST request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_TEAMS_MEMBERSHIP_URI,
@@ -427,11 +429,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -448,7 +450,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus updateTeamMembership(SparkAccount account, String membershipId, boolean moderator)
+	public static SparkApiStatus updateTeamMembership(SparkAccount account, String membershipId, boolean moderator)
 			throws ClientProtocolException, IOException {
 		// Create a new PUT request
 		SparkHttpConnection req = new SparkHttpConnection(account,
@@ -467,11 +469,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -485,7 +487,7 @@ public class SparkApi {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static SparkAPIStatus deleteTeamMembership(SparkAccount account, String memberId)
+	public static SparkApiStatus deleteTeamMembership(SparkAccount account, String memberId)
 			throws ClientProtocolException, IOException {
 		// Create a new DELETE request
 		SparkHttpConnection req = new SparkHttpConnection(account,
@@ -498,11 +500,11 @@ public class SparkApi {
 		if (req.getCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -539,7 +541,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus createRoom(SparkAccount account, String roomName)
+	public static SparkApiStatus createRoom(SparkAccount account, String roomName)
 			throws ClientProtocolException, IOException {
 		// Create a new POST request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI, httpMethod.POST);
@@ -557,11 +559,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -578,7 +580,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus updateRoom(SparkAccount account, String roomId, String newName)
+	public static SparkApiStatus updateRoom(SparkAccount account, String roomId, String newName)
 			throws ClientProtocolException, IOException {
 		// Create a new PUT request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI + "/" + roomId,
@@ -597,11 +599,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -615,7 +617,7 @@ public class SparkApi {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static SparkAPIStatus deleteRoom(SparkAccount account, String roomId)
+	public static SparkApiStatus deleteRoom(SparkAccount account, String roomId)
 			throws ClientProtocolException, IOException {
 		// Create a new DELETE request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI + "/" + roomId,
@@ -628,11 +630,11 @@ public class SparkApi {
 		if (req.getCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -649,7 +651,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus sendMessageToRoom(SparkAccount account, String roomId, SparkMessage message)
+	public static SparkApiStatus sendMessageToRoom(SparkAccount account, String roomId, SparkMessage message)
 			throws ClientProtocolException, IOException {
 		// Create a new POST request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MESSAGES_URI, httpMethod.POST);
@@ -671,11 +673,26 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage(), null);
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null, req.getResponse());
+	}
+
+	/**
+	 * Takes a Spark message response (typically via a SparkApiStatus response)
+	 * and parses the responmse
+	 *
+	 * @param json
+	 *            JSON response from a sendMessageToRoom
+	 * @return SparkMessageResponse
+	 * @see SparkMessageResponse
+	 * @see #sendMessageToRoom
+	 */
+	public static SparkMessageResponse getMessageResponse(String json) {
+		Gson gson = new Gson();
+		return gson.fromJson(json, SparkMessageResponse.class);
 	}
 
 	/**
@@ -692,7 +709,7 @@ public class SparkApi {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SparkAPIStatus sendMessageToPerson(SparkAccount account, String emailAddress, SparkMessage message)
+	public static SparkApiStatus sendMessageToPerson(SparkAccount account, String emailAddress, SparkMessage message)
 			throws ClientProtocolException, IOException {
 		// Create a new POST request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MESSAGES_URI, httpMethod.POST);
@@ -714,11 +731,11 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
 	}
 
 	/**
@@ -732,7 +749,7 @@ public class SparkApi {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static SparkAPIStatus deleteMessage(SparkAccount account, String messageId)
+	public static SparkApiStatus deleteMessage(SparkAccount account, String messageId)
 			throws ClientProtocolException, IOException {
 		// Create a new DELETE request
 		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MESSAGES_URI + "/" + messageId,
@@ -745,11 +762,56 @@ public class SparkApi {
 		if (req.getCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkAPIStatus(false, error.getMessage());
+			return new SparkApiStatus(false, error.getMessage());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkAPIStatus(true, null);
+		return new SparkApiStatus(true, null);
+	}
+
+	/**
+	 * Returns a list of messages for an account
+	 *
+	 * @param account
+	 *            Account to check from
+	 * @param max
+	 *            Maximum number of messages to return
+	 * @return Specified spark messages
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 */
+	public static SparkRoomMessages getMessages(SparkAccount account, int max)
+			throws SparkReportException, HttpException, IOException {
+
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_MESSAGES_URI + "&max=" + max,
+				httpMethod.GET);
+		req.execute();
+		Gson gson = new Gson();
+		return gson.fromJson(req.getResponse(), SparkRoomMessages.class);
+	}
+
+	/**
+	 * Returns a list of messages for an account
+	 *
+	 * @param account
+	 *            Account to check from
+	 * @return Specified spark messages
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 */
+	public static SparkRoomMessages getMessages(SparkAccount account)
+			throws SparkReportException, HttpException, IOException {
+		// Use default maximum messages
+		return getMessages(account, SparkConstants.SPARK_MAXIMUM_MESSAGES);
 	}
 
 	/**
@@ -852,8 +914,10 @@ public class SparkApi {
 	 * @param account
 	 *            Account to test
 	 * @return true if the connection is successful
+	 * @throws SparkAccountException
+	 *             if there's a problem
 	 */
-	public static boolean testConnection(SparkAccount account) {
+	public static boolean testConnection(SparkAccount account) throws SparkAccountException {
 		try {
 			String json = getSparkPerson(account);
 			// Check if the response is not empty:
@@ -867,6 +931,7 @@ public class SparkApi {
 		}
 		catch (SparkReportException | IOException e) {
 			logger.warn("Connection test failed: " + e.getMessage());
+			throw new SparkAccountException("Connection test failed: " + e.getMessage());
 		}
 		return false;
 	}

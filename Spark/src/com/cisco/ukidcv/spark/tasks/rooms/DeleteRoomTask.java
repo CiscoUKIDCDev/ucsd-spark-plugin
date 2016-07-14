@@ -7,7 +7,7 @@
 package com.cisco.ukidcv.spark.tasks.rooms;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkAPIStatus;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
@@ -37,7 +37,7 @@ public class DeleteRoomTask extends AbstractTask {
 		SparkAccount account = new SparkAccount(config.getAccount());
 
 		// Attempt to delete the room
-		SparkAPIStatus s = SparkApi.deleteRoom(account, config.getRoomId());
+		SparkApiStatus s = SparkApi.deleteRoom(account, config.getRoomId());
 
 		// If there was an error, log it and throw an exception
 		if (!s.isSuccess()) {
