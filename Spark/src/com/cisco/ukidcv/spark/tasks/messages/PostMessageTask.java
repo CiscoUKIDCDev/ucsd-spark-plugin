@@ -42,6 +42,11 @@ public class PostMessageTask extends AbstractTask {
 		// Construct Spark Message:
 		SparkMessage message = new SparkMessage(config.getMessage());
 
+		// Add file URL:
+		if ((config.getFileUrl() != null) && (!"".equals(config.getFileUrl()))) {
+			message.addFiles(config.getFileUrl());
+		}
+
 		// Post message
 		SparkApiStatus s = SparkApi.sendMessageToRoom(account, config.getRoomId(), message);
 
