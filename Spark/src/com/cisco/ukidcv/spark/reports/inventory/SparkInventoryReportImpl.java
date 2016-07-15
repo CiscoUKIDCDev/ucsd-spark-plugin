@@ -21,9 +21,9 @@ import com.cloupia.service.cIM.inframgr.reports.TabularReportInternalModel;
  * Implements the log list
  *
  * @author Matt Day
- * @see InventoryReport
+ * @see SparkInventoryReport
  */
-public class InventoryReportImpl implements TabularReportGeneratorIf {
+public class SparkInventoryReportImpl implements TabularReportGeneratorIf {
 
 	@Override
 	public TabularReport getTabularReportReport(ReportRegistryEntry reportEntry, ReportContext context)

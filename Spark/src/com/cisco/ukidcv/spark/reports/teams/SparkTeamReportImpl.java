@@ -23,7 +23,7 @@ package com.cisco.ukidcv.spark.reports.teams;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
-import com.cisco.ukidcv.spark.api.json.SparkRoom;
+import com.cisco.ukidcv.spark.api.json.SparkTeam;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.model.cIM.TabularReport;
 import com.cloupia.service.cIM.inframgr.TabularReportGeneratorIf;
@@ -31,7 +31,7 @@ import com.cloupia.service.cIM.inframgr.reportengine.ReportRegistryEntry;
 import com.cloupia.service.cIM.inframgr.reports.TabularReportInternalModel;
 
 /**
- * Implements a room report - a list of all rooms in the converged view.
+ * Implements a team report - a list of all teams in the converged view.
  *
  * @author Matt Day
  * @see SparkTeamReport
@@ -54,17 +54,14 @@ public class SparkTeamReportImpl implements TabularReportGeneratorIf {
 		// action buttons and drilldown reports
 		model.addTextColumn("Internal ID", "Internal ID", true);
 		model.addTextColumn("Name", "Name");
-		model.addTextColumn("Type", "Type");
-		model.addTextColumn("Locked", "Locked");
-		model.addTextColumn("Last activity", "Last activity");
 		model.addTextColumn("Created", "Created");
 		model.completedHeader();
 
 		SparkAccount account = new SparkAccount(context);
 
-		for (SparkRoom room : SparkInventory.getRooms(account).getItems()) {
-			// Generate internal ID in the format AccountName;RoomID;Room Name
-			final String internalId = account.getAccountName() + ";" + room.getId() + ";" + room.getTitle();
+		for (SparkTeam team : SparkInventory.getTeams(account).getItems()) {
+			// Generate internal ID in the format AccountName;TeamID;Team Name
+			final String internalId = account.getAccountName() + ";" + team.getId() + ";" + team.getName();
 
 			/*
 			 * Now add the various attributes as per above (the number of
@@ -72,11 +69,8 @@ public class SparkTeamReportImpl implements TabularReportGeneratorIf {
 			 * an exception)
 			 */
 			model.addTextValue(internalId);
-			model.addTextValue(room.getTitle());
-			model.addTextValue(room.getType());
-			model.addTextValue(room.getIsLocked().toString());
-			model.addTextValue(room.getLastActivity());
-			model.addTextValue(room.getCreated());
+			model.addTextValue(team.getName());
+			model.addTextValue(team.getCreated());
 			model.completedRow();
 		}
 

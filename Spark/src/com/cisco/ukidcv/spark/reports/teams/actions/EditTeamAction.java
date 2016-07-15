@@ -4,13 +4,15 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.reports.inventory.actions;
+package com.cisco.ukidcv.spark.reports.teams.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
+import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
-import com.cisco.ukidcv.spark.reports.inventory.SparkInventoryReport;
-import com.cisco.ukidcv.spark.tasks.inventory.CollectInventoryConfig;
+import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
+import com.cisco.ukidcv.spark.reports.teams.SparkTeamReport;
+import com.cisco.ukidcv.spark.tasks.teams.EditTeamConfig;
 import com.cloupia.model.cIM.ConfigTableAction;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.service.cIM.inframgr.forms.wizard.Page;
@@ -19,23 +21,24 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.WizardSession;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
- * Action button allowing the user to refresh the inventory
+ * Action button allowing the user to edit an existing team
  *
  * @author Matt Day
- * @see SparkInventoryReport
+ * @see SparkTeamReport
+ * @see EditTeamConfig
  *
  */
-public class InventoryCollectionAction extends CloupiaPageAction {
+public class EditTeamAction extends CloupiaPageAction {
 	// need to provide a unique string to identify this form and action
-	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.inventory.actions.InventoryCollectionForm";
-	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.inventory.actions.InventoryCollectionAction";
-	private static final String LABEL = SparkConstants.INVENTORY_TASK_LABEL;
-	private static final String DESCRIPTION = SparkConstants.INVENTORY_TASK_LABEL;
+	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.teams.actions.EditTeamForm";
+	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.teams.actions.EditTeamAction";
+	private static final String LABEL = SparkConstants.EDIT_TEAM_TASK_LABEL;
+	private static final String DESCRIPTION = SparkConstants.EDIT_TEAM_TASK_LABEL;
 
 	@Override
 	public void definePage(Page page, ReportContext context) {
-		// Use the same form (config) as the Create Host custom task
-		page.bind(FORM_ID, CollectInventoryConfig.class);
+		// Use the same form (config) as the Edit Host custom task
+		page.bind(FORM_ID, EditTeamConfig.class);
 	}
 
 	/**
@@ -45,16 +48,18 @@ public class InventoryCollectionAction extends CloupiaPageAction {
 	@Override
 	public void loadDataToPage(Page page, ReportContext context, WizardSession session) throws Exception {
 		String query = context.getId();
-		CollectInventoryConfig form = new CollectInventoryConfig();
+		EditTeamConfig form = new EditTeamConfig();
 
-		// The form will be in the format Account;Pod - grab the former:
-		String account = query.split(";")[0];
+		// Pre-populate the team field (it has the same context as the
+		// selection):
+		form.setTeamName(query);
 
-		// Pre-populate the account field:
-		form.setAccount(account);
+		// Fill in the current team name in the new name field for convenience
+		form.setNewTeamName(query.split(";")[2]);
 
-		// Set the account field to read-only
-		page.getFlist().getByFieldId(FORM_ID + ".account").setEditable(false);
+		// Set the team field to read-only
+		// page.getFlist().getByFieldId(FORM_ID +
+		// ".teamName").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);
@@ -70,12 +75,20 @@ public class InventoryCollectionAction extends CloupiaPageAction {
 	@Override
 	public int validatePageData(Page page, ReportContext context, WizardSession session) throws Exception {
 		// Get credentials from the current context
+		Object obj = page.unmarshallToSession(FORM_ID);
+		EditTeamConfig config = (EditTeamConfig) obj;
 
 		SparkAccount account = new SparkAccount(context);
-		SparkInventory.update(account, SparkConstants.INVENTORY_REASON_USER, true);
+
+		SparkApiStatus s = SparkApi.updateTeam(account, config.getTeamId(), config.getNewTeamName());
+
+		if (!s.isSuccess()) {
+			// Throw an exception, the message will show in the GUI
+			throw new SparkTaskFailedException(s.getError());
+		}
 
 		// Set the text for the "OK" prompt and return successfully
-		page.setPageMessage("Inventory collection requested OK");
+		page.setPageMessage("Team edited OK");
 		return PageIf.STATUS_OK;
 	}
 
@@ -96,7 +109,7 @@ public class InventoryCollectionAction extends CloupiaPageAction {
 
 	@Override
 	public boolean isSelectionRequired() {
-		return false;
+		return true;
 	}
 
 	@Override

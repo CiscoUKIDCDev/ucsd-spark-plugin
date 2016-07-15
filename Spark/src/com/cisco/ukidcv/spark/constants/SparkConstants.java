@@ -61,6 +61,10 @@ public class SparkConstants {
 	 */
 	public static final String ROOM_MEMBERS_LABEL = "Room Members";
 	/**
+	 * Label for team member reports
+	 */
+	public static final String TEAM_MEMBERS_LABEL = "Team Members";
+	/**
 	 * Label for recent messages
 	 */
 	public static final String ROOM_RECENT_MESSAGES_LABEL = "Recent Messages";
@@ -76,6 +80,18 @@ public class SparkConstants {
 	 * Label for room name
 	 */
 	public static final String ROOM_NAME_LABEL = "Room Name";
+	/**
+	 * Label for overview team reports
+	 */
+	public static final String TEAM_TYPE_LABEL = "Team Types";
+	/**
+	 * Label for team name
+	 */
+	public static final String TEAM_NAME_LABEL = "Team Name";
+	/**
+	 * Label for new team name
+	 */
+	public static final String NEW_TEAM_NAME_LABEL = "New Name";
 	/**
 	 * Label for new room name
 	 */
@@ -119,6 +135,18 @@ public class SparkConstants {
 	 * Label for edit room task
 	 */
 	public static final String EDIT_ROOM_TASK_LABEL = "Edit Room";
+	/**
+	 * Label for create team task
+	 */
+	public static final String CREATE_TEAM_TASK_LABEL = "Create Team";
+	/**
+	 * Label for edit team task
+	 */
+	public static final String EDIT_TEAM_TASK_LABEL = "Edit Team";
+	/**
+	 * Label for delete team task
+	 */
+	public static final String DELETE_TEAM_TASK_LABEL = "Delete Team";
 	/**
 	 * Label for edit membership task
 	 */
@@ -200,9 +228,29 @@ public class SparkConstants {
 	public static final String MESSAGE_LIST_FORM_TABLE_NAME = "spark_message_list_table";
 
 	/**
-	 * Account list form name
+	 * Team list form name
 	 */
 	public static final String MESSAGE_LIST_FORM_NAME = "SparkMessageList";
+
+	/**
+	 * Label for team ID
+	 */
+	public static final String TEAM_LIST_FORM_LABEL = "Team ID";
+
+	/**
+	 * Team list UCS Director internal name
+	 */
+	public static final String TEAM_LIST_FORM_PROVIDER = "spark_team_list_provider";
+
+	/**
+	 * Label for team ID
+	 */
+	public static final String TEAM_LIST_FORM_TABLE_NAME = "spark_team_list_table";
+
+	/**
+	 * Team list form name
+	 */
+	public static final String TEAM_LIST_FORM_NAME = "SparkTeamList";
 
 	/**
 	 * Room list UCS Director internal name

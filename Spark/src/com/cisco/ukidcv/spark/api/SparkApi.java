@@ -26,8 +26,10 @@ import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.api.json.SparkRoomCreation;
 import com.cisco.ukidcv.spark.api.json.SparkRoomMessages;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
+import com.cisco.ukidcv.spark.api.json.SparkTeam;
 import com.cisco.ukidcv.spark.api.json.SparkTeamCreation;
 import com.cisco.ukidcv.spark.api.json.SparkTeamMembershipCreation;
+import com.cisco.ukidcv.spark.api.json.SparkTeamMemberships;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.constants.SparkConstants.httpMethod;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
@@ -303,6 +305,35 @@ public class SparkApi {
 	}
 
 	/**
+	 * Requests a list of team memberships from the Spark servers and returns it
+	 * as a Java class.
+	 * <p>
+	 * <b>Caution:</b>This method is not cached!
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @param teamId
+	 *            Team ID
+	 * @return SparkMemberships
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkMemberships
+	 */
+	public static SparkTeamMemberships getSparkTeamMemberships(SparkAccount account, String teamId)
+			throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account,
+				SparkConstants.SPARK_TEAMS_MEMBERSHIP_URI + "?roomId=" + teamId, httpMethod.GET);
+		req.execute();
+		Gson gson = new Gson();
+		return gson.fromJson(req.getResponse(), SparkTeamMemberships.class);
+	}
+
+	/**
 	 * Creates a new team using the Spark API
 	 *
 	 * @param account
@@ -331,12 +362,34 @@ public class SparkApi {
 		// If the request does not return 200 (success) it's an error, return
 		// details:
 		if (req.getCode() != 200) {
-			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkApiStatus(false, error.getMessage());
+			SparkErrors error = null;
+			try {
+				error = gson.fromJson(req.getResponse(), SparkErrors.class);
+				return new SparkApiStatus(false, error.getMessage());
+			}
+			catch (Exception e) {
+				logger.error("Could not create team " + e.getMessage());
+				return new SparkApiStatus(false, e.getMessage());
+			}
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkApiStatus(true, null);
+		return new SparkApiStatus(true, null, req.getResponse());
+	}
+
+	/**
+	 * Takes a Spark team response (typically via a SparkApiStatus response) and
+	 * parses the responmse
+	 *
+	 * @param json
+	 *            JSON response from a createMember
+	 * @return SparkTeam
+	 * @see SparkTeam
+	 * @see #createTeam
+	 */
+	public static SparkTeam getTeamResponse(String json) {
+		Gson gson = new Gson();
+		return gson.fromJson(json, SparkTeam.class);
 	}
 
 	/**

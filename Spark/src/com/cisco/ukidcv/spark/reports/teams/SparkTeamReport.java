@@ -7,12 +7,17 @@
 package com.cisco.ukidcv.spark.reports.teams;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.reports.teams.actions.CreateTeamAction;
+import com.cisco.ukidcv.spark.reports.teams.actions.DeleteTeamAction;
+import com.cisco.ukidcv.spark.reports.teams.actions.EditTeamAction;
+import com.cisco.ukidcv.spark.reports.teams.drilldowns.TeamMembersReport;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaReport;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaReportAction;
 import com.cloupia.service.cIM.inframgr.reports.simplified.DrillableReportWithActions;
+import com.cloupia.service.cIM.inframgr.reports.simplified.actions.DrillDownAction;
 
 /**
  * Defines a team report - a list of all teams in the converged view.
@@ -30,11 +35,11 @@ public class SparkTeamReport extends DrillableReportWithActions {
 	// Drilldown reports MUST be defined like this (i.e. not in the
 	// getDrilldownReports method)
 	private CloupiaReport[] drillable = new CloupiaReport[] {
-
+			new TeamMembersReport()
 	};
 
 	private CloupiaReportAction[] actions = new CloupiaReportAction[] {
-
+			new CreateTeamAction(), new EditTeamAction(), new DeleteTeamAction(), new DrillDownAction()
 	};
 
 	/**

@@ -19,9 +19,9 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.DrillableReportWithAc
  * Defines an inventory report / log
  * 
  * @author Matt Day
- * @see InventoryReportImpl
+ * @see SparkInventoryReportImpl
  */
-public class InventoryReport extends DrillableReportWithActions {
+public class SparkInventoryReport extends DrillableReportWithActions {
 	/**
 	 * Unique identifier for this report
 	 */
@@ -37,7 +37,7 @@ public class InventoryReport extends DrillableReportWithActions {
 	/**
 	 * Create Host report
 	 */
-	public InventoryReport() {
+	public SparkInventoryReport() {
 		super();
 		// This sets what column to use as the context ID for child drilldown
 		// reports
@@ -52,8 +52,8 @@ public class InventoryReport extends DrillableReportWithActions {
 	}
 
 	@Override
-	public Class<InventoryReportImpl> getImplementationClass() {
-		return InventoryReportImpl.class;
+	public Class<SparkInventoryReportImpl> getImplementationClass() {
+		return SparkInventoryReportImpl.class;
 	}
 
 	@Override

@@ -8,10 +8,13 @@ package com.cisco.ukidcv.spark.inputs;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.json.SparkTeam;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
+import com.cisco.ukidcv.spark.exceptions.SparkReportException;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.account.AccountUtil;
@@ -31,6 +34,7 @@ import com.cloupia.service.cIM.inframgr.reports.TabularReportInternalModel;
  *
  */
 public class SparkTeamSelector implements TabularReportGeneratorIf {
+	private static Logger logger = Logger.getLogger(SparkTeamSelector.class);
 
 	@Override
 	public TabularReport getTabularReportReport(ReportRegistryEntry reportEntry, ReportContext context)
@@ -63,23 +67,28 @@ public class SparkTeamSelector implements TabularReportGeneratorIf {
 					&& (acc.getAccountType().equals(SparkConstants.INFRA_ACCOUNT_TYPE))) {
 				SparkAccount account = new SparkAccount(acc.getAccountName());
 
-				for (SparkTeam team : SparkInventory.getTeams(account).getItems()) {
+				try {
+					for (SparkTeam team : SparkInventory.getTeams(account).getItems()) {
 
-					// Generate internal ID in the format
-					// AccountName;TeamID;Team Name
-					final String internalId = account.getAccountName() + ";" + team.getId() + ";" + team.getName();
+						// Generate internal ID in the format
+						// AccountName;TeamID;Team Name
+						final String internalId = account.getAccountName() + ";" + team.getId() + ";" + team.getName();
 
-					/*
-					 * Now add the various attributes as per above (the number
-					 * of entries must match the number of column headers or it
-					 * will throw an exception)
-					 */
-					model.addTextValue(internalId);
-					model.addTextValue(account.getAccountName());
-					model.addTextValue(team.getName());
-					model.addTextValue(team.getCreated());
-					model.completedRow();
+						/*
+						 * Now add the various attributes as per above (the
+						 * number of entries must match the number of column
+						 * headers or it will throw an exception)
+						 */
+						model.addTextValue(internalId);
+						model.addTextValue(account.getAccountName());
+						model.addTextValue(team.getName());
+						model.addTextValue(team.getCreated());
+						model.completedRow();
 
+					}
+				}
+				catch (SparkReportException e) {
+					logger.error("Could not generate teams report for account: " + account + " - " + e.getMessage());
 				}
 			}
 		}

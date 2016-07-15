@@ -16,10 +16,12 @@ import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cisco.ukidcv.spark.inputs.SparkAccountSelector;
 import com.cisco.ukidcv.spark.inputs.SparkMessageSelector;
 import com.cisco.ukidcv.spark.inputs.SparkRoomSelector;
+import com.cisco.ukidcv.spark.inputs.SparkTeamSelector;
 import com.cisco.ukidcv.spark.inputs.WorkflowInputTypeDeclaration;
-import com.cisco.ukidcv.spark.reports.inventory.InventoryReport;
+import com.cisco.ukidcv.spark.reports.inventory.SparkInventoryReport;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
 import com.cisco.ukidcv.spark.reports.summary.AccountReport;
+import com.cisco.ukidcv.spark.reports.teams.SparkTeamReport;
 import com.cisco.ukidcv.spark.tasks.inventory.CollectInventoryTask;
 import com.cisco.ukidcv.spark.tasks.membership.AddMembershipTask;
 import com.cisco.ukidcv.spark.tasks.membership.DeleteMembershipTask;
@@ -29,6 +31,9 @@ import com.cisco.ukidcv.spark.tasks.messages.PostMessageTask;
 import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomTask;
 import com.cisco.ukidcv.spark.tasks.rooms.DeleteRoomTask;
 import com.cisco.ukidcv.spark.tasks.rooms.EditRoomTask;
+import com.cisco.ukidcv.spark.tasks.teams.CreateTeamTask;
+import com.cisco.ukidcv.spark.tasks.teams.DeleteTeamTask;
+import com.cisco.ukidcv.spark.tasks.teams.EditTeamTask;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.ConfigItemDef;
@@ -65,7 +70,7 @@ public class SparkModule extends AbstractCloupiaModule {
 	@Override
 	public CloupiaReport[] getReports() {
 		return new CloupiaReport[] {
-				new AccountReport(), new SparkRoomReport(), new InventoryReport(),
+				new AccountReport(), new SparkRoomReport(), new SparkTeamReport(), new SparkInventoryReport(),
 		};
 	}
 
@@ -77,7 +82,7 @@ public class SparkModule extends AbstractCloupiaModule {
 		return new AbstractTask[] {
 				new CreateRoomTask(), new EditRoomTask(), new DeleteRoomTask(), new CollectInventoryTask(),
 				new AddMembershipTask(), new EditMembershipTask(), new DeleteMembershipTask(), new PostMessageTask(),
-				new DeleteMessageTask(),
+				new DeleteMessageTask(), new CreateTeamTask(), new EditTeamTask(), new DeleteTeamTask(),
 		};
 	}
 
@@ -89,6 +94,7 @@ public class SparkModule extends AbstractCloupiaModule {
 			cfr.registerTabularField(SparkConstants.ACCOUNT_LIST_FORM_PROVIDER, SparkAccountSelector.class, "0", "0");
 			cfr.registerTabularField(SparkConstants.ROOM_LIST_FORM_PROVIDER, SparkRoomSelector.class, "0", "2");
 			cfr.registerTabularField(SparkConstants.MESSAGE_LIST_FORM_PROVIDER, SparkMessageSelector.class, "0", "4");
+			cfr.registerTabularField(SparkConstants.TEAM_LIST_FORM_PROVIDER, SparkTeamSelector.class, "0", "2");
 
 			// Register the account type drilldown
 			ReportContextRegistry.getInstance().register(SparkConstants.INFRA_ACCOUNT_TYPE,

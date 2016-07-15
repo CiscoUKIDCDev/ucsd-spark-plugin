@@ -35,6 +35,7 @@ public class WorkflowInputTypeDeclaration {
 		registerAccountPicker();
 		registerRoomPicker();
 		registerMessagesPicker();
+		registerTeamPicker();
 	}
 
 	/**
@@ -83,5 +84,21 @@ public class WorkflowInputTypeDeclaration {
 		// display in the GUI
 		TabularFieldRegistry.getInstance().registerTabularField(SparkConstants.MESSAGE_LIST_FORM_NAME,
 				SparkMessageSelector.class, "0", "4");
+	}
+
+	/**
+	 * Register team list
+	 *
+	 */
+	private static void registerTeamPicker() {
+		WorkflowInputTypeRegistry input = WorkflowInputTypeRegistry.getInstance();
+		input.addDeclaration(new WorkflowInputFieldTypeDeclaration(SparkConstants.TEAM_LIST_FORM_TABLE_NAME,
+				SparkConstants.TEAM_NAME_LABEL, FormFieldDefinition.FIELD_TYPE_TABULAR_POPUP,
+				SparkConstants.TEAM_LIST_FORM_NAME));
+
+		// First item is what we return to the workflow, second is what we
+		// display in the GUI
+		TabularFieldRegistry.getInstance().registerTabularField(SparkConstants.TEAM_LIST_FORM_NAME,
+				SparkTeamSelector.class, "0", "2");
 	}
 }
