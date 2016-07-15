@@ -22,10 +22,10 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
  * be used via an action button or as a workflow task.
  *
  * @author Matt Day
- * @see PostMessageTask
+ * @see PostMessageToRoomTask
  */
 @PersistenceCapable(detachable = "true", table = "Spark_post_message_to_room")
-public class PostMessageConfig implements TaskConfigIf {
+public class PostMessageToRoomConfig implements TaskConfigIf {
 
 	@Persistent
 	private long configEntryId;
@@ -52,7 +52,7 @@ public class PostMessageConfig implements TaskConfigIf {
 	 * Empty default constructor - you could initialise default values here if
 	 * you wanted
 	 */
-	public PostMessageConfig() {
+	public PostMessageToRoomConfig() {
 		super();
 
 	}

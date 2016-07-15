@@ -185,7 +185,11 @@ public class SparkConstants {
 	/**
 	 * Label for the post message task
 	 */
-	public static final String POST_MESSAGE_TASK_LABEL = "Send Message";
+	public static final String POST_MESSAGE_TASK_LABEL = "Send Message to Room";
+	/**
+	 * Label for the post message task
+	 */
+	public static final String POST_MESSAGE_EMAIL_TASK_LABEL = "Send Message to User";
 	/**
 	 * Label for the delete message task
 	 */

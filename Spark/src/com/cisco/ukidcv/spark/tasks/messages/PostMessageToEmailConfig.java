@@ -16,7 +16,7 @@ import com.cloupia.service.cIM.inframgr.customactions.UserInputField;
 import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
 
 /**
- * Configuration task to delete a message from a Spark room
+ * Configuration task to post a message to a Spark room
  * <p>
  * This provides the GUI and configuration elements to execute this task. It can
  * be used via an action button or as a workflow task.
@@ -24,8 +24,8 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.FormField;
  * @author Matt Day
  * @see PostMessageToRoomTask
  */
-@PersistenceCapable(detachable = "true", table = "Spark_delete_message_from_room")
-public class DeleteMessageConfig implements TaskConfigIf {
+@PersistenceCapable(detachable = "true", table = "Spark_post_message_to_email")
+public class PostMessageToEmailConfig implements TaskConfigIf {
 
 	@Persistent
 	private long configEntryId;
@@ -38,49 +38,28 @@ public class DeleteMessageConfig implements TaskConfigIf {
 	@Persistent
 	private String account;
 
-	@FormField(label = SparkConstants.MESSAGE_LIST_FORM_LABEL, help = SparkConstants.MESSAGE_LIST_FORM_LABEL, mandatory = true, type = FormFieldDefinition.FIELD_TYPE_TEXT)
+	@FormField(label = SparkConstants.EMAIL_LABEL, help = SparkConstants.EMAIL_LABEL, mandatory = true, type = FormFieldDefinition.FIELD_TYPE_TEXT)
 	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
 	@Persistent
-	private String messageId;
+	private String email;
+
+	@FormField(label = SparkConstants.MESSAGE_TEXT_LABEL, help = SparkConstants.MESSAGE_TEXT_LABEL, mandatory = false, type = FormFieldDefinition.FIELD_TYPE_TEXT)
+	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
+	@Persistent
+	private String message;
+
+	@FormField(label = SparkConstants.MESSAGE_FILE_URL_LABEL, help = SparkConstants.MESSAGE_FILE_URL_LABEL, mandatory = false, type = FormFieldDefinition.FIELD_TYPE_TEXT)
+	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
+	@Persistent
+	private String fileUrl;
 
 	/**
 	 * Empty default constructor - you could initialise default values here if
 	 * you wanted
 	 */
-	public DeleteMessageConfig() {
+	public PostMessageToEmailConfig() {
 		super();
-	}
 
-	/**
-	 * Rollback constructor. This is used from the PostMessageTask to allow UCS
-	 * Director to undo the message posted.
-	 *
-	 * @param config
-	 *            Original configuration to post the message
-	 * @param messageId
-	 *            Message ID from posted message
-	 *
-	 * @see PostMessageToRoomTask
-	 */
-	public DeleteMessageConfig(PostMessageToEmailConfig config, String messageId) {
-		this.setAccount(config.getAccount());
-		this.setMessageId(messageId);
-	}
-
-	/**
-	 * Rollback constructor. This is used from the PostMessageTask to allow UCS
-	 * Director to undo the message posted.
-	 *
-	 * @param config
-	 *            Original configuration to post the message
-	 * @param messageId
-	 *            Message ID from posted message
-	 *
-	 * @see PostMessageToRoomTask
-	 */
-	public DeleteMessageConfig(PostMessageToRoomConfig config, String messageId) {
-		this.setAccount(config.getAccount());
-		this.setMessageId(messageId);
 	}
 
 	/**
@@ -102,20 +81,53 @@ public class DeleteMessageConfig implements TaskConfigIf {
 	}
 
 	/**
-	 * @return Message ID set by the user
+	 * Set the email address
+	 *
+	 * @param email
+	 *            email address to set
 	 */
-	public String getMessageId() {
-		return this.messageId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	/**
-	 * Set the message ID
-	 *
-	 * @param messageId
-	 *            message ID to set
+	 * @return user provided message
 	 */
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
+	public String getMessage() {
+		return this.message;
+	}
+
+	/**
+	 * Set the message to send
+	 *
+	 * @param message
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return URL for any files to be sent
+	 */
+	public String getFileUrl() {
+		return this.fileUrl;
+	}
+
+	/**
+	 * Set a URL for a file to send
+	 *
+	 * @param fileUrl
+	 *            URL for file
+	 */
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
+
+	/**
+	 * @return The user provided email address
+	 */
+	public String getEmail() {
+		return this.email;
 	}
 
 	@Override
@@ -130,7 +142,7 @@ public class DeleteMessageConfig implements TaskConfigIf {
 
 	@Override
 	public String getDisplayLabel() {
-		return SparkConstants.DELETE_MESSAGE_TASK_LABEL;
+		return SparkConstants.POST_MESSAGE_EMAIL_TASK_LABEL;
 	}
 
 	@Override

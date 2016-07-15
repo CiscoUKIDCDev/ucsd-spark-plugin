@@ -21,14 +21,14 @@ import com.cloupia.service.cIM.inframgr.customactions.CustomActionLogger;
 import com.cloupia.service.cIM.inframgr.customactions.CustomActionTriggerContext;
 
 /**
- * This calls the Spark API to create the requested room.
+ * This calls the Spark API to post a message to an email address
  *
  * @author Matt Day
  * @see SparkApi#createRoom
- * @see PostMessageConfig
+ * @see PostMessageToEmailConfig
  * @see SparkMessageSelector
  */
-public class PostMessageTask extends AbstractTask {
+public class PostMessageToEmailTask extends AbstractTask {
 
 	/**
 	 * Executes the task
@@ -36,7 +36,7 @@ public class PostMessageTask extends AbstractTask {
 	@Override
 	public void executeCustomAction(CustomActionTriggerContext context, CustomActionLogger ucsdLogger)
 			throws Exception {
-		PostMessageConfig config = (PostMessageConfig) context.loadConfigObject();
+		PostMessageToEmailConfig config = (PostMessageToEmailConfig) context.loadConfigObject();
 		SparkAccount account = new SparkAccount(config.getAccount());
 
 		// Construct Spark Message:
@@ -48,7 +48,7 @@ public class PostMessageTask extends AbstractTask {
 		}
 
 		// Post message
-		SparkApiStatus s = SparkApi.sendMessageToRoom(account, config.getRoomId(), message);
+		SparkApiStatus s = SparkApi.sendMessageToPerson(account, config.getEmail(), message);
 
 		// If there was an error, log it and throw an exception
 		if (!s.isSuccess()) {
@@ -78,12 +78,12 @@ public class PostMessageTask extends AbstractTask {
 
 	@Override
 	public TaskConfigIf getTaskConfigImplementation() {
-		return new PostMessageConfig();
+		return new PostMessageToEmailConfig();
 	}
 
 	@Override
 	public String getTaskName() {
-		return SparkConstants.POST_MESSAGE_TASK_LABEL;
+		return SparkConstants.POST_MESSAGE_EMAIL_TASK_LABEL;
 	}
 
 	@Override

@@ -27,7 +27,8 @@ import com.cisco.ukidcv.spark.tasks.membership.AddMembershipTask;
 import com.cisco.ukidcv.spark.tasks.membership.DeleteMembershipTask;
 import com.cisco.ukidcv.spark.tasks.membership.EditMembershipTask;
 import com.cisco.ukidcv.spark.tasks.messages.DeleteMessageTask;
-import com.cisco.ukidcv.spark.tasks.messages.PostMessageTask;
+import com.cisco.ukidcv.spark.tasks.messages.PostMessageToEmailTask;
+import com.cisco.ukidcv.spark.tasks.messages.PostMessageToRoomTask;
 import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomTask;
 import com.cisco.ukidcv.spark.tasks.rooms.DeleteRoomTask;
 import com.cisco.ukidcv.spark.tasks.rooms.EditRoomTask;
@@ -84,9 +85,10 @@ public class SparkModule extends AbstractCloupiaModule {
 	public AbstractTask[] getTasks() {
 		return new AbstractTask[] {
 				new CreateRoomTask(), new EditRoomTask(), new DeleteRoomTask(), new CollectInventoryTask(),
-				new AddMembershipTask(), new EditMembershipTask(), new DeleteMembershipTask(), new PostMessageTask(),
-				new DeleteMessageTask(), new CreateTeamTask(), new EditTeamTask(), new DeleteTeamTask(),
-				new AddTeamMembershipTask(), new EditTeamMembershipTask(), new DeleteTeamMembershipTask(),
+				new AddMembershipTask(), new EditMembershipTask(), new DeleteMembershipTask(),
+				new PostMessageToRoomTask(), new DeleteMessageTask(), new CreateTeamTask(), new EditTeamTask(),
+				new DeleteTeamTask(), new AddTeamMembershipTask(), new EditTeamMembershipTask(),
+				new DeleteTeamMembershipTask(), new PostMessageToEmailTask(),
 		};
 	}
 

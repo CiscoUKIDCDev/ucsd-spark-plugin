@@ -51,11 +51,12 @@ public class CreateTeamRoomAction extends CloupiaPageAction {
 		CreateRoomConfig form = new CreateRoomConfig();
 
 		// The form will be in the format Account;Pod - grab the former:
-		final String account = query.split(";")[0];
-		final String teamId = query.split(";")[1];
+		final String accountName = query.split(";")[0];
+		// Build team ID query
+		final String teamId = accountName + ";" + query.split(";")[1] + ";" + query.split(";")[2];
 
 		// Pre-populate the account and team field:
-		form.setAccount(account);
+		form.setAccount(accountName);
 		form.setTeamName(teamId);
 
 		// Set the account and team fields to read-only

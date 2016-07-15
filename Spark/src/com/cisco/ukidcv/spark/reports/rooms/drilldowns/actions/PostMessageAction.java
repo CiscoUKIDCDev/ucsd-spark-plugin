@@ -12,7 +12,7 @@ import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.json.SparkMessage;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
-import com.cisco.ukidcv.spark.tasks.messages.PostMessageConfig;
+import com.cisco.ukidcv.spark.tasks.messages.PostMessageToRoomConfig;
 import com.cloupia.model.cIM.ConfigTableAction;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.service.cIM.inframgr.forms.wizard.Page;
@@ -27,7 +27,7 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
  * read-only if they're known.
  *
  * @author Matt Day
- * @see PostMessageConfig
+ * @see PostMessageToRoomConfig
  *
  */
 public class PostMessageAction extends CloupiaPageAction {
@@ -40,7 +40,7 @@ public class PostMessageAction extends CloupiaPageAction {
 	@Override
 	public void definePage(Page page, ReportContext context) {
 		// Use the same form (config) as the Create Host custom task
-		page.bind(FORM_ID, PostMessageConfig.class);
+		page.bind(FORM_ID, PostMessageToRoomConfig.class);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class PostMessageAction extends CloupiaPageAction {
 	@Override
 	public void loadDataToPage(Page page, ReportContext context, WizardSession session) throws Exception {
 		String query = context.getId();
-		PostMessageConfig form = new PostMessageConfig();
+		PostMessageToRoomConfig form = new PostMessageToRoomConfig();
 
 		// Pre-populate the account field:
 		form.setRoomName(query);
@@ -73,7 +73,7 @@ public class PostMessageAction extends CloupiaPageAction {
 	public int validatePageData(Page page, ReportContext context, WizardSession session) throws Exception {
 		// Get credentials from the current context
 		Object obj = page.unmarshallToSession(FORM_ID);
-		PostMessageConfig config = (PostMessageConfig) obj;
+		PostMessageToRoomConfig config = (PostMessageToRoomConfig) obj;
 
 		SparkAccount account = new SparkAccount(context);
 
