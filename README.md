@@ -16,6 +16,8 @@ You can then administer your Spark account(s) either via custom workflow tasks, 
 ## Demo Video
 [![Video Demo](http://img.youtube.com/vi/N4l2K2TbfKE/0.jpg)](https://www.youtube.com/watch?v=N4l2K2TbfKE)
 
+You can find [screen shots here](https://github.com/CiscoUKIDCDev/ucsd-spark-plugin/blob/master/screenshots.md)
+
 ## Function
 This plugin is under active development. New features and screenshots are due
 soon.
@@ -38,18 +40,19 @@ Right now, it has the following functionality.
 * Add people to rooms (GUI or tasks)
 * Edit if someone is a moderator or not (GUI or tasks)
 * Remove people from rooms (GUI or tasks)
+* Rollback (undo) adding someone to a room (tasks)
 
-## Intended features
-* Adding and managing accounts
-* Full reports, including:
-	* Summary
-	* Drilldowns
-	* Graphs
-	* Action buttons
-* Inventory
-* Workflow tasks, including:
-	* Input/output
-	* Rollback
+### Teams
+* Create teams (GUI or tasks)
+* Edit teams names (GUI or tasks)
+* Delete teams (GUI or tasks)
+* Rollback (undo) creating a team (tasks)
+
+### Team Members
+* Add people to teams (GUI or tasks)
+* Edit if someone is a team moderator or not (GUI or tasks)
+* Remove people from teams (GUI or tasks)
+* Rollback (undo) adding someone to a team (tasks)
 
 ## License
 It is licensed under the Apache 2.0 license (see LICENSE for more information).
