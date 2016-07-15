@@ -82,6 +82,7 @@ public class CreateTeamAction extends CloupiaPageAction {
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Team creation filed: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

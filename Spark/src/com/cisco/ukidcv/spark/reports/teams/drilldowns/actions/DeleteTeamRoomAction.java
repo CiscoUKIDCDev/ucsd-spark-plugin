@@ -4,7 +4,7 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.reports.rooms.actions;
+package com.cisco.ukidcv.spark.reports.teams.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
@@ -12,7 +12,7 @@ import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
-import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomConfig;
+import com.cisco.ukidcv.spark.tasks.rooms.DeleteRoomConfig;
 import com.cloupia.model.cIM.ConfigTableAction;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.service.cIM.inframgr.forms.wizard.Page;
@@ -21,24 +21,24 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.WizardSession;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
- * Action button allowing the user to create a new room
+ * Action button allowing the user to delete a new room
  *
  * @author Matt Day
  * @see SparkRoomReport
- * @see CreateRoomConfig
+ * @see DeleteRoomConfig
  *
  */
-public class CreateRoomAction extends CloupiaPageAction {
+public class DeleteTeamRoomAction extends CloupiaPageAction {
 	// need to provide a unique string to identify this form and action
-	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomForm";
-	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction";
-	private static final String LABEL = SparkConstants.CREATE_ROOM_TASK_LABEL;
-	private static final String DESCRIPTION = SparkConstants.CREATE_ROOM_TASK_LABEL;
+	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.DeleteRoomForm";
+	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.DeleteRoomAction";
+	private static final String LABEL = SparkConstants.DELETE_ROOM_TASK_LABEL;
+	private static final String DESCRIPTION = SparkConstants.DELETE_ROOM_TASK_LABEL;
 
 	@Override
 	public void definePage(Page page, ReportContext context) {
-		// Use the same form (config) as the Create Host custom task
-		page.bind(FORM_ID, CreateRoomConfig.class);
+		// Use the same form (config) as the Delete Host custom task
+		page.bind(FORM_ID, DeleteRoomConfig.class);
 	}
 
 	/**
@@ -48,16 +48,13 @@ public class CreateRoomAction extends CloupiaPageAction {
 	@Override
 	public void loadDataToPage(Page page, ReportContext context, WizardSession session) throws Exception {
 		String query = context.getId();
-		CreateRoomConfig form = new CreateRoomConfig();
+		DeleteRoomConfig form = new DeleteRoomConfig();
 
-		// The form will be in the format Account;Pod - grab the former:
-		String account = query.split(";")[0];
+		// Pre-populate the room field:
+		form.setRoomName(query);
 
-		// Pre-populate the account field:
-		form.setAccount(account);
-
-		// Set the account field to read-only
-		page.getFlist().getByFieldId(FORM_ID + ".account").setEditable(false);
+		// Set the room field to read-only
+		page.getFlist().getByFieldId(FORM_ID + ".roomName").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);
@@ -74,19 +71,11 @@ public class CreateRoomAction extends CloupiaPageAction {
 	public int validatePageData(Page page, ReportContext context, WizardSession session) throws Exception {
 		// Get credentials from the current context
 		Object obj = page.unmarshallToSession(FORM_ID);
-		CreateRoomConfig config = (CreateRoomConfig) obj;
+		DeleteRoomConfig config = (DeleteRoomConfig) obj;
 
 		SparkAccount account = new SparkAccount(context);
 
-		SparkApiStatus s;
-
-		// Was a team specified? If so create the room for that team
-		if ((config.getTeamId() != null) && (!"".equals(config.getTeamId()))) {
-			s = SparkApi.createRoom(account, config.getRoomName(), config.getTeamId());
-		}
-		else {
-			s = SparkApi.createRoom(account, config.getRoomName());
-		}
+		SparkApiStatus s = SparkApi.deleteRoom(account, config.getRoomId());
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI
@@ -94,7 +83,7 @@ public class CreateRoomAction extends CloupiaPageAction {
 		}
 
 		// Set the text for the "OK" prompt and return successfully
-		page.setPageMessage("Room created OK");
+		page.setPageMessage("Room deleted OK");
 		return PageIf.STATUS_OK;
 	}
 
@@ -115,7 +104,7 @@ public class CreateRoomAction extends CloupiaPageAction {
 
 	@Override
 	public boolean isSelectionRequired() {
-		return false;
+		return true;
 	}
 
 	@Override

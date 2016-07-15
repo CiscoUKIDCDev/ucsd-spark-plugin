@@ -4,11 +4,13 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.reports.rooms.actions;
+package com.cisco.ukidcv.spark.reports.teams.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
+import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.SparkApiStatus;
+import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
@@ -28,10 +30,10 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
  * @see CreateRoomConfig
  *
  */
-public class CreateRoomAction extends CloupiaPageAction {
+public class CreateTeamRoomAction extends CloupiaPageAction {
 	// need to provide a unique string to identify this form and action
-	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomForm";
-	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction";
+	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.CreateRoomForm";
+	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.CreateRoomAction";
 	private static final String LABEL = SparkConstants.CREATE_ROOM_TASK_LABEL;
 	private static final String DESCRIPTION = SparkConstants.CREATE_ROOM_TASK_LABEL;
 
@@ -51,13 +53,19 @@ public class CreateRoomAction extends CloupiaPageAction {
 		CreateRoomConfig form = new CreateRoomConfig();
 
 		// The form will be in the format Account;Pod - grab the former:
-		String account = query.split(";")[0];
+		final String account = query.split(";")[0];
+		final String roomId = query.split(";")[1];
 
-		// Pre-populate the account field:
+		// Look up team ID:
+		SparkRoom room = SparkInventory.getRoom(new SparkAccount(account), roomId);
+
+		// Pre-populate the account and team field:
 		form.setAccount(account);
+		form.setTeamName(room.getTeamId());
 
-		// Set the account field to read-only
+		// Set the account and team fields to read-only
 		page.getFlist().getByFieldId(FORM_ID + ".account").setEditable(false);
+ 		page.getFlist().getByFieldId(FORM_ID + ".teamId").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);

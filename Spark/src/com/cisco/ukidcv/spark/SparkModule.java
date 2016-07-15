@@ -34,6 +34,9 @@ import com.cisco.ukidcv.spark.tasks.rooms.EditRoomTask;
 import com.cisco.ukidcv.spark.tasks.teams.CreateTeamTask;
 import com.cisco.ukidcv.spark.tasks.teams.DeleteTeamTask;
 import com.cisco.ukidcv.spark.tasks.teams.EditTeamTask;
+import com.cisco.ukidcv.spark.tasks.teams.membership.AddTeamMembershipTask;
+import com.cisco.ukidcv.spark.tasks.teams.membership.DeleteTeamMembershipTask;
+import com.cisco.ukidcv.spark.tasks.teams.membership.EditTeamMembershipTask;
 import com.cloupia.fw.objstore.ObjStore;
 import com.cloupia.fw.objstore.ObjStoreHelper;
 import com.cloupia.lib.connector.ConfigItemDef;
@@ -83,6 +86,7 @@ public class SparkModule extends AbstractCloupiaModule {
 				new CreateRoomTask(), new EditRoomTask(), new DeleteRoomTask(), new CollectInventoryTask(),
 				new AddMembershipTask(), new EditMembershipTask(), new DeleteMembershipTask(), new PostMessageTask(),
 				new DeleteMessageTask(), new CreateTeamTask(), new EditTeamTask(), new DeleteTeamTask(),
+				new AddTeamMembershipTask(), new EditTeamMembershipTask(), new DeleteTeamMembershipTask(),
 		};
 	}
 

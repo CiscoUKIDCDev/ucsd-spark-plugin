@@ -4,15 +4,17 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.reports.rooms.actions;
+package com.cisco.ukidcv.spark.reports.teams.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
+import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.SparkApiStatus;
+import com.cisco.ukidcv.spark.api.json.SparkTeam;
+import com.cisco.ukidcv.spark.api.json.SparkTeamMembership;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
-import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
-import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomConfig;
+import com.cisco.ukidcv.spark.tasks.teams.membership.DeleteTeamMembershipConfig;
 import com.cloupia.model.cIM.ConfigTableAction;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.service.cIM.inframgr.forms.wizard.Page;
@@ -21,24 +23,28 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.WizardSession;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
- * Action button allowing the user to create a new room
+ * Action button allowing the user to delete an existing team membership
+ * <p>
+ * *
+ * <p>
+ * This uses the DeleteMembership task to present the GUI, setting certain
+ * fields read-only if they're known.
  *
  * @author Matt Day
- * @see SparkRoomReport
- * @see CreateRoomConfig
+ * @see DeleteTeamMembershipConfig
  *
  */
-public class CreateRoomAction extends CloupiaPageAction {
+public class DeleteTeamMembershipAction extends CloupiaPageAction {
 	// need to provide a unique string to identify this form and action
-	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomForm";
-	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction";
-	private static final String LABEL = SparkConstants.CREATE_ROOM_TASK_LABEL;
-	private static final String DESCRIPTION = SparkConstants.CREATE_ROOM_TASK_LABEL;
+	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.DeleteTeamMembershipForm";
+	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions.DeleteTeamMembershipAction";
+	private static final String LABEL = SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL;
+	private static final String DESCRIPTION = SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL;
 
 	@Override
 	public void definePage(Page page, ReportContext context) {
-		// Use the same form (config) as the Create Host custom task
-		page.bind(FORM_ID, CreateRoomConfig.class);
+		// Use the same form (config) as the Delete Host custom task
+		page.bind(FORM_ID, DeleteTeamMembershipConfig.class);
 	}
 
 	/**
@@ -48,16 +54,35 @@ public class CreateRoomAction extends CloupiaPageAction {
 	@Override
 	public void loadDataToPage(Page page, ReportContext context, WizardSession session) throws Exception {
 		String query = context.getId();
-		CreateRoomConfig form = new CreateRoomConfig();
+		DeleteTeamMembershipConfig form = new DeleteTeamMembershipConfig();
+		SparkAccount account = new SparkAccount(context);
 
-		// The form will be in the format Account;Pod - grab the former:
-		String account = query.split(";")[0];
+		// Get email address and member ID from context
+		final String memberId = query.split(";")[1];
+		final String email = query.split(";")[2];
 
-		// Pre-populate the account field:
-		form.setAccount(account);
+		// Get team information from ID:
+		SparkTeamMembership m = SparkApi.getSparkTeamDetails(account, memberId);
 
-		// Set the account field to read-only
-		page.getFlist().getByFieldId(FORM_ID + ".account").setEditable(false);
+		if (m == null) {
+			throw new SparkTaskFailedException("Could not find membership details");
+		}
+
+		// Look up Email address:
+		SparkTeam r = SparkInventory.getTeam(account, m.getTeamId());
+
+		// Create a string to match the SparkTeamSelector internal ID
+		final String roomContextId = account.getAccountName() + ";" + m.getTeamId() + ";" + r.getName();
+
+		// Pre-populate the email and roomId field (it has the same context as
+		// the selection):
+		form.setEmail(email);
+		form.setTeamName(roomContextId);
+
+		// Set the email and room name fields to read-only as this is an action
+		// button
+		page.getFlist().getByFieldId(FORM_ID + ".teamName").setEditable(false);
+		page.getFlist().getByFieldId(FORM_ID + ".email").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);
@@ -74,19 +99,18 @@ public class CreateRoomAction extends CloupiaPageAction {
 	public int validatePageData(Page page, ReportContext context, WizardSession session) throws Exception {
 		// Get credentials from the current context
 		Object obj = page.unmarshallToSession(FORM_ID);
-		CreateRoomConfig config = (CreateRoomConfig) obj;
+		DeleteTeamMembershipConfig config = (DeleteTeamMembershipConfig) obj;
 
 		SparkAccount account = new SparkAccount(context);
 
-		SparkApiStatus s;
+		// First obtain the Membership ID
+		String memberId = SparkApi.getSparkTeamMemberships(account, config.getTeamId(), config.getEmail());
+		if (memberId == null) {
+			throw new SparkTaskFailedException("Cannot find email: " + config.getEmail());
+		}
 
-		// Was a team specified? If so create the room for that team
-		if ((config.getTeamId() != null) && (!"".equals(config.getTeamId()))) {
-			s = SparkApi.createRoom(account, config.getRoomName(), config.getTeamId());
-		}
-		else {
-			s = SparkApi.createRoom(account, config.getRoomName());
-		}
+		// Attempt to delete the membership
+		SparkApiStatus s = SparkApi.deleteMembership(account, memberId);
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI
@@ -94,7 +118,7 @@ public class CreateRoomAction extends CloupiaPageAction {
 		}
 
 		// Set the text for the "OK" prompt and return successfully
-		page.setPageMessage("Room created OK");
+		page.setPageMessage("Membership deleteed OK");
 		return PageIf.STATUS_OK;
 	}
 
@@ -115,7 +139,7 @@ public class CreateRoomAction extends CloupiaPageAction {
 
 	@Override
 	public boolean isSelectionRequired() {
-		return false;
+		return true;
 	}
 
 	@Override

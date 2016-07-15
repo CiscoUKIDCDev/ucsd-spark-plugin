@@ -54,8 +54,7 @@ public class DeleteTeamAction extends CloupiaPageAction {
 		form.setTeamName(query);
 
 		// Set the team field to read-only
-		// page.getFlist().getByFieldId(FORM_ID +
-		// ".teamName").setEditable(false);
+		page.getFlist().getByFieldId(FORM_ID + ".teamName").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);

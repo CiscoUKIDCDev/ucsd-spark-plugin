@@ -43,6 +43,11 @@ public class CreateRoomConfig implements TaskConfigIf {
 	@Persistent
 	private String roomName;
 
+	@FormField(label = SparkConstants.TEAM_NAME_LABEL, help = SparkConstants.TEAM_NAME_LABEL, mandatory = false, type = FormFieldDefinition.FIELD_TYPE_TABULAR_POPUP, table = SparkConstants.TEAM_LIST_FORM_PROVIDER)
+	@UserInputField(type = SparkConstants.TEAM_LIST_FORM_TABLE_NAME)
+	@Persistent
+	private String teamName;
+
 	/**
 	 * Empty default constructor - you could initialise default values here if
 	 * you wanted
@@ -85,6 +90,23 @@ public class CreateRoomConfig implements TaskConfigIf {
 	 */
 	public String getRoomName() {
 		return this.roomName;
+	}
+
+	/**
+	 * @return The user provided team name
+	 */
+	public String getTeamId() {
+		return this.teamName.split(";")[1];
+	}
+
+	/**
+	 * Set the team name
+	 *
+	 * @param teamName
+	 *            team name to set
+	 */
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
 	}
 
 	@Override

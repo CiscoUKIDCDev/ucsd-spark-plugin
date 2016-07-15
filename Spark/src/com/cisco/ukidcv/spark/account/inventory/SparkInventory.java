@@ -6,6 +6,7 @@
  *******************************************************************************/
 package com.cisco.ukidcv.spark.account.inventory;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
+import com.cisco.ukidcv.spark.api.json.SparkTeam;
 import com.cisco.ukidcv.spark.api.json.SparkTeams;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
@@ -261,6 +263,38 @@ public class SparkInventory {
 	}
 
 	/**
+	 * Gets a list of Spark rooms in a specific team for the account requested.
+	 * It will first check the cache needs updating.
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @param teamId
+	 *            Team ID to match against
+	 * @return List of Spark rooms
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkRooms
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkRooms getRoomsForTeam(SparkAccount account, String teamId)
+			throws SparkReportException, Exception {
+		SparkRooms rooms = new SparkRooms();
+		List<SparkRoom> matching = new ArrayList<>();
+		for (SparkRoom room : getRooms(account).getItems()) {
+			if (teamId.equals(room.getTeamId())) {
+				matching.add(room);
+			}
+		}
+		rooms.setItems(matching);
+		return rooms;
+	}
+
+	/**
 	 * Gets a list of Spark teams for the account requested. It will first check
 	 * the cache needs updating.
 	 * <p>
@@ -326,6 +360,46 @@ public class SparkInventory {
 			for (SparkRoom room : rooms.getItems()) {
 				if (roomId.equals(room.getId())) {
 					return room;
+				}
+			}
+			return null;
+		}
+		throw new SparkReportException("Could not parse JSON");
+	}
+
+	/**
+	 * Gets information about a specific Spark team. It will return null if the
+	 * team is not found.
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @param teamId
+	 *            Team ID to search for
+	 * @return List of Spark rooms
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkRooms
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkTeam getTeam(SparkAccount account, String teamId) throws SparkReportException, Exception {
+		// Update inventory if needed:
+		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
+
+		SparkInventoryDB inv = getInventoryStore(account);
+		String json = inv.getTeamList();
+
+		// Check if the response is not empty:
+		if (!"".equals(json)) {
+			Gson gson = new Gson();
+			SparkTeams teams = gson.fromJson(json, SparkTeams.class);
+			for (SparkTeam team : teams.getItems()) {
+				if (teamId.equals(team.getId())) {
+					return team;
 				}
 			}
 			return null;

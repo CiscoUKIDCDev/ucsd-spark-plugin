@@ -88,7 +88,8 @@ public class SparkTeamSelector implements TabularReportGeneratorIf {
 					}
 				}
 				catch (SparkReportException e) {
-					logger.error("Could not generate teams report for account: " + account + " - " + e.getMessage());
+					logger.error("Could not generate teams report for account: " + account.getAccountName() + " - "
+							+ e.getMessage());
 				}
 			}
 		}

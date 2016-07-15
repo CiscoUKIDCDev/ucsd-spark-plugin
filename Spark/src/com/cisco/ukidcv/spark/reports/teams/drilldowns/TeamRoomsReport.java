@@ -7,9 +7,9 @@
 package com.cisco.ukidcv.spark.reports.teams.drilldowns;
 
 import com.cisco.ukidcv.spark.constants.SparkConstants;
-import com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.AddTeamMemberAction;
-import com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.DeleteTeamMembershipAction;
-import com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.EditTeamMembershipAction;
+import com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.CreateTeamRoomAction;
+import com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.DeleteTeamRoomAction;
+import com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.EditTeamRoomAction;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
@@ -26,19 +26,19 @@ import com.cloupia.service.cIM.inframgr.reports.simplified.DrillableReportWithAc
  * @author Matt Day
  *
  */
-public class TeamMembersReport extends DrillableReportWithActions {
+public class TeamRoomsReport extends DrillableReportWithActions {
 
-	private final static String REPORT_NAME = "com.cisco.ukidcv.spark.reports.teams.drilldowns.TeamMembersReport";
+	private final static String REPORT_NAME = "com.cisco.ukidcv.spark.reports.teams.drilldowns.TeamRoomsReport";
 
 	private CloupiaReportAction[] actionButtons = {
-			new AddTeamMemberAction(), new EditTeamMembershipAction(), new DeleteTeamMembershipAction()
+			new CreateTeamRoomAction(), new DeleteTeamRoomAction(), new EditTeamRoomAction()
 	};
 
 	/**
 	 * Creates the account summary report and passes the account name, magic
 	 * number and storage category to the implementing class
 	 */
-	public TeamMembersReport() {
+	public TeamRoomsReport() {
 		super();
 		// Use column 0 (the hidden column) as context
 		this.setMgmtColumnIndex(0);
@@ -51,7 +51,7 @@ public class TeamMembersReport extends DrillableReportWithActions {
 	 */
 	@Override
 	public String getReportLabel() {
-		return SparkConstants.TEAM_MEMBERS_LABEL;
+		return SparkConstants.TEAM_ROOMS_LABEL;
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class TeamMembersReport extends DrillableReportWithActions {
 	}
 
 	@Override
-	public Class<TeamMembersReportImpl> getImplementationClass() {
-		return TeamMembersReportImpl.class;
+	public Class<TeamRoomsReportImpl> getImplementationClass() {
+		return TeamRoomsReportImpl.class;
 	}
 
 	@Override

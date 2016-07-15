@@ -28,6 +28,7 @@ import com.cisco.ukidcv.spark.api.json.SparkRoomMessages;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
 import com.cisco.ukidcv.spark.api.json.SparkTeam;
 import com.cisco.ukidcv.spark.api.json.SparkTeamCreation;
+import com.cisco.ukidcv.spark.api.json.SparkTeamMembership;
 import com.cisco.ukidcv.spark.api.json.SparkTeamMembershipCreation;
 import com.cisco.ukidcv.spark.api.json.SparkTeamMemberships;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
@@ -46,7 +47,7 @@ public class SparkApi {
 	private static Logger logger = Logger.getLogger(SparkApi.class);
 
 	/**
-	 * Requests a list of room memberships from the Spark servers and returns it
+	 * Requests a list of team memberships from the Spark servers and returns it
 	 * in JSON format
 	 *
 	 * @param account
@@ -105,6 +106,48 @@ public class SparkApi {
 	}
 
 	/**
+	 * Requests a specific team member from the Spark servers and returns it as
+	 * a Java Object. If the team member does not exist (or cannot be found) it
+	 * returns null
+	 *
+	 * @param account
+	 *            Account to request from
+	 * @param teamId
+	 *            Team ID to check
+	 * @param personEmail
+	 *            User's email to check
+	 * @return Membership ID as a String
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws HttpException
+	 *             if there's a problem accessing the report
+	 * @throws IOException
+	 *             if there's a problem accessing the report
+	 * @see SparkRooms
+	 */
+	public static String getSparkTeamMemberships(SparkAccount account, String teamId, String personEmail)
+			throws SparkReportException, HttpException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account,
+				SparkConstants.SPARK_TEAMS_MEMBERSHIP_URI + "?teamId=" + teamId + "&personEmail=" + personEmail,
+				httpMethod.GET);
+		req.execute();
+		String json = req.getResponse();
+		Gson gson = new Gson();
+		SparkTeamMemberships members = gson.fromJson(json, SparkTeamMemberships.class);
+		if (members.getItems().size() > 0) {
+			// There is a bug (2016-07-15) which means searching via email
+			// doesn't work - find it ourselves
+			for (SparkTeamMembership member : members.getItems()) {
+				if (personEmail.toLowerCase().equals(member.getPersonEmail().toLowerCase())) {
+					return member.getId();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Requests a list of room memberships from the Spark servers and returns it
 	 * as a Java class.
 	 * <p>
@@ -152,6 +195,27 @@ public class SparkApi {
 		req.execute();
 		Gson gson = new Gson();
 		return gson.fromJson(req.getResponse(), SparkMembership.class);
+	}
+
+	/**
+	 * Get Spark team details from a Spark Membership ID
+	 *
+	 * @param account
+	 *            Account to check from
+	 * @param memberId
+	 *            Member ID to check
+	 * @return Membership information
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public static SparkTeamMembership getSparkTeamDetails(SparkAccount account, String memberId)
+			throws ClientProtocolException, IOException {
+		// Set up a request to the spark server
+		SparkHttpConnection req = new SparkHttpConnection(account,
+				SparkConstants.SPARK_TEAMS_MEMBERSHIP_URI + "/" + memberId, httpMethod.GET);
+		req.execute();
+		Gson gson = new Gson();
+		return gson.fromJson(req.getResponse(), SparkTeamMembership.class);
 	}
 
 	/**
@@ -327,7 +391,7 @@ public class SparkApi {
 			throws SparkReportException, HttpException, IOException {
 		// Set up a request to the spark server
 		SparkHttpConnection req = new SparkHttpConnection(account,
-				SparkConstants.SPARK_TEAMS_MEMBERSHIP_URI + "?roomId=" + teamId, httpMethod.GET);
+				SparkConstants.SPARK_TEAMS_MEMBERSHIP_URI + "?teamId=" + teamId, httpMethod.GET);
 		req.execute();
 		Gson gson = new Gson();
 		return gson.fromJson(req.getResponse(), SparkTeamMemberships.class);
@@ -619,6 +683,49 @@ public class SparkApi {
 
 		// Create JSON room request:
 		String json = gson.toJson(new SparkRoomCreation(roomName));
+
+		// Set it to the request body (must be POST or PUT)
+		req.setBody(json);
+		req.execute();
+
+		// If the request does not return 200 (success) it's an error, return
+		// details:
+		if (req.getCode() != 200) {
+			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
+			return new SparkApiStatus(false, error.getMessage());
+		}
+		// Update inventory after this operation
+		updateInventory(account);
+		return new SparkApiStatus(true, null, req.getResponse());
+	}
+
+	/**
+	 * Creates a new room using the Spark API and associates it with a specific
+	 * team
+	 *
+	 * @param account
+	 *            Account to create it from
+	 * @param roomName
+	 *            New room name
+	 * @param teamId
+	 *            Team to add the user to
+	 * @return Status of request
+	 *
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public static SparkApiStatus createRoom(SparkAccount account, String roomName, String teamId)
+			throws ClientProtocolException, IOException {
+		// Create a new POST request
+		SparkHttpConnection req = new SparkHttpConnection(account, SparkConstants.SPARK_ROOM_URI, httpMethod.POST);
+
+		SparkRoomCreation room = new SparkRoomCreation(roomName);
+		room.setTeamId(teamId);
+
+		Gson gson = new Gson();
+
+		// Create JSON room request:
+		String json = gson.toJson(room);
 
 		// Set it to the request body (must be POST or PUT)
 		req.setBody(json);

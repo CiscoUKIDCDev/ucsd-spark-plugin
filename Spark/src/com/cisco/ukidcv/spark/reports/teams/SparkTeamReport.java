@@ -11,6 +11,7 @@ import com.cisco.ukidcv.spark.reports.teams.actions.CreateTeamAction;
 import com.cisco.ukidcv.spark.reports.teams.actions.DeleteTeamAction;
 import com.cisco.ukidcv.spark.reports.teams.actions.EditTeamAction;
 import com.cisco.ukidcv.spark.reports.teams.drilldowns.TeamMembersReport;
+import com.cisco.ukidcv.spark.reports.teams.drilldowns.TeamRoomsReport;
 import com.cloupia.model.cIM.DynReportContext;
 import com.cloupia.model.cIM.ReportContextRegistry;
 import com.cloupia.service.cIM.inframgr.reportengine.ContextMapRule;
@@ -35,7 +36,7 @@ public class SparkTeamReport extends DrillableReportWithActions {
 	// Drilldown reports MUST be defined like this (i.e. not in the
 	// getDrilldownReports method)
 	private CloupiaReport[] drillable = new CloupiaReport[] {
-			new TeamMembersReport()
+			new TeamMembersReport(), new TeamRoomsReport()
 	};
 
 	private CloupiaReportAction[] actions = new CloupiaReportAction[] {

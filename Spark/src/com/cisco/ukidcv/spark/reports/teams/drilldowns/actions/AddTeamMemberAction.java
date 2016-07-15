@@ -4,15 +4,14 @@
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.reports.rooms.actions;
+package com.cisco.ukidcv.spark.reports.teams.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
-import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
-import com.cisco.ukidcv.spark.tasks.rooms.CreateRoomConfig;
+import com.cisco.ukidcv.spark.tasks.teams.membership.AddTeamMembershipConfig;
 import com.cloupia.model.cIM.ConfigTableAction;
 import com.cloupia.model.cIM.ReportContext;
 import com.cloupia.service.cIM.inframgr.forms.wizard.Page;
@@ -21,24 +20,26 @@ import com.cloupia.service.cIM.inframgr.forms.wizard.WizardSession;
 import com.cloupia.service.cIM.inframgr.reports.simplified.CloupiaPageAction;
 
 /**
- * Action button allowing the user to create a new room
+ * Action button allowing the user to add a new member to a team
+ * <p>
+ * This uses the AddMembership task to present the GUI, setting certain fields
+ * read-only if they're known.
  *
  * @author Matt Day
- * @see SparkRoomReport
- * @see CreateRoomConfig
+ * @see AddTeamMembershipConfig
  *
  */
-public class CreateRoomAction extends CloupiaPageAction {
+public class AddTeamMemberAction extends CloupiaPageAction {
 	// need to provide a unique string to identify this form and action
-	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomForm";
-	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.rooms.actions.CreateRoomAction";
-	private static final String LABEL = SparkConstants.CREATE_ROOM_TASK_LABEL;
-	private static final String DESCRIPTION = SparkConstants.CREATE_ROOM_TASK_LABEL;
+	private static final String FORM_ID = "com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.AddTeamMemberForm";
+	private static final String ACTION_ID = "com.cisco.ukidcv.spark.reports.teams.drilldowns.actions.AddTeamMemberAction";
+	private static final String LABEL = SparkConstants.ADD_MEMBERSHIP_TASK_LABEL;
+	private static final String DESCRIPTION = SparkConstants.ADD_MEMBERSHIP_TASK_LABEL;
 
 	@Override
 	public void definePage(Page page, ReportContext context) {
 		// Use the same form (config) as the Create Host custom task
-		page.bind(FORM_ID, CreateRoomConfig.class);
+		page.bind(FORM_ID, AddTeamMembershipConfig.class);
 	}
 
 	/**
@@ -48,16 +49,13 @@ public class CreateRoomAction extends CloupiaPageAction {
 	@Override
 	public void loadDataToPage(Page page, ReportContext context, WizardSession session) throws Exception {
 		String query = context.getId();
-		CreateRoomConfig form = new CreateRoomConfig();
-
-		// The form will be in the format Account;Pod - grab the former:
-		String account = query.split(";")[0];
+		AddTeamMembershipConfig form = new AddTeamMembershipConfig();
 
 		// Pre-populate the account field:
-		form.setAccount(account);
+		form.setTeamName(query);
 
 		// Set the account field to read-only
-		page.getFlist().getByFieldId(FORM_ID + ".account").setEditable(false);
+		page.getFlist().getByFieldId(FORM_ID + ".teamName").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);
@@ -74,27 +72,20 @@ public class CreateRoomAction extends CloupiaPageAction {
 	public int validatePageData(Page page, ReportContext context, WizardSession session) throws Exception {
 		// Get credentials from the current context
 		Object obj = page.unmarshallToSession(FORM_ID);
-		CreateRoomConfig config = (CreateRoomConfig) obj;
+		AddTeamMembershipConfig config = (AddTeamMembershipConfig) obj;
 
 		SparkAccount account = new SparkAccount(context);
 
-		SparkApiStatus s;
-
-		// Was a team specified? If so create the room for that team
-		if ((config.getTeamId() != null) && (!"".equals(config.getTeamId()))) {
-			s = SparkApi.createRoom(account, config.getRoomName(), config.getTeamId());
-		}
-		else {
-			s = SparkApi.createRoom(account, config.getRoomName());
-		}
+		SparkApiStatus s = SparkApi.createTeamMembership(account, config.getTeamId(), config.getEmail(),
+				config.isModerator());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Failed to add team member: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 
 		// Set the text for the "OK" prompt and return successfully
-		page.setPageMessage("Room created OK");
+		page.setPageMessage("Team member added OK");
 		return PageIf.STATUS_OK;
 	}
 

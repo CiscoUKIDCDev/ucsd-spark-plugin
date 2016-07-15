@@ -37,8 +37,15 @@ public class CreateRoomTask extends AbstractTask {
 		CreateRoomConfig config = (CreateRoomConfig) context.loadConfigObject();
 		SparkAccount account = new SparkAccount(config.getAccount());
 
-		// Attempt to create the room
-		SparkApiStatus s = SparkApi.createRoom(account, config.getRoomName());
+		SparkApiStatus s;
+
+		// Was a team specified? If so create the room for that team
+		if ((config.getTeamId() != null) && (!"".equals(config.getTeamId()))) {
+			s = SparkApi.createRoom(account, config.getRoomName(), config.getTeamId());
+		}
+		else {
+			s = SparkApi.createRoom(account, config.getRoomName());
+		}
 
 		// If there was an error, log it and throw an exception
 		if (!s.isSuccess()) {
