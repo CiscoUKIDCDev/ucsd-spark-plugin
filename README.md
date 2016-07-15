@@ -13,6 +13,9 @@ You can [download it here](https://github.com/CiscoUKIDCDev/ucsd-spark-plugin/re
 
 You can then administer your Spark account(s) either via custom workflow tasks, or via the UCS Director GUI.
 
+## Demo Video
+[![Video Demo](http://img.youtube.com/vi/N4l2K2TbfKE/0.jpg)](https://www.youtube.com/watch?v=N4l2K2TbfKE)
+
 ## Function
 This plugin is under active development. New features and screenshots are due
 soon.
