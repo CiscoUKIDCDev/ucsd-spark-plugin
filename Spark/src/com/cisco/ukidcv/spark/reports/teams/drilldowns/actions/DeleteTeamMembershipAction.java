@@ -110,7 +110,7 @@ public class DeleteTeamMembershipAction extends CloupiaPageAction {
 		}
 
 		// Attempt to delete the membership
-		SparkApiStatus s = SparkApi.deleteMembership(account, memberId);
+		SparkApiStatus s = SparkApi.deleteTeamMembership(account, memberId);
 
 		if (!s.isSuccess()) {
 			// Throw an exception, the message will show in the GUI

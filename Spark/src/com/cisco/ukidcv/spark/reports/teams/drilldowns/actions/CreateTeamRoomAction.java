@@ -7,10 +7,8 @@
 package com.cisco.ukidcv.spark.reports.teams.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.SparkApiStatus;
-import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
@@ -54,18 +52,15 @@ public class CreateTeamRoomAction extends CloupiaPageAction {
 
 		// The form will be in the format Account;Pod - grab the former:
 		final String account = query.split(";")[0];
-		final String roomId = query.split(";")[1];
-
-		// Look up team ID:
-		SparkRoom room = SparkInventory.getRoom(new SparkAccount(account), roomId);
+		final String teamId = query.split(";")[1];
 
 		// Pre-populate the account and team field:
 		form.setAccount(account);
-		form.setTeamName(room.getTeamId());
+		form.setTeamName(teamId);
 
 		// Set the account and team fields to read-only
 		page.getFlist().getByFieldId(FORM_ID + ".account").setEditable(false);
- 		page.getFlist().getByFieldId(FORM_ID + ".teamId").setEditable(false);
+		page.getFlist().getByFieldId(FORM_ID + ".teamName").setEditable(false);
 
 		session.getSessionAttributes().put(FORM_ID, form);
 		page.marshallFromSession(FORM_ID);
