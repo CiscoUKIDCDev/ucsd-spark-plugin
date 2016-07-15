@@ -96,8 +96,18 @@ public class AddMembershipConfig implements TaskConfigIf {
 	 * @return Get selected room ID
 	 */
 	public String getRoomId() {
-		// The room name will be the context ID in the format Account;roomId
+		// The room name will be the context ID in the format
+		// Account;roomId;roomName
 		return this.roomName.split(";")[1];
+	}
+
+	/**
+	 * @return Get selected room Name
+	 */
+	public String getRoomName() {
+		// The room name will be the context ID in the format
+		// Account;roomId;roomName
+		return this.roomName.split(";")[2];
 	}
 
 	/**

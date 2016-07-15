@@ -98,6 +98,8 @@ public class SparkModule extends AbstractCloupiaModule {
 			// they won't be able to drilldown
 			ReportContextRegistry.getInstance().register(SparkConstants.ROOM_LIST_DRILLDOWN,
 					SparkConstants.ROOM_LIST_DRILLDOWN_LABEL);
+			ReportContextRegistry.getInstance().register(SparkConstants.TEAM_LIST_DRILLDOWN,
+					SparkConstants.TEAM_LIST_DRILLDOWN_LABEL);
 			ReportContextRegistry.getInstance().register(SparkConstants.INVENTORY_LIST_DRILLDOWN,
 					SparkConstants.INVENTORY_LIST_DRILLDOWN_LABEL);
 

@@ -49,7 +49,11 @@ public class SparkConstants {
 	 */
 	public static final String OVERVIEW_LABEL = "Overview";
 	/**
-	 * Label for overview reports
+	 * Label for team reports
+	 */
+	public static final String TEAM_LABEL = "Teams";
+	/**
+	 * Label for room reports
 	 */
 	public static final String ROOM_LABEL = "Rooms";
 	/**
@@ -149,6 +153,14 @@ public class SparkConstants {
 	 * Label for room drilldowns
 	 */
 	public static final String ROOM_LIST_DRILLDOWN_LABEL = "Spark Room List";
+	/**
+	 * Context for team drilldowns
+	 */
+	public static final String TEAM_LIST_DRILLDOWN = "com.cisco.ukidcv.spark.reports.teams.SparkTeamList";
+	/**
+	 * Label for team drilldowns
+	 */
+	public static final String TEAM_LIST_DRILLDOWN_LABEL = "Spark Team List";
 	/**
 	 * Context for room drilldowns
 	 */

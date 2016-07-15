@@ -17,6 +17,7 @@ import com.cisco.ukidcv.spark.api.json.SparkMemberships;
 import com.cisco.ukidcv.spark.api.json.SparkPersonDetails;
 import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.api.json.SparkRooms;
+import com.cisco.ukidcv.spark.api.json.SparkTeams;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkAccountException;
 import com.cisco.ukidcv.spark.exceptions.SparkReportException;
@@ -255,6 +256,39 @@ public class SparkInventory {
 			Gson gson = new Gson();
 			SparkRooms rooms = gson.fromJson(json, SparkRooms.class);
 			return rooms;
+		}
+		throw new SparkReportException("Could not parse JSON");
+	}
+
+	/**
+	 * Gets a list of Spark teams for the account requested. It will first check
+	 * the cache needs updating.
+	 * <p>
+	 * To force updating the cache, use update(SparkAccount, String, boolean)
+	 * setting the boolean to true before calling this.
+	 *
+	 * @param account
+	 *            Account to check
+	 * @return List of Spark rooms
+	 * @throws SparkReportException
+	 *             if the report fails
+	 * @throws Exception
+	 *             If there's an issue reading or parsing the cache
+	 * @see SparkRooms
+	 * @see #update(SparkAccount, String, boolean)
+	 */
+	public static SparkTeams getTeams(SparkAccount account) throws SparkReportException, Exception {
+		// Update inventory if needed:
+		update(account, SparkConstants.INVENTORY_REASON_PERIODIC, false);
+
+		SparkInventoryDB inv = getInventoryStore(account);
+		String json = inv.getTeamList();
+
+		// Check if the response is not empty:
+		if (!"".equals(json)) {
+			Gson gson = new Gson();
+			SparkTeams teams = gson.fromJson(json, SparkTeams.class);
+			return teams;
 		}
 		throw new SparkReportException("Could not parse JSON");
 	}

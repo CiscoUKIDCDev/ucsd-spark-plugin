@@ -57,6 +57,23 @@ public class DeleteMembershipConfig implements TaskConfigIf {
 	}
 
 	/**
+	 * Rollback constructor. This is used from the AddMembershipTask to allow
+	 * UCS Director to undo adding the member to a room
+	 *
+	 * @param config
+	 *            Original configuration to post the message
+	 * @param email
+	 *            Message ID from posted message
+	 *
+	 * @see AddMembershipTask
+	 */
+	public DeleteMembershipConfig(AddMembershipConfig config, String email) {
+		final String roomId = config.getAccount() + ";" + config.getRoomId() + ";" + config.getRoomName();
+		this.setRoomName(roomId);
+		this.setEmail(email);
+	}
+
+	/**
 	 * @return the selected account
 	 */
 	public String getAccount() {

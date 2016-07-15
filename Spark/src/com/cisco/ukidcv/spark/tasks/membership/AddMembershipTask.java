@@ -9,6 +9,7 @@ package com.cisco.ukidcv.spark.tasks.membership;
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.api.SparkApi;
 import com.cisco.ukidcv.spark.api.SparkApiStatus;
+import com.cisco.ukidcv.spark.api.json.SparkMembership;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cloupia.service.cIM.inframgr.AbstractTask;
@@ -46,6 +47,18 @@ public class AddMembershipTask extends AbstractTask {
 			throw new SparkTaskFailedException(s.getError());
 		}
 		ucsdLogger.addInfo("Added member");
+		// Get message ID for rollback:
+		try {
+			SparkMembership membership = SparkApi.getMembershipResponse(s.getJson());
+			if (membership.getId() != null) {
+				context.getChangeTracker().undoableResourceAdded("Membership", membership.getPersonEmail(),
+						"Membership", "Undo adding membership", SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL,
+						new DeleteMembershipConfig(config, membership.getPersonEmail()));
+			}
+		}
+		catch (Exception e) {
+			ucsdLogger.addWarning("Could not register outputs for task: " + e.getMessage());
+		}
 
 	}
 

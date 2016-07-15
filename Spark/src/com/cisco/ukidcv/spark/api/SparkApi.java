@@ -187,11 +187,26 @@ public class SparkApi {
 		// details:
 		if (req.getCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
-			return new SparkApiStatus(false, error.getMessage(), json);
+			return new SparkApiStatus(false, error.getMessage(), req.getResponse());
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkApiStatus(true, null, json);
+		return new SparkApiStatus(true, null, req.getResponse());
+	}
+
+	/**
+	 * Takes a Spark membership response (typically via a SparkApiStatus
+	 * response) and parses the responmse
+	 *
+	 * @param json
+	 *            JSON response from a createMember
+	 * @return SparkMembership
+	 * @see SparkMembership
+	 * @see #createMembership
+	 */
+	public static SparkMembership getMembershipResponse(String json) {
+		Gson gson = new Gson();
+		return gson.fromJson(json, SparkMembership.class);
 	}
 
 	/**
