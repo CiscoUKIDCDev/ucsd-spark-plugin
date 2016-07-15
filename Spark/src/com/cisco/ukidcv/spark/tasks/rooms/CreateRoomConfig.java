@@ -96,7 +96,13 @@ public class CreateRoomConfig implements TaskConfigIf {
 	 * @return The user provided team name
 	 */
 	public String getTeamId() {
-		return this.teamName.split(";")[1];
+		// Return null if the team wasn't specified
+		try {
+			return this.teamName.split(";")[1];
+		}
+		catch (@SuppressWarnings("unused") ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	/**
