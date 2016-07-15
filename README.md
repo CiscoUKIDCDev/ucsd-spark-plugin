@@ -3,6 +3,16 @@ This project intends to be a well documented UCS Director SDK implementation.
 
 It is designed to be easy to consume and full-featured.
 
+## Download & Installation
+You can [download it here](https://github.com/CiscoUKIDCDev/ucsd-spark-plugin/releases)
+
+### Installation
+1. Under **Administration -> Open Automation** upload the plugin file (Spark-plugin.zip). Select it and click **enable**.
+2. From the CLI (typically ssh logged in as shelladmin) select **3** to stop services and then **4** to start them.
+3. You can then add a Spark account under a Generic pod (it's confusingly a **storage** account!)
+
+You can then administer your Spark account(s) either via custom workflow tasks, or via the UCS Director GUI.
+
 ## Function
 This plugin is under active development. New features and screenshots are due
 soon.
