@@ -71,7 +71,7 @@ public class SparkMembership {
 		this.personDisplayName = personDisplayName;
 	}
 
-	public Boolean getIsModerator() {
+	public Boolean isModerator() {
 		return this.isModerator;
 	}
 

@@ -59,7 +59,7 @@ public class RoomMembersReportImpl implements TabularReportGeneratorIf {
 			model.addTextValue(internalId);
 			model.addTextValue(member.getPersonDisplayName());
 			model.addTextValue(member.getPersonEmail());
-			model.addTextValue(member.getIsModerator().toString());
+			model.addTextValue(member.isModerator().toString());
 			model.addTextValue(member.getIsMonitor().toString());
 			model.addTextValue(member.getCreated());
 			model.completedRow();

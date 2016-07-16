@@ -77,6 +77,7 @@ public class EditTeamMembershipAction extends CloupiaPageAction {
 		// the selection):
 		form.setEmail(email);
 		form.setTeamName(teamContextId);
+		form.setModerator(m.isModerator().booleanValue());
 
 		// Set the email and team name fields to read-only as this is an action
 		// button

@@ -8,8 +8,8 @@ package com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.json.SparkMembership;
 import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
@@ -76,6 +76,7 @@ public class EditMembershipAction extends CloupiaPageAction {
 		// the selection):
 		form.setEmail(email);
 		form.setRoomName(roomContextId);
+		form.setModerator(m.isModerator().booleanValue());
 
 		// Set the email and room name fields to read-only as this is an action
 		// button
