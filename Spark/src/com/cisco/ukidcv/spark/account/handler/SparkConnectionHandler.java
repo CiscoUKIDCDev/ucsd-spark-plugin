@@ -47,7 +47,8 @@ public class SparkConnectionHandler extends PhysicalConnectivityTestHandler {
 						}
 						logger.debug("Token acquired - connection verified");
 
-						StorageAccountStatusSummary.accountSummary(accountName);
+						SparkAccountStatusSummary.accountSummary(accountName);
+
 					}
 					catch (@SuppressWarnings("unused") SparkAccountException e) {
 						logger.warn("Couldn't get token from system - probably invalid credentials");
