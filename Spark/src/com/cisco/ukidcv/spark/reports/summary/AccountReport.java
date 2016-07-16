@@ -32,11 +32,11 @@ public class AccountReport extends GenericInfraAccountReport {
 
 	/**
 	 * Creates the account summary report and passes the account name, magic
-	 * number and storage category to the implementing class
+	 * number and category to the implementing class
 	 */
 	public AccountReport() {
 		super(SparkConstants.INFRA_ACCOUNT_LABEL, SparkConstants.INFRA_ACCOUNT_MAGIC_NUMBER,
-				InfraAccountTypes.CAT_STORAGE);
+				InfraAccountTypes.CAT_CLOUD);
 	}
 
 	@Override

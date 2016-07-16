@@ -5,7 +5,7 @@
 	<pod-element category="3" name="NXOS" count="6" code="81" account-types="nxos">
 		<device-model vendor="[cC]isco" version=".*" model="Nexus[\s]*[157].*" />
 	</pod-element>
-	<pod-element category="2" count="2" code="77" account-types="Spark">
-<device-model vendor="[wW]eather" version=".*" model="FAS.*|.*Cluster.*|.*OnCommand.*|.*DFM.*" />
+	<pod-element category="6" count="100" code="77" account-types="Spark">
+<device-model vendor="[sS]park" version=".*" model="FAS.*|.*Cluster.*|.*OnCommand.*|.*DFM.*" />
 	</pod-element>
 </pod-definition>

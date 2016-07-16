@@ -172,16 +172,15 @@ public class SparkModule extends AbstractCloupiaModule {
 		// Account type label for the GUI
 		entry.setAccountLabel(SparkConstants.INFRA_ACCOUNT_LABEL);
 
-		// Type of account (can be storage, networking or compute) - this is
-		// storage for now
-		entry.setCategory(InfraAccountTypes.CAT_STORAGE);
+		// Type of account (can be storage, networking, compute etc)
+		entry.setCategory(InfraAccountTypes.CAT_CLOUD);
 
 		// Each account has its own context ID - set it here
 		entry.setContextType(
 				ReportContextRegistry.getInstance().getContextByName(SparkConstants.INFRA_ACCOUNT_TYPE).getType());
 
 		// Make this a physical account - not sure if other types even work!
-		entry.setAccountClass(AccountTypeEntry.PHYSICAL_ACCOUNT);
+		entry.setAccountClass(AccountTypeEntry.VIRTUAL_ACCOUNT);
 
 		// Task prefix, only used for authorised plugins
 		entry.setInventoryTaskPrefix(SparkConstants.TASK_PREFIX);

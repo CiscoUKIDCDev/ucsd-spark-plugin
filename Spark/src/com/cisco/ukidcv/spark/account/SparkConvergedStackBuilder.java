@@ -78,7 +78,7 @@ public class SparkConvergedStackBuilder implements ConvergedStackComponentBuilde
 		// Pass conext type to all reports:
 		detail.setContextValue(contextId);
 		// Not sure what '3' is here, guessing it's storage
-		detail.setLayerType(3);
+		detail.setLayerType(ConvergedStackComponentDetail.LAYER_TYPE_VIRTUAL);
 
 		// You can add arbitrary fields to this view like this:
 		List<String> detailList = new ArrayList<>(2);
