@@ -225,7 +225,7 @@ public class SparkModule extends AbstractCloupiaModule {
 	@SuppressWarnings("static-method")
 	private void registerInventoryObjects(AccountTypeEntry sparkRecoverPointAccountEntry) {
 		@SuppressWarnings("unused")
-		final ConfigItemDef HP3ParRecoverPointStateInfo = sparkRecoverPointAccountEntry
+		final ConfigItemDef sparkRecoverPointStateInfo = sparkRecoverPointAccountEntry
 				.createInventoryRoot("Spark.inventory.root", SparkInventoryItemHandler.class);
 	}
 

@@ -31,8 +31,8 @@ import com.cloupia.lib.connector.account.PhysicalInfraAccount;
  * @author Matt Day
  *
  */
-public class StorageAccountStatusSummary {
-	private static Logger logger = Logger.getLogger(StorageAccountStatusSummary.class);
+public class SparkAccountStatusSummary {
+	private static Logger logger = Logger.getLogger(SparkAccountStatusSummary.class);
 
 	/**
 	 * Obtain account summary information
@@ -83,7 +83,7 @@ public class StorageAccountStatusSummary {
 		accStatus.setModel(SparkConstants.INFRA_ACCOUNT_LABEL);
 		accStatus.setServerAddress(dbStore.getServerAddress());
 		accStatus.setVersion(SparkConstants.API_VERSION);
-		persistStorageAccountStatus(accStatus);
+		persistSparkAccountStatus(accStatus);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class StorageAccountStatusSummary {
 	 * @param ac
 	 * @throws Exception
 	 */
-	public static void persistStorageAccountStatus(StorageAccountStatus ac) throws Exception {
+	public static void persistSparkAccountStatus(StorageAccountStatus ac) throws Exception {
 		PersistenceManager pm = ObjStoreHelper.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 
