@@ -7,8 +7,8 @@
 package com.cisco.ukidcv.spark.tasks.membership;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cloupia.service.cIM.inframgr.AbstractTask;
@@ -53,7 +53,7 @@ public class DeleteMembershipTask extends AbstractTask {
 			ucsdLogger.addError("Failed to delete membership: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
-		ucsdLogger.addInfo("Deleteed member");
+		ucsdLogger.addInfo("Deleted member");
 
 	}
 
@@ -64,7 +64,7 @@ public class DeleteMembershipTask extends AbstractTask {
 
 	@Override
 	public String getTaskName() {
-		return SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL;
+		return SparkConstants.DELETE_ROOM_MEMBERSHIP_TASK_LABEL;
 	}
 
 	@Override

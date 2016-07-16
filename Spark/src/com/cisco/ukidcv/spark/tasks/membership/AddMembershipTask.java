@@ -69,7 +69,7 @@ public class AddMembershipTask extends AbstractTask {
 
 	@Override
 	public String getTaskName() {
-		return SparkConstants.ADD_MEMBERSHIP_TASK_LABEL;
+		return SparkConstants.ADD_ROOM_MEMBERSHIP_TASK_LABEL;
 	}
 
 	@Override

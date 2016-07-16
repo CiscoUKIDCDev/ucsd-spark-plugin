@@ -128,7 +128,7 @@ public class DeleteMembershipConfig implements TaskConfigIf {
 
 	@Override
 	public String getDisplayLabel() {
-		return SparkConstants.DELETE_MEMBERSHIP_TASK_LABEL;
+		return SparkConstants.DELETE_ROOM_MEMBERSHIP_TASK_LABEL;
 	}
 
 	@Override

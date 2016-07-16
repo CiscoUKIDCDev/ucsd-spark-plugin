@@ -7,8 +7,8 @@
 package com.cisco.ukidcv.spark.tasks.membership;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cloupia.service.cIM.inframgr.AbstractTask;
@@ -64,7 +64,7 @@ public class EditMembershipTask extends AbstractTask {
 
 	@Override
 	public String getTaskName() {
-		return SparkConstants.EDIT_MEMBERSHIP_TASK_LABEL;
+		return SparkConstants.EDIT_ROOM_MEMBERSHIP_TASK_LABEL;
 	}
 
 	@Override

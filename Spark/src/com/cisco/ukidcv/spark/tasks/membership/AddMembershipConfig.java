@@ -141,7 +141,7 @@ public class AddMembershipConfig implements TaskConfigIf {
 
 	@Override
 	public String getDisplayLabel() {
-		return SparkConstants.ADD_MEMBERSHIP_TASK_LABEL;
+		return SparkConstants.ADD_ROOM_MEMBERSHIP_TASK_LABEL;
 	}
 
 	@Override

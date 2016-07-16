@@ -156,14 +156,27 @@ public class SparkConstants {
 	 * Label for edit membership task
 	 */
 	public static final String EDIT_MEMBERSHIP_TASK_LABEL = "Edit Member";
+
+	/**
+	 * Label for edit membership task
+	 */
+	public static final String EDIT_ROOM_MEMBERSHIP_TASK_LABEL = "Edit Room Member";
 	/**
 	 * Label for edit membership task
 	 */
 	public static final String DELETE_MEMBERSHIP_TASK_LABEL = "Remove Member";
 	/**
+	 * Label for edit membership task
+	 */
+	public static final String DELETE_ROOM_MEMBERSHIP_TASK_LABEL = "Remove Room Member";
+	/**
 	 * Label for create room task
 	 */
 	public static final String ADD_MEMBERSHIP_TASK_LABEL = "Add Member";
+	/**
+	 * Label for create room task
+	 */
+	public static final String ADD_ROOM_MEMBERSHIP_TASK_LABEL = "Add Room Member";
 
 	/**
 	 * Label for edit team membership task
