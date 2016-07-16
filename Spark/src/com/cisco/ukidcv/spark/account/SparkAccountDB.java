@@ -168,6 +168,16 @@ public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCre
 	 */
 	@Override
 	public InfraAccount toInfraAccount() {
+		// Check the API key starts with 'Bearer', if not add it
+		try {
+			if (!this.apiKey.substring(0, 5).equals("Bearer")) {
+				this.apiKey = "Bearer " + this.apiKey;
+			}
+		}
+		catch (Exception e) {
+			logger.warn("Failed to add Bearer to API key: " + e.getMessage());
+		}
+
 		try {
 			// Create an object store
 			ObjStore<InfraAccount> store = ObjStoreHelper.getStore(InfraAccount.class);
