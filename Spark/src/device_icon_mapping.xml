@@ -29,31 +29,10 @@
 		synch with your ConvergedStackBuilder implementation! Refer to DummyConvergedStackBuilder.java 
 		for details. -->
 	<Device>
-		<DeviceType>HP_3PAR 7200</DeviceType>
-		<Vendor>HP Enterprise</Vendor>
+		<DeviceType>Spark</DeviceType>
+		<Vendor>Spark</Vendor>
 		<IconURL>/app/uploads/openauto/cloud.png</IconURL>
-		<Description>HP 3PAR 7200</Description>
-		<IsSupported>true</IsSupported>
-	</Device>
-	<Device>
-		<DeviceType>HP_3PAR 7200</DeviceType>
-		<Vendor>HP3PAR</Vendor>
-		<IconURL>/app/uploads/openauto/cloud.png</IconURL>
-		<Description>HP 3PAR 7200</Description>
-		<IsSupported>true</IsSupported>
-	</Device>
-	<Device>
-		<DeviceType>HP 3PAR Pod</DeviceType>
-		<Vendor>HP Enterprise</Vendor>
-		<IconURL>/app/uploads/openauto/cloud.png</IconURL>
-		<Description>HP 3PAR 7200</Description>
-		<IsSupported>true</IsSupported>
-	</Device>
-	<Device>
-		<DeviceType>HP3PAR</DeviceType>
-		<Vendor>HP Enterprise</Vendor>
-		<IconURL>/app/uploads/openauto/cloud.png</IconURL>
-		<Description>HP 3PAR 7200</Description>
+		<Description>Cisco Spark</Description>
 		<IsSupported>true</IsSupported>
 	</Device>
 </DeviceSupportList>
