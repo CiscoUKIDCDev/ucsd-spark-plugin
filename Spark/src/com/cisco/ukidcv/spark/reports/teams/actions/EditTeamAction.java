@@ -82,7 +82,7 @@ public class EditTeamAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.updateTeam(account, config.getTeamId(), config.getNewTeamName());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not edit team: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

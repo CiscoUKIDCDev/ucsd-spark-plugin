@@ -7,8 +7,8 @@
 package com.cisco.ukidcv.spark.reports.rooms.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cisco.ukidcv.spark.reports.rooms.SparkRoomReport;
@@ -78,7 +78,7 @@ public class DeleteRoomAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.deleteRoom(account, config.getRoomId());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not delete room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

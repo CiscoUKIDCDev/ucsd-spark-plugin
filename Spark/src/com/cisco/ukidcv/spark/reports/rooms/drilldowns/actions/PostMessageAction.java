@@ -89,7 +89,7 @@ public class PostMessageAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.sendMessageToRoom(account, config.getRoomId(), message);
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not post message to room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

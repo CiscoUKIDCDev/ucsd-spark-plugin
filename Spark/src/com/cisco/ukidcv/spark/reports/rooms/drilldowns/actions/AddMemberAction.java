@@ -7,8 +7,8 @@
 package com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.exceptions.SparkTaskFailedException;
 import com.cisco.ukidcv.spark.tasks.membership.AddMembershipConfig;
@@ -80,7 +80,7 @@ public class AddMemberAction extends CloupiaPageAction {
 				config.isModerator());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not add member to room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

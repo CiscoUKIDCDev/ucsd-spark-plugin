@@ -112,7 +112,7 @@ public class EditMembershipAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.updateMembership(account, memberId, config.isModerator());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not edit room member: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

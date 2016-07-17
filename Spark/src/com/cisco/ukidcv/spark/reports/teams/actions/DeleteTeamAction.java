@@ -78,7 +78,7 @@ public class DeleteTeamAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.deleteTeam(account, config.getTeamId());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not delete team: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

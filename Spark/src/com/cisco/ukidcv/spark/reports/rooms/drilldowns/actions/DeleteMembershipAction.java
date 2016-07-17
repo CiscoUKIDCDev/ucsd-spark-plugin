@@ -8,8 +8,8 @@ package com.cisco.ukidcv.spark.reports.rooms.drilldowns.actions;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.inventory.SparkInventory;
-import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.SparkApi;
+import com.cisco.ukidcv.spark.api.SparkApiStatus;
 import com.cisco.ukidcv.spark.api.json.SparkMembership;
 import com.cisco.ukidcv.spark.api.json.SparkRoom;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
@@ -113,12 +113,12 @@ public class DeleteMembershipAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.deleteMembership(account, memberId);
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not remove member from room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 
 		// Set the text for the "OK" prompt and return successfully
-		page.setPageMessage("Membership deleteed OK");
+		page.setPageMessage("Membership removed OK");
 		return PageIf.STATUS_OK;
 	}
 

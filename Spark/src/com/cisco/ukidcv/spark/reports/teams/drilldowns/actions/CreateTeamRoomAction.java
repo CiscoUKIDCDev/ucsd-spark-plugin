@@ -93,7 +93,7 @@ public class CreateTeamRoomAction extends CloupiaPageAction {
 		}
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not create room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

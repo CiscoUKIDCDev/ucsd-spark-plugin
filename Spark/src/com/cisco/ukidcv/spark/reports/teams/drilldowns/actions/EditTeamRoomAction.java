@@ -82,7 +82,7 @@ public class EditTeamRoomAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.updateRoom(account, config.getRoomId(), config.getNewRoomName());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not edit room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

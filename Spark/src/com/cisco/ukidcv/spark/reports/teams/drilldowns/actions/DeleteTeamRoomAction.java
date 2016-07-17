@@ -78,7 +78,7 @@ public class DeleteTeamRoomAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.deleteRoom(account, config.getRoomId());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
+			page.setPageMessage("Could not delete room: " + s.getError());
 			throw new SparkTaskFailedException(s.getError());
 		}
 

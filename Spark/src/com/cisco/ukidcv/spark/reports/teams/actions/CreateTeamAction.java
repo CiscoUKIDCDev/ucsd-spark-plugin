@@ -81,8 +81,7 @@ public class CreateTeamAction extends CloupiaPageAction {
 		SparkApiStatus s = SparkApi.createTeam(account, config.getTeamName());
 
 		if (!s.isSuccess()) {
-			// Throw an exception, the message will show in the GUI
-			page.setPageMessage("Team creation filed: " + s.getError());
+			page.setPageMessage("Team creation failed: Permission failed");
 			throw new SparkTaskFailedException(s.getError());
 		}
 
