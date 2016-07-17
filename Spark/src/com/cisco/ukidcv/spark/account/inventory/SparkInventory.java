@@ -324,7 +324,8 @@ public class SparkInventory {
 			SparkTeams teams = gson.fromJson(json, SparkTeams.class);
 			return teams;
 		}
-		throw new SparkReportException("Could not parse JSON");
+		logger.info("Team API returned nothing - probably not supported by account");
+		return new SparkTeams();
 	}
 
 	/**
