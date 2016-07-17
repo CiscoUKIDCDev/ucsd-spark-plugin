@@ -48,37 +48,47 @@ public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCre
 	@Persistent
 	private boolean isCredentialPolicy = false;
 
+	// Provide a link to developer.cisco.com via an HTML form:
+	@Persistent
+	@FormField(label = "", help = "", mandatory = false, type = FormFieldDefinition.FIELD_TYPE_HTML_LABEL, editable = false)
+	final private String apiKeyHelp = "Obtain an API Key from <a href=\"https://developer.ciscospark.com\" target=\"blank\">developer.ciscospark.com</a>";
+
 	// Input field for API key:
 	@Persistent
 	@FormField(label = "Spark API Key", help = "API Key from developer.ciscospark.com", mandatory = true, type = FormFieldDefinition.FIELD_TYPE_PASSWORD)
 	private String apiKey;
 
-	// Input field for API key:
+	// Show an example via a label
+	@Persistent
+	@FormField(label = "For example: ", help = "Obtain an API Key from developer.ciscospark.com", mandatory = false, editable = false)
+	final private String apiKeyExample = "Bearer XYZwODlmZTQtZTIxYy00MTVjLWExMGEtMDNlYzljMmQyZTgyZTUyMTM4NjctOTI0";
+
+	// Input field for proxy:
 	@Persistent
 	@FormField(label = "Use a proxy", help = "Check if you need to use a proxy to access the internet", type = FormFieldDefinition.FIELD_TYPE_BOOLEAN)
 	private boolean proxy;
 
-	// Input field for API key:
+	// Input field for proxy server:
 	@Persistent
 	@FormField(label = "Proxy Server", help = "Proxy server to use (leave blank if none)", mandatory = false)
 	private String proxyServer;
 
-	// Input field for API key:
+	// Input field for proxy port:
 	@Persistent
 	@FormField(label = "Proxy Port", help = "Proxy port to use (leave blank if none)", mandatory = false)
 	private int proxyPort;
 
-	// Input field for API key:
+	// Input field for proxy auth:
 	@Persistent
 	@FormField(label = "Proxy Authentication", help = "Check if your proxy server requires authentication", mandatory = false, type = FormFieldDefinition.FIELD_TYPE_BOOLEAN)
 	private boolean proxyAuth;
 
-	// Input field for API key:
+	// Input field for proxy username:
 	@Persistent
 	@FormField(label = "Proxy Username", help = "Proxy username (leave blank if none)", mandatory = false)
 	private String proxyUser;
 
-	// Input field for API key:
+	// Input field for proxy password:
 	@Persistent
 	@FormField(label = "Proxy Password", help = "Proxy password (leave blank if none)", type = FormFieldDefinition.FIELD_TYPE_PASSWORD, mandatory = false)
 	private String proxyPass;
@@ -154,10 +164,21 @@ public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCre
 	}
 
 	/**
-	 * Set this to avoid UCSD showing 'null' under server/filer (cosmetic)
+	 * Set the following to avoid UCSD showing 'null' under server/filer
+	 * (cosmetic)
 	 *
 	 * @return Spark API IP Address
 	 */
+	@Override
+	public String getServerAddress() {
+		return SparkConstants.SPARK_SERVER_HOSTNAME;
+	}
+
+	@Override
+	public String getServer() {
+		return SparkConstants.SPARK_SERVER_HOSTNAME;
+	}
+
 	@Override
 	public String getServerIp() {
 		return SparkConstants.SPARK_SERVER_HOSTNAME;
