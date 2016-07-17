@@ -48,15 +48,15 @@ public class SparkAccountDB extends AbstractInfraAccount implements ConnectorCre
 	@Persistent
 	private boolean isCredentialPolicy = false;
 
-	// Provide a link to developer.cisco.com via an HTML form:
-	@Persistent
-	@FormField(label = "", help = "", mandatory = false, type = FormFieldDefinition.FIELD_TYPE_HTML_LABEL, editable = false)
-	final private String apiKeyHelp = "Obtain an API Key from <a href=\"https://developer.ciscospark.com\" target=\"blank\">developer.ciscospark.com</a>";
-
 	// Input field for API key:
 	@Persistent
 	@FormField(label = "Spark API Key", help = "API Key from developer.ciscospark.com", mandatory = true, type = FormFieldDefinition.FIELD_TYPE_PASSWORD)
 	private String apiKey;
+
+	// Provide a link to developer.cisco.com via an HTML form:
+	@Persistent
+	@FormField(label = "", help = "", mandatory = false, type = FormFieldDefinition.FIELD_TYPE_HTML_LABEL, editable = false)
+	final private String apiKeyHelp = "Obtain an API Key from <a href=\"https://developer.ciscospark.com\" target=\"blank\">developer.ciscospark.com</a>";
 
 	// Show an example via a label
 	@Persistent
