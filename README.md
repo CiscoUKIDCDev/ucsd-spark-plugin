@@ -6,12 +6,28 @@ It is designed to be easy to consume and full-featured.
 ## Download & Installation
 You can [download it here](https://github.com/CiscoUKIDCDev/ucsd-spark-plugin/releases)
 
-### Installation
-1. Under **Administration -> Open Automation** upload the plugin file (Spark-plugin.zip). Select it and click **enable**.
-2. From the CLI (typically ssh logged in as shelladmin) select **3** to stop services and then **4** to start them.
-3. You can then add a Spark account under a Generic pod (it's confusingly a **storage** account!)
+### Spark Developer Key
+To install it you will first need a Spark Developer Key.
 
-You can then administer your Spark account(s) either via custom workflow tasks, or via the UCS Director GUI.
+1. Visit the Cisco Spark Developer community - [https://developer.ciscospark.com/](https://developer.ciscospark.com/)
+2. Click Sign In in the top right
+3. Click Get Started
+4. Under Authentication will be your API key - copy the whole thing
+5. For example: ```Bearer XYZwODlmZTQtZTIxYy00MTVjLWExMGEtMDNlYzljMmQyZTgyZTUyMTM4NjctOTI0```
+
+### Installation
+Once this is enabled you can install the UCS Director plugin:
+
+1. Under **Administration -> Open Automation** upload the plugin file (**Spark-plugin.zip**). Select it and click **enable**.
+2. Once it has finished uploading, select the plugin and click **Enable** to mark it as active
+3. ssh to your UCS Director installation as shelladmin and select **3** to stop services and y to confirm
+4. Select **4** to start services again
+
+UCS Director will reload. This may take up to 10 minutes.
+
+Once it has come back online, navigate to **Administration -> Physical Accounts**, select the **Physical Accounts** tab and click **Add**.
+
+Select **Storage** as the account type (yes, I know...) and then select **Spark**. You can only add it to a Generic Pod.
 
 ## Demo Video
 [![Video Demo](http://img.youtube.com/vi/N4l2K2TbfKE/0.jpg)](https://www.youtube.com/watch?v=N4l2K2TbfKE)
