@@ -56,10 +56,6 @@ public class SparkInventoryDB {
 
 	@Persistent(defaultFetchGroup = "true")
 	@Column(jdbcType = "CLOB")
-	private String teamMembershipList;
-
-	@Persistent(defaultFetchGroup = "true")
-	@Column(jdbcType = "CLOB")
 	private String me;
 
 	/**
@@ -135,25 +131,6 @@ public class SparkInventoryDB {
 	 */
 	public void setTeamList(String teamList) {
 		this.teamList = teamList;
-	}
-
-	/**
-	 * Gets the list of team members
-	 *
-	 * @return List of team members in JSON format
-	 */
-	public String getTeamMembershipList() {
-		return this.teamMembershipList;
-	}
-
-	/**
-	 * Sets the team membership list in JSON format
-	 *
-	 * @param teamMembershipList
-	 *            list of team members in JSON format
-	 */
-	public void setTeamMembershipList(String teamMembershipList) {
-		this.teamMembershipList = teamMembershipList;
 	}
 
 	/**
