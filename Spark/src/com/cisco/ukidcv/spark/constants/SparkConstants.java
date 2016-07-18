@@ -114,6 +114,11 @@ public class SparkConstants {
 	 * Label for new message
 	 */
 	public static final String MESSAGE_TEXT_LABEL = "Message";
+
+	/**
+	 * Label for new message markdown
+	 */
+	public static final String MESSAGE_MARKDOWN_LABEL = "Markdown";
 	/**
 	 * Label for file URL
 	 */

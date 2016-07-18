@@ -43,6 +43,11 @@ public class PostMessageToRoomConfig implements TaskConfigIf {
 	@Persistent
 	private String message;
 
+	@FormField(label = SparkConstants.MESSAGE_MARKDOWN_LABEL, help = SparkConstants.MESSAGE_MARKDOWN_LABEL, mandatory = false, type = FormFieldDefinition.FIELD_TYPE_TEXT)
+	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
+	@Persistent
+	private String markdown;
+
 	@FormField(label = SparkConstants.MESSAGE_FILE_URL_LABEL, help = SparkConstants.MESSAGE_FILE_URL_LABEL, mandatory = false, type = FormFieldDefinition.FIELD_TYPE_TEXT)
 	@UserInputField(type = SparkConstants.GENERIC_TEXT_INPUT)
 	@Persistent
@@ -89,6 +94,22 @@ public class PostMessageToRoomConfig implements TaskConfigIf {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	/**
+	 * @return user provided markdown
+	 */
+	public String getMarkdown() {
+		return this.markdown;
+	}
+
+	/**
+	 * Set the message to send
+	 *
+	 * @param message
+	 */
+	public void setMarkdown(String message) {
+		this.message = this.markdown;
 	}
 
 	/**

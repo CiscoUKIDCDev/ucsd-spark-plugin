@@ -78,11 +78,21 @@ public class PostMessageAction extends CloupiaPageAction {
 		SparkAccount account = new SparkAccount(context);
 
 		// Construct Spark Message:
-		SparkMessage message = new SparkMessage(config.getMessage());
+		SparkMessage message = new SparkMessage();
+
+		// Add message
+		if ((config.getMessage() != null) && (!"".equals(config.getMessage()))) {
+			message.setMarkdown(config.getMessage());
+		}
 
 		// Add file URL:
 		if ((config.getFileUrl() != null) && (!"".equals(config.getFileUrl()))) {
 			message.addFiles(config.getFileUrl());
+		}
+
+		// Add markdown
+		if ((config.getMarkdown() != null) && (!"".equals(config.getMarkdown()))) {
+			message.setMarkdown(config.getMarkdown());
 		}
 
 		// Post message
