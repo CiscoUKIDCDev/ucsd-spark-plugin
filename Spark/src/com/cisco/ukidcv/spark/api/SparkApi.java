@@ -251,7 +251,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage(), req.getResponse());
 		}
@@ -306,7 +306,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage(), json);
 		}
@@ -336,7 +336,7 @@ public class SparkApi {
 
 		// If the request does not return 204 (deleted) it's an error, return
 		// details:
-		if (req.getCode() != 204) {
+		if (req.getResponseCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
@@ -425,7 +425,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = null;
 			try {
 				error = gson.fromJson(req.getResponse(), SparkErrors.class);
@@ -487,7 +487,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -517,7 +517,7 @@ public class SparkApi {
 
 		// If the request does not return 204 (deleted) it's an error, return
 		// details:
-		if (req.getCode() != 204) {
+		if (req.getResponseCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
@@ -560,7 +560,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -600,7 +600,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -630,7 +630,7 @@ public class SparkApi {
 
 		// If the request does not return 204 (deleted) it's an error, return
 		// details:
-		if (req.getCode() != 204) {
+		if (req.getResponseCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
@@ -690,7 +690,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -733,7 +733,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -788,7 +788,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -818,7 +818,7 @@ public class SparkApi {
 
 		// If the request does not return 204 (deleted) it's an error, return
 		// details:
-		if (req.getCode() != 204) {
+		if (req.getResponseCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
@@ -862,7 +862,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage(), null);
 		}
@@ -920,7 +920,7 @@ public class SparkApi {
 
 		// If the request does not return 200 (success) it's an error, return
 		// details:
-		if (req.getCode() != 200) {
+		if (req.getResponseCode() != 200) {
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
 		}
@@ -950,7 +950,7 @@ public class SparkApi {
 
 		// If the request does not return 204 (deleted) it's an error, return
 		// details:
-		if (req.getCode() != 204) {
+		if (req.getResponseCode() != 204) {
 			Gson gson = new Gson();
 			SparkErrors error = gson.fromJson(req.getResponse(), SparkErrors.class);
 			return new SparkApiStatus(false, error.getMessage());
