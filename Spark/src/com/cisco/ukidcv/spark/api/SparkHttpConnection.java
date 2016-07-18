@@ -83,8 +83,6 @@ public class SparkHttpConnection {
 
 		// Do we need a proxy?
 		this.setProxy(account.getProxy());
-
-		this.allowUntrustedCertificates = true;
 	}
 
 	/**
