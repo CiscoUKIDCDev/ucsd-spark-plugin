@@ -32,7 +32,7 @@ Select **Storage** as the account type (yes, I know...) and then select **Spark*
 ## Demo Video
 [![Video Demo](http://img.youtube.com/vi/N4l2K2TbfKE/0.jpg)](https://www.youtube.com/watch?v=N4l2K2TbfKE)
 
-You can find [screen shots here](https://github.com/CiscoUKIDCDev/ucsd-spark-plugin/blob/master/screenshots.md)
+You can find [screenshots here](screenshots.md)
 
 ## Function
 This plugin is under active development. New features and screenshots are due
