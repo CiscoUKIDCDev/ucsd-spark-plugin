@@ -1,31 +1,30 @@
 # Screenshots
 ## Summary View
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/Summary.png)
+![Screenshot](screenshots/summary.png)
 
 ## Rooms
 Room List
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/RoomList.png)
+![Screenshot](screenshots/room-list.png)
 
 Room Drilldown summary
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/RoomDrilldown.png)
+![Screenshot](screenshots/room-drilldown.png)
 
 Room Members
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/RoomMembers.png)
+![Screenshot](screenshots/room-members.png)
 
 Room Messages
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/RoomMessages.png)
+![Screenshot](screenshots/room-messages.png)
 
 ## Teams
 Team list
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/Teams.png)
+![Screenshot](screenshots/teams.png)
 
 Team Members
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/TeamMembers.png)
+![Screenshot](screenshots/team-members.png)
 
 Team Rooms
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/TeamRooms.png)
+![Screenshot](screenshots/team-rooms.png)
 
 ## Orchestration
 Orchestration
-![Screenshot](https://matt.fragilegeek.com/spark-ucsd/Orchestration.png)
-
+![Screenshot](screenshots/orchestration.png)
