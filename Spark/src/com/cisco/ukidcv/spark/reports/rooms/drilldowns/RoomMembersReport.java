@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 Matt Day, Cisco and others
+ * Copyright (c) 2016 Cisco and/or its affiliates
+ * @author Matt Day
  *
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
