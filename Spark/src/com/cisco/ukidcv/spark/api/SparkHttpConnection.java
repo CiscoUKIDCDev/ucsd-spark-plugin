@@ -227,6 +227,10 @@ public class SparkHttpConnection {
 		catch (Exception e) {
 			logger.error("Failed to execute http request: " + e.getMessage());
 		}
+		finally {
+			// ALWAYS reset the https handler for other plugins
+			Protocol.unregisterProtocol("https");
+		}
 	}
 
 	/**
