@@ -927,7 +927,7 @@ public class SparkApi {
 		}
 		// Update inventory after this operation
 		updateInventory(account);
-		return new SparkApiStatus(true, null);
+		return new SparkApiStatus(true, null, req.getResponse());
 	}
 
 	/**

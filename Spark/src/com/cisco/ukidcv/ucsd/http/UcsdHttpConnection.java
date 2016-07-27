@@ -391,8 +391,13 @@ public class UcsdHttpConnection {
 				HttpResponse rsp = this.httpclient.execute(target, this.request);
 
 				// Store response string:
-				this.response = EntityUtils.toString(rsp.getEntity());
+				if (rsp.getEntity() != null) {
+					this.response = EntityUtils.toString(rsp.getEntity());
+				}
 				this.httpCode = rsp.getStatusLine().getStatusCode();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
 			}
 			finally {
 				// Always release the connection
