@@ -37,8 +37,8 @@ import org.apache.log4j.Logger;
  * It's been designed to be easy to use and cover most use-cases with pre-built
  * methods.
  * <p>
- * This isn't being used by the Spark plugin (as a more customised version is
- * used here), but this library will provide the basis for future plugins
+ * This is being extended by the Spark plugin to provide easier API access, but
+ * it uses this API at its core
  *
  * @author Matt Day
  *
