@@ -5,8 +5,6 @@
 	<classpathentry kind="lib" path="lib/apache-commons-httpclient/commons-codec-1.9.jar"/>
 	<classpathentry kind="lib" path="lib/apache-commons-httpclient/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/apache-commons-httpclient/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/apache-commons-httpclient/httpclient-4.5.1.jar"/>
-	<classpathentry kind="lib" path="lib/apache-commons-httpclient/httpcore-4.4.3.jar"/>
 	<classpathentry kind="lib" path="lib/gson/google-gson.jar"/>
 	<classpathentry kind="lib" path="lib/javamail/mailapi.jar"/>
 	<classpathentry kind="lib" path="lib/jdo/asm-5.0.4.jar"/>
@@ -21,6 +19,7 @@
 	<classpathentry kind="lib" path="lib/ucsd-oa-sdk/ucsd-oa-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/ucsd-oa-sdk/ucsd-oa-api.jar"/>
 	<classpathentry kind="lib" path="lib/ucsd-rest-sdk/ucsd-rest-api-sdk-v2.jar"/>
-	<classpathentry kind="lib" path="lib/ucsd-httprequest/ucsd-http-proxy.jar"/>
+	<classpathentry kind="lib" path="lib/apache-commons-httpclient/httpclient-4.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/apache-commons-httpclient/httpcore-4.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

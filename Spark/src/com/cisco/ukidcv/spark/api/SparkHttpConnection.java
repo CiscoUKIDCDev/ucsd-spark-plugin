@@ -9,24 +9,33 @@ package com.cisco.ukidcv.spark.api;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.DeleteMethod;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import com.cisco.ukidcv.spark.account.SparkAccount;
 import com.cisco.ukidcv.spark.account.SparkProxySettings;
 import com.cisco.ukidcv.spark.constants.SparkConstants;
 import com.cisco.ukidcv.spark.constants.SparkConstants.httpMethod;
+import com.cisco.ukidcv.spark.constants.SparkConstants.httpProtocol;
 
 /**
  * Handles communication to the Spark servers.
@@ -44,15 +53,17 @@ import com.cisco.ukidcv.spark.constants.SparkConstants.httpMethod;
 public class SparkHttpConnection {
 	private static Logger logger = Logger.getLogger(SparkHttpConnection.class);
 
-	private HttpMethod request;
+	private HttpRequestBase request;
 
 	private String response = null;
 	private int httpCode;
-	private HttpClient httpclient = new HttpClient();
+	private DefaultHttpClient httpclient = new DefaultHttpClient();
 	private httpMethod method;
 
-	// By default assume it's not via a proxy
-	private boolean isProxied = false;
+	// Default to https on 443
+	private String protocol = "https";
+	private int port = 443;
+	private String server;
 
 	// By default do not allow untrusted certificates
 	private boolean allowUntrustedCertificates = false;
@@ -73,9 +84,10 @@ public class SparkHttpConnection {
 		// Store the method type
 		this.method = method;
 
-		// Set the http target to the Spark server:
-		String fullUri = SparkConstants.SPARK_SERVER_PROTOCOL + "://" + SparkConstants.SPARK_SERVER_HOSTNAME + path;
-		this.setUri(fullUri, this.method);
+		this.setServer(SparkConstants.SPARK_SERVER_HOSTNAME);
+
+		// Set the URI and method to the Spark Server
+		this.setUri(path, this.method);
 
 		// Add Spark token
 		this.setHeader("Authorization", account.getApiKey());
@@ -91,6 +103,7 @@ public class SparkHttpConnection {
 	 * setUri() etc yourself
 	 *
 	 * @see #setUri
+	 * @see #setServer
 	 * @see #setProxy
 	 * @see #setHeader
 	 */
@@ -105,14 +118,15 @@ public class SparkHttpConnection {
 	 *            Proxy settings
 	 */
 	public void setProxy(SparkProxySettings proxy) {
-		this.isProxied = proxy.isEnabled();
 		// If the proxy is set:
 		if (proxy.isEnabled()) {
-			this.httpclient.getHostConfiguration().setProxy(proxy.getProxyServer(), proxy.getProxyPort());
+			HttpHost proxyConnection = new HttpHost(proxy.getProxyServer(), proxy.getProxyPort(), "http");
 			if (proxy.isProxyAuth()) {
-				this.httpclient.getState().setProxyCredentials(AuthScope.ANY,
-						new UsernamePasswordCredentials(proxy.getProxyUser(), proxy.getProxyPass()));
+				AuthScope proxyScope = new AuthScope(proxy.getProxyServer(), proxy.getProxyPort());
+				Credentials proxyCreds = new UsernamePasswordCredentials(proxy.getProxyUser(), proxy.getProxyPass());
+				this.httpclient.getCredentialsProvider().setCredentials(proxyScope, proxyCreds);
 			}
+			this.httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyConnection);
 		}
 	}
 
@@ -136,20 +150,31 @@ public class SparkHttpConnection {
 	 *            Value (e.g. "text/plain")
 	 */
 	public void setHeader(String key, String value) {
-		this.request.addRequestHeader(key, value);
+		this.request.addHeader(key, value);
+	}
+
+	/**
+	 * Sets a JSON body parameter
+	 *
+	 * @param body
+	 */
+	public void setJsonBody(String body) {
+		this.setBody(body, ContentType.APPLICATION_JSON);
 	}
 
 	/**
 	 * Sets a body parameter
 	 *
 	 * @param body
+	 *            message body to add
+	 * @param contentType
+	 *            Content type
 	 */
-	public void setBody(String body) {
+	public void setBody(String body, ContentType contentType) {
 		try {
 			// Attempt to cast it to an EntityEnclosingMethod which supports
 			// body elements (i.e. POST, PUT methods) and set the body
-			((EntityEnclosingMethod) this.request)
-					.setRequestEntity(new StringRequestEntity(body, "application/json", "utf-8"));
+			((HttpEntityEnclosingRequestBase) this.request).setEntity(new StringEntity(body, contentType));
 		}
 		catch (Exception e) {
 			logger.error("Cannot add http body to request: " + e.getMessage());
@@ -159,29 +184,52 @@ public class SparkHttpConnection {
 	/**
 	 * Set the URI and method to use
 	 *
-	 * @param uri
-	 *            URI (e.g. https://api.ciscospark.com/v1/rooms)
+	 * @param path
+	 *            path (e.g. /api.ciscospark.com/v1/rooms)
 	 * @param method
 	 *            http method Method to use (i.e. GET, POST, DELETE, PUT)
 	 */
-	public void setUri(String uri, httpMethod method) {
+	public void setUri(String path, httpMethod method) {
 		switch (method) {
 		case GET:
-			this.request = new GetMethod(uri);
+			this.request = new HttpGet(path);
 			return;
 		case PUT:
-			this.request = new PutMethod(uri);
+			this.request = new HttpPut(path);
 			return;
 		case POST:
-			this.request = new PostMethod(uri);
+			this.request = new HttpPost(path);
 			return;
 		case DELETE:
-			this.request = new DeleteMethod(uri);
+			this.request = new HttpDelete(path);
 			return;
 		default:
 			logger.error("Unknown method type " + method);
 			return;
 		}
+	}
+
+	/**
+	 * Set the server to connect to (e.g. api.ciscospark.com)
+	 *
+	 * @param server
+	 *            server to connect to
+	 */
+	public void setServer(String server) {
+		this.server = server;
+	}
+
+	/**
+	 * Set the protocol to connect with (http or https)
+	 *
+	 * @param protocol
+	 *            protocol to connect with
+	 * @param port
+	 *            TCP port to use
+	 */
+	public void setProtocol(httpProtocol protocol, int port) {
+		this.protocol = (protocol == httpProtocol.HTTPS) ? "https" : "http";
+		this.port = port;
 	}
 
 	/**
@@ -192,34 +240,26 @@ public class SparkHttpConnection {
 	 * @throws IOException
 	 *             If there is an IO connectivity problem
 	 */
+	@SuppressWarnings("deprecation")
 	public void execute() throws ClientProtocolException, IOException {
 		try {
 			// If SSL verification is disabled, use own socket factory
 			if (this.allowUntrustedCertificates) {
-				/*
-				 * There is a bug I can't seem to workaround which means if
-				 * you're using a proxy you cannot provide your own socket
-				 * factory... For now I'm not trying to provide a socket
-				 * factory, but it will break any self-signed pages that are
-				 * requested via a proxy
-				 */
-				if (this.isProxied) {
-					Protocol.unregisterProtocol("https");
-				}
-				else {
-					Protocol.registerProtocol("https", new Protocol("https", new UntrustedSSLSocketFactory(), 443));
-				}
-			}
-			else {
-				// Unregister any https protocol set elsewhere - otherwise it
-				// may attempt to use an SSL socket factory created by another
-				// plugin
-				Protocol.unregisterProtocol("https");
+				// Create a new socket factory and set it to always say yes
+				SSLSocketFactory socketFactory = new SSLSocketFactory((chain, authType) -> true);
+
+				// This method is deprecated, but the workaround is to upgrade
+				// to 4.3 which isn't included in UCSD as of 5.5
+				socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+				this.httpclient.getConnectionManager().getSchemeRegistry()
+						.register(new Scheme("https", 443, socketFactory));
 			}
 			try {
-				this.httpclient.executeMethod(this.request);
-				this.response = this.request.getResponseBodyAsString();
-				this.httpCode = this.request.getStatusCode();
+				HttpHost target = new HttpHost(this.server, this.port, this.protocol);
+				HttpResponse rsp = this.httpclient.execute(target, this.request);
+				this.response = EntityUtils.toString(rsp.getEntity());
+				this.httpCode = rsp.getStatusLine().getStatusCode();
 			}
 			finally {
 				this.request.releaseConnection();

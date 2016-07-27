@@ -342,6 +342,20 @@ public class SparkConstants {
 	}
 
 	/**
+	 * Enum type for protocols
+	 */
+	public enum httpProtocol {
+		/**
+		 * http
+		 */
+		HTTP,
+		/**
+		 * https
+		 */
+		HTTPS,
+	}
+
+	/**
 	 * API Version
 	 */
 	public static final String API_VERSION = "1";

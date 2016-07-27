@@ -247,7 +247,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkMembershipCreation(roomId, personEmail, moderator));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -302,7 +302,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkMembershipCreation(moderator));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -421,7 +421,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkTeamCreation(teamName));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -483,7 +483,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkTeamCreation(newName));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -556,7 +556,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkTeamMembershipCreation(teamId, personEmail, moderator));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -596,7 +596,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkTeamMembershipCreation(moderator));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -686,7 +686,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkRoomCreation(roomName));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -729,7 +729,7 @@ public class SparkApi {
 		String json = gson.toJson(room);
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -784,7 +784,7 @@ public class SparkApi {
 		String json = gson.toJson(new SparkRoomCreation(newName));
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -858,7 +858,7 @@ public class SparkApi {
 		String json = gson.toJson(newMessage);
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return
@@ -916,7 +916,7 @@ public class SparkApi {
 		String json = gson.toJson(newMessage);
 
 		// Set it to the request body (must be POST or PUT)
-		req.setBody(json);
+		req.setJsonBody(json);
 		req.execute();
 
 		// If the request does not return 200 (success) it's an error, return

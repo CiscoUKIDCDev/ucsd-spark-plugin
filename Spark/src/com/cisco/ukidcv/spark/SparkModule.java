@@ -96,6 +96,7 @@ public class SparkModule extends AbstractCloupiaModule {
 	public void onStart(CustomFeatureRegistry cfr) {
 
 		try {
+
 			// Register LOV inputs
 			cfr.registerTabularField(SparkConstants.ACCOUNT_LIST_FORM_PROVIDER, SparkAccountSelector.class, "0", "0");
 			cfr.registerTabularField(SparkConstants.ROOM_LIST_FORM_PROVIDER, SparkRoomSelector.class, "0", "2");
