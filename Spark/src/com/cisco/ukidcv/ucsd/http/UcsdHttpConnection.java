@@ -1,11 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Cisco and/or its affiliates
- * @author Matt Day
  *
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
  *******************************************************************************/
-package com.cisco.ukidcv.spark.api;
+package com.cisco.ukidcv.ucsd.http;
 
 import java.io.IOException;
 
@@ -31,27 +30,23 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import com.cisco.ukidcv.spark.account.SparkAccount;
-import com.cisco.ukidcv.spark.account.SparkProxySettings;
-import com.cisco.ukidcv.spark.constants.SparkConstants;
-import com.cisco.ukidcv.spark.constants.SparkConstants.httpMethod;
-import com.cisco.ukidcv.spark.constants.SparkConstants.httpProtocol;
-
 /**
- * Handles communication to the Spark servers.
+ * Provides a generic means to connect to external http and https servers with
+ * options to ignore certificate validation and to provide a proxy.
  * <p>
- * Can be used in two ways, the first where the constructor takes the account,
- * uri and method is the easiest but is restricted in flexibility. It will add
- * proxy settings and the token headers automatically.
+ * It's been designed to be easy to use and cover most use-cases with pre-built
+ * methods.
  * <p>
- * The default constructor does no setup (not even proxy) and can be used for
- * more advanced workloads.
+ * This isn't being used by the Spark plugin (as a more customised version is
+ * used here), but this library will provide the basis for future plugins
  *
  * @author Matt Day
  *
  */
-public class SparkHttpConnection {
-	private static Logger logger = Logger.getLogger(SparkHttpConnection.class);
+
+public class UcsdHttpConnection {
+
+	private static Logger logger = Logger.getLogger(UcsdHttpConnection.class);
 
 	private HttpRequestBase request;
 
@@ -69,33 +64,68 @@ public class SparkHttpConnection {
 	private boolean allowUntrustedCertificates = false;
 
 	/**
+	 * HTTP method type to use (POST, GET, DELETE, PUT)
+	 */
+	public enum httpMethod {
+		/**
+		 * http POST method
+		 */
+		POST,
+		/**
+		 * http GET method
+		 */
+		GET,
+		/**
+		 * http DELETE method
+		 */
+		DELETE,
+		/**
+		 * http PUT method
+		 */
+		PUT
+	}
+
+	/**
+	 * Protocol to use (http or https)
+	 */
+	public enum httpProtocol {
+		/**
+		 * http
+		 */
+		HTTP,
+		/**
+		 * https
+		 */
+		HTTPS,
+	}
+
+	/**
 	 * Create a connection to the Spark API using the specified account.
 	 * <p>
 	 * Automatically configures the token and proxy settings.
 	 *
-	 * @param account
-	 *            Account from which to connect
+	 * @param server
+	 *            Server to connect to (e.g. cisco.com)
+	 *
 	 * @param path
 	 *            path to request to (e.g. /v1/rooms)
+	 * @param protocol
+	 *            Protocol to use (http or https)
+	 * @param port
+	 *            Port to connect on (e.g. 443)
 	 * @param method
 	 *            Method to use (i.e. GET, POST, DELETE, PUT)
 	 */
-	public SparkHttpConnection(SparkAccount account, String path, httpMethod method) {
+	public UcsdHttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method) {
 		// Store the method type
 		this.method = method;
 
-		this.setServer(SparkConstants.SPARK_SERVER_HOSTNAME);
+		this.setServer(server);
+
+		this.setProtocol(protocol, port);
 
 		// Set the URI and method to the Spark Server
 		this.setUri(path, this.method);
-
-		// Add Spark token
-		this.setHeader("Authorization", account.getApiKey());
-
-		this.setHeader("Content-type", "application/json; charset=utf-8");
-
-		// Do we need a proxy?
-		this.setProxy(account.getProxy());
 	}
 
 	/**
@@ -107,31 +137,60 @@ public class SparkHttpConnection {
 	 * @see #setProxy
 	 * @see #setHeader
 	 */
-	public SparkHttpConnection() {
+	public UcsdHttpConnection() {
 		super();
 	}
 
 	/**
-	 * Add proxy settings
+	 * Set basic http authentication for this connection
 	 *
-	 * @param proxy
-	 *            Proxy settings
+	 * @param username
+	 *            Username
+	 * @param password
+	 *            Password
 	 */
-	public void setProxy(SparkProxySettings proxy) {
-		// If the proxy is set:
-		if (proxy.isEnabled()) {
-			HttpHost proxyConnection = new HttpHost(proxy.getProxyServer(), proxy.getProxyPort(), "http");
+	public void setAuth(String username, String password) {
+		AuthScope authScope = new AuthScope(this.server, this.port);
+		Credentials authCreds = new UsernamePasswordCredentials(username, password);
+		this.httpclient.getCredentialsProvider().setCredentials(authScope, authCreds);
+	}
 
-			// Proxy auth is handled like http authentication
-			if (proxy.isProxyAuth()) {
-				AuthScope proxyScope = new AuthScope(proxy.getProxyServer(), proxy.getProxyPort());
-				Credentials proxyCreds = new UsernamePasswordCredentials(proxy.getProxyUser(), proxy.getProxyPass());
-				this.httpclient.getCredentialsProvider().setCredentials(proxyScope, proxyCreds);
-			}
+	/**
+	 * Configure proxy for this connection
+	 *
+	 * @param proxyServer
+	 *            Proxy server to connect to
+	 * @param proxyPort
+	 *            Proxy server port
+	 */
+	public void setProxy(String proxyServer, int proxyPort) {
+		this.setProxy(proxyServer, proxyPort, null, null);
+	}
 
-			// Register the proxy server with the http client handler
-			this.httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyConnection);
+	/**
+	 * Configure authenticated proxy for this connection
+	 *
+	 * @param proxyServer
+	 *            Proxy server to connect to
+	 * @param proxyPort
+	 *            Proxy server port
+	 * @param proxyUser
+	 *            Proxy user (null for none)
+	 * @param proxyPass
+	 *            Proxy password (null for none)
+	 */
+	public void setProxy(String proxyServer, int proxyPort, String proxyUser, String proxyPass) {
+
+		HttpHost proxyConnection = new HttpHost(proxyServer, proxyPort, "http");
+		// Proxy auth is handled like http authentication
+		if ((proxyUser != null) && (proxyPass != null)) {
+			AuthScope proxyScope = new AuthScope(proxyServer, proxyPort);
+			Credentials proxyCreds = new UsernamePasswordCredentials(proxyUser, proxyPass);
+			this.httpclient.getCredentialsProvider().setCredentials(proxyScope, proxyCreds);
 		}
+
+		// Register the proxy server with the http client handler
+		this.httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyConnection);
 	}
 
 	/**
@@ -158,11 +217,18 @@ public class SparkHttpConnection {
 	}
 
 	/**
+	 * Set the header to application/json
+	 */
+	public void setJsonContentHeader() {
+		this.setHeader("Content-type", "application/json; charset=utf-8");
+	}
+
+	/**
 	 * Sets a JSON body parameter
 	 *
 	 * @param body
 	 */
-	public void setJsonBody(String body) {
+	public void setBodyJson(String body) {
 		this.setBody(body, ContentType.APPLICATION_JSON);
 	}
 
@@ -252,7 +318,8 @@ public class SparkHttpConnection {
 				// Create a new socket factory and set it to always say yes
 				SSLSocketFactory socketFactory = new SSLSocketFactory((chain, authType) -> true);
 
-				// This method is deprecated, but the workaround is to upgrade
+				// This method is deprecated, but the workaround is to
+				// upgrade
 				// to 4.3 which isn't included in UCSD as of 5.5
 				socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
