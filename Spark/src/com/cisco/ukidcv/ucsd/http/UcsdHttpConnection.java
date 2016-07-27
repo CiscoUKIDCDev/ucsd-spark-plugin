@@ -8,7 +8,6 @@ package com.cisco.ukidcv.ucsd.http;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -319,29 +318,29 @@ public class UcsdHttpConnection {
 				SSLSocketFactory socketFactory = new SSLSocketFactory((chain, authType) -> true);
 
 				// This method is deprecated, but the workaround is to
-				// upgrade
-				// to 4.3 which isn't included in UCSD as of 5.5
+				// upgrade to 4.3 which isn't included in UCSD as of 5.5
 				socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
 				this.httpclient.getConnectionManager().getSchemeRegistry()
 						.register(new Scheme("https", 443, socketFactory));
 			}
+
+			// Execute http request
 			try {
 				HttpHost target = new HttpHost(this.server, this.port, this.protocol);
 				HttpResponse rsp = this.httpclient.execute(target, this.request);
+
+				// Store response string:
 				this.response = EntityUtils.toString(rsp.getEntity());
 				this.httpCode = rsp.getStatusLine().getStatusCode();
 			}
 			finally {
+				// Always release the connection
 				this.request.releaseConnection();
 			}
 		}
 		catch (Exception e) {
 			logger.error("Failed to execute http request: " + e.getMessage());
-		}
-		finally {
-			// ALWAYS reset the https handler for other plugins
-			Protocol.unregisterProtocol("https");
 		}
 	}
 
