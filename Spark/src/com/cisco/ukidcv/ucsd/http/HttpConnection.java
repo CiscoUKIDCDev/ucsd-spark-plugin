@@ -43,9 +43,9 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class UcsdHttpConnection {
+public class HttpConnection {
 
-	private static Logger logger = Logger.getLogger(UcsdHttpConnection.class);
+	private static Logger logger = Logger.getLogger(HttpConnection.class);
 
 	private HttpRequestBase request;
 
@@ -115,7 +115,7 @@ public class UcsdHttpConnection {
 	 * @param method
 	 *            Method to use (i.e. GET, POST, DELETE, PUT)
 	 */
-	public UcsdHttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method) {
+	public HttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method) {
 		// Store the method type
 		this.method = method;
 
@@ -128,6 +128,42 @@ public class UcsdHttpConnection {
 	}
 
 	/**
+	 * Create a connection to the Spark API using the specified account via a
+	 * Proxy
+	 * <p>
+	 * Automatically configures the token and proxy settings.
+	 *
+	 * @param server
+	 *            Server to connect to (e.g. cisco.com)
+	 *
+	 * @param path
+	 *            path to request to (e.g. /v1/rooms)
+	 * @param protocol
+	 *            Protocol to use (http or https)
+	 * @param port
+	 *            Port to connect on (e.g. 443)
+	 * @param method
+	 *            Method to use (i.e. GET, POST, DELETE, PUT)
+	 * @param proxy
+	 *            Proxy configuration to use
+	 */
+	public HttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method,
+			ProxySettings proxy) {
+		// Store the method type
+		this.method = method;
+
+		this.setServer(server);
+
+		this.setProtocol(protocol, port);
+
+		// Set the URI and method to the Spark Server
+		this.setUri(path, this.method);
+
+		// Set the proxy
+		this.setProxy(proxy);
+	}
+
+	/**
 	 * Create a new http entry with no configuration. You will need to call
 	 * setUri() etc yourself
 	 *
@@ -136,7 +172,7 @@ public class UcsdHttpConnection {
 	 * @see #setProxy
 	 * @see #setHeader
 	 */
-	public UcsdHttpConnection() {
+	public HttpConnection() {
 		super();
 	}
 
@@ -155,7 +191,30 @@ public class UcsdHttpConnection {
 	}
 
 	/**
-	 * Configure proxy for this connection
+	 * Configure proxy for this connection with a ProxySettings class
+	 *
+	 * @param proxy
+	 *            Proxy configuration file to use
+	 */
+	public void setProxy(ProxySettings proxy) {
+		// If the proxy is set:
+		if (proxy.isEnabled()) {
+			HttpHost proxyConnection = new HttpHost(proxy.getServer(), proxy.getPort(), "http");
+
+			// Proxy auth is handled like http authentication
+			if (proxy.isAuth()) {
+				AuthScope proxyScope = new AuthScope(proxy.getServer(), proxy.getPort());
+				Credentials proxyCreds = new UsernamePasswordCredentials(proxy.getUsername(), proxy.getPassword());
+				this.httpclient.getCredentialsProvider().setCredentials(proxyScope, proxyCreds);
+			}
+
+			// Register the proxy server with the http client handler
+			this.httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyConnection);
+		}
+	}
+
+	/**
+	 * Configure proxy for this connection with manual inputs
 	 *
 	 * @param proxyServer
 	 *            Proxy server to connect to
@@ -167,7 +226,7 @@ public class UcsdHttpConnection {
 	}
 
 	/**
-	 * Configure authenticated proxy for this connection
+	 * Configure authenticated proxy for this connection with manual inputs
 	 *
 	 * @param proxyServer
 	 *            Proxy server to connect to
@@ -197,7 +256,7 @@ public class UcsdHttpConnection {
 	 * lab or internal equipment without a trusted certificate
 	 *
 	 * @param allow
-	 *            true to allow untrusted certificates
+	 *            true to allow untrusted certificates (dangerous!)
 	 */
 	public void allowUntrustedCertificates(boolean allow) {
 		this.allowUntrustedCertificates = allow;
