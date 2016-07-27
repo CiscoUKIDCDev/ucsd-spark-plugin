@@ -15,14 +15,10 @@ import com.cisco.ukidcv.ucsd.http.UcsdHttpConnection;
 /**
  * Handles communication to the Spark servers.
  * <p>
- * Can be used in two ways, the first where the constructor takes the account,
- * uri and method is the easiest but is restricted in flexibility. It will add
- * proxy settings and the token headers automatically.
- * <p>
- * The default constructor does no setup (not even proxy) and can be used for
- * more advanced workloads.
+ * Extends tue UcsdHttpConnection library to handle most tasks
  *
  * @author Matt Day
+ * @see UcsdHttpConnection
  *
  */
 public class SparkHttpConnection extends UcsdHttpConnection {
@@ -57,20 +53,7 @@ public class SparkHttpConnection extends UcsdHttpConnection {
 	}
 
 	/**
-	 * Create a new http entry with no configuration. You will need to call
-	 * setUri() etc yourself
-	 *
-	 * @see #setUri
-	 * @see #setServer
-	 * @see #setProxy
-	 * @see #setHeader
-	 */
-	public SparkHttpConnection() {
-		super();
-	}
-
-	/**
-	 * Add proxy settings
+	 * Add spark account proxy settings
 	 *
 	 * @param proxy
 	 *            Proxy settings
