@@ -396,9 +396,6 @@ public class UcsdHttpConnection {
 				}
 				this.httpCode = rsp.getStatusLine().getStatusCode();
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
 			finally {
 				// Always release the connection
 				this.request.releaseConnection();
