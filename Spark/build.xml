@@ -36,14 +36,6 @@
 			<fileset dir="${basedir}/poddefinition" includes="**"/> 
 		</copy>
 		<mkdir dir="${basedir}/build/${moduleID}/lib" />
-		<!-- this is how you copy a folder of jars to be part of your module -->
-        <copy todir="${basedir}/build/${moduleID}/lib">
-	        <fileset dir="${basedir}/lib">
-                <include name="jsch/**"/>
-	        	<include name="apache-commons-httpclient/**"/>
-	        	<include name="ucsd-httprequest/**"/>
-	        </fileset>
-        </copy>
 		<zip destfile="${basedir}/${moduleID}-plugin.zip" basedir="${basedir}/build">
 		</zip>
 		<echo message="${moduleID} feature is located at ${basedir}/${moduleID}-plugin.zip"></echo>

@@ -1,8 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2016 Matt Day, Cisco and others
+ * Copyright (c) 2016 Cisco and/or its affiliates
  *
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
+ * @author Matt Day
  *******************************************************************************/
 package com.cisco.ukidcv.ucsd.http;
 
@@ -20,6 +21,14 @@ import com.cisco.ukidcv.ucsd.http.UcsdHttpConnection.httpProtocol;
  *
  */
 public class HttpConnectionExample {
+	/**
+	 * Demonstration of the http connection library and some sample code on how
+	 * it may be used
+	 * 
+	 * @param args
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 
 		// Example one : simple way to connect to cisco.com via a proxy

@@ -3,6 +3,7 @@
  *
  * Unless explicitly stated otherwise all files in this repository are licensed
  * under the Apache Software License 2.0
+ * @author Matt Day
  *******************************************************************************/
 package com.cisco.ukidcv.ucsd.http;
 
