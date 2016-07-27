@@ -319,41 +319,6 @@ public class SparkConstants {
 	public static final String BOOLEAN_INPUT = "Boolean";
 
 	// ======== Spark API Constants
-	/**
-	 * Enum type for http method
-	 */
-	public enum httpMethod {
-		/**
-		 * http POST method
-		 */
-		POST,
-		/**
-		 * http GET method
-		 */
-		GET,
-		/**
-		 * http DELETE method
-		 */
-		DELETE,
-		/**
-		 * http PUT method
-		 */
-		PUT
-	}
-
-	/**
-	 * Enum type for protocols
-	 */
-	public enum httpProtocol {
-		/**
-		 * http
-		 */
-		HTTP,
-		/**
-		 * https
-		 */
-		HTTPS,
-	}
 
 	/**
 	 * API Version

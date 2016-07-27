@@ -43,9 +43,9 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class HttpConnection {
+public class UcsdHttpConnection {
 
-	private static Logger logger = Logger.getLogger(HttpConnection.class);
+	private static Logger logger = Logger.getLogger(UcsdHttpConnection.class);
 
 	private HttpRequestBase request;
 
@@ -115,7 +115,7 @@ public class HttpConnection {
 	 * @param method
 	 *            Method to use (i.e. GET, POST, DELETE, PUT)
 	 */
-	public HttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method) {
+	public UcsdHttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method) {
 		// Store the method type
 		this.method = method;
 
@@ -147,7 +147,7 @@ public class HttpConnection {
 	 * @param proxy
 	 *            Proxy configuration to use
 	 */
-	public HttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method,
+	public UcsdHttpConnection(String server, String path, httpProtocol protocol, int port, httpMethod method,
 			ProxySettings proxy) {
 		// Store the method type
 		this.method = method;
@@ -172,7 +172,7 @@ public class HttpConnection {
 	 * @see #setProxy
 	 * @see #setHeader
 	 */
-	public HttpConnection() {
+	public UcsdHttpConnection() {
 		super();
 	}
 
