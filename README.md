@@ -16,18 +16,7 @@ To install it you will first need a Spark Developer Key.
 5. For example: ```Bearer XYZwODlmZTQtZTIxYy00MTVjLWExMGEtMDNlYzljMmQyZTgyZTUyMTM4NjctOTI0```
 
 ### Installation
-Once this is enabled you can install the UCS Director plugin:
-
-1. Under **Administration -> Open Automation** upload the plugin file (**Spark-plugin.zip**). Select it and click **enable**.
-2. Once it has finished uploading, select the plugin and click **Enable** to mark it as active
-3. ssh to your UCS Director installation as shelladmin and select **3** to stop services and y to confirm
-4. Select **4** to start services again
-
-UCS Director will reload. This may take up to 10 minutes.
-
-Once it has come back online, navigate to **Administration -> Physical Accounts**, select the **Physical Accounts** tab and click **Add**.
-
-Select **Storage** as the account type (yes, I know...) and then select **Spark**. You can only add it to a Generic Pod.
+Please see the **[installation guide](INSTALL.md)** for instructions on how to compile and install this plugin.
 
 ## Demo Video
 [![Video Demo](http://img.youtube.com/vi/N4l2K2TbfKE/0.jpg)](https://www.youtube.com/watch?v=N4l2K2TbfKE)
