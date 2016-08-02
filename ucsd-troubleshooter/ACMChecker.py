@@ -36,7 +36,7 @@ def checkArrayBasedMethods(fileContents, signature):
 		flag = False
 	elif(returns[0] == "{"):
 		l.log(1, "\t" + signature + " returning full object inline: return new " + signature.split()[1] +" { .. } ")
-		flag = False
+		flag = True
 	else:
 		if(returns[0] == "null"):
 			l.warning("\t" + signature + " returns null")
@@ -55,7 +55,8 @@ def checkArrayBasedMethods(fileContents, signature):
 				l.critical("\tThe capacity of the returned array in " + signature + " is not large enough")
 				flag = False
 
-
+		if (flag == True):
+			l.log(1, "\t" + str(signature) + " is OK")
 
 		'''
 		for use in usages:
