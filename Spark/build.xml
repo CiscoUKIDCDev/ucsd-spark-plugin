@@ -58,5 +58,8 @@
 	</target>
 	
 	<target name="verify">
-    </target>
+	        <exec dir="${basedir}" executable="python" failonerror="true">
+        	    <arg line="../ucsd-troubleshooter/SHOOTER.py" />
+        	</exec>
+	</target>
 </project>

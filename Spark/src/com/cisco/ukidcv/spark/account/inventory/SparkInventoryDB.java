@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author Matt Day
  *
  */
-@PersistenceCapable(detachable = "true", table = "spark_inventory_db")
+@PersistenceCapable(detachable = "true", table = "Spark_inventory_db")
 public class SparkInventoryDB {
 
 	private static Logger logger = Logger.getLogger(SparkInventoryDB.class);
