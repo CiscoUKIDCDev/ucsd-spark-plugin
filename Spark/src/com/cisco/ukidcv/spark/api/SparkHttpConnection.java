@@ -36,7 +36,6 @@ public class SparkHttpConnection extends UcsdHttpConnection {
 	 *            Method to use (i.e. GET, POST, DELETE, PUT)
 	 */
 	public SparkHttpConnection(SparkAccount account, String path, httpMethod method) {
-		super();
 
 		this.setServer(SparkConstants.SPARK_SERVER_HOSTNAME);
 
@@ -61,7 +60,7 @@ public class SparkHttpConnection extends UcsdHttpConnection {
 	public void setProxy(SparkProxySettings proxy) {
 		// If the proxy is set:
 		if (proxy.isEnabled()) {
-			// Proxy auth is handled like http authentication
+			// Setup for proxy authentication if needed
 			if (proxy.isProxyAuth()) {
 				this.setProxy(proxy.getProxyServer(), proxy.getProxyPort(), proxy.getProxyUser(), proxy.getProxyPass());
 			}

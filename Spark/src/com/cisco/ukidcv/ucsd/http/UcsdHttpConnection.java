@@ -100,9 +100,7 @@ public class UcsdHttpConnection {
 	}
 
 	/**
-	 * Create a connection to the Spark API using the specified account.
-	 * <p>
-	 * Automatically configures the token and proxy settings.
+	 * Create a connection object to the specified server and path
 	 *
 	 * @param server
 	 *            Server to connect to (e.g. cisco.com)
@@ -129,10 +127,7 @@ public class UcsdHttpConnection {
 	}
 
 	/**
-	 * Create a connection to the Spark API using the specified account via a
-	 * Proxy
-	 * <p>
-	 * Automatically configures the token and proxy settings.
+	 * Create a connection object to the specified server and path via a Proxy
 	 *
 	 * @param server
 	 *            Server to connect to (e.g. cisco.com)
@@ -192,7 +187,7 @@ public class UcsdHttpConnection {
 	}
 
 	/**
-	 * Configure proxy for this connection with a ProxySettings class
+	 * Configure proxy for this connection with a ProxySettings object
 	 *
 	 * @param proxy
 	 *            Proxy configuration file to use
