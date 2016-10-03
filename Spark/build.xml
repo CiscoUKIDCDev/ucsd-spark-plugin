@@ -4,10 +4,56 @@
 	
 	<target name="clean">
 		<delete dir="${basedir}/build" />
-		<delete file="${basedir}/${moduleID}-plugin.zip" />
+		<delete dir="${basedir}/bin" />
+		<delete file="${basedir}/{moduleID}-plugin.zip" />
 	</target>
-	
-	<target name="build" depends="clean, jdoEnhance, verify">
+	<target name="compile" description="compile the source">
+		<mkdir dir="${basedir}/bin" />
+                <copy file="${basedir}/src/device_icon_mapping.xml" tofile="${basedir}/bin/device_icon_mapping.xml" />
+                <copy file="${basedir}/src/module.properties" tofile="${basedir}/bin/module.properties" />
+
+		<javac srcdir="${basedir}/src" destdir="${classesdir}">
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement location="lib/logging/log4j-1.2.15.jar"/>
+				<pathelement path="${classesdir}"/>
+				<fileset dir="${basedir}/lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="debug" depends="clean, compile, jdoEnhance, verify">
+		<delete dir="${basedir}/build" />
+		<mkdir dir="${basedir}/build" />
+		<jar destfile="${basedir}/build/${moduleID}-plugin.jar" update="true">
+		        <fileset dir="${basedir}/bin">
+		        </fileset>
+	        </jar>
+		<copy file="${basedir}/${moduleID}.feature" tofile="${basedir}/build/${moduleID}.feature" />
+		<!-- Copy all the resources into the zip -->
+		<mkdir dir="${basedir}/build/resources" />
+		<copy todir="${basedir}/build/resources">
+			<fileset dir="${basedir}/resources" includes="**"/>  
+		</copy>
+		<!-- Copy all the cloudsense artifacts into the zip -->
+		<mkdir dir="${basedir}/build/cloudsense" />
+		<copy todir="${basedir}/build/cloudsense">
+			<fileset dir="${basedir}/cloudsense" includes="**"/>  
+		</copy>
+		<!-- Copy the pod definition folder into the zip -->
+		<mkdir dir="${basedir}/build/poddefinition" />
+		<copy todir="${basedir}/build/poddefinition">
+			<fileset dir="${basedir}/poddefinition" includes="**"/> 
+		</copy>
+		<mkdir dir="${basedir}/build/${moduleID}/lib" />
+		<zip destfile="${basedir}/${moduleID}-plugin.zip" basedir="${basedir}/build">
+		</zip>
+		<echo message="${moduleID} feature is located at ${basedir}/${moduleID}-plugin.zip"></echo>
+	</target>
+
+	<target name="build" depends="clean, compile, jdoEnhance">
 		<delete dir="${basedir}/build" />
 		<mkdir dir="${basedir}/build" />
 		<jar destfile="${basedir}/build/${moduleID}-plugin.jar" update="true">
@@ -56,10 +102,9 @@
 			</classpath>
 		</java>
 	</target>
-	
 	<target name="verify">
 	        <exec dir="${basedir}" executable="python" failonerror="true">
-        	    <arg line="../ucsd-troubleshooter/SHOOTER.py" />
+	            <arg line="../ucsd-troubleshooter/SHOOTER.py" />
         	</exec>
 	</target>
 </project>
