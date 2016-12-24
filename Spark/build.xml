@@ -12,7 +12,7 @@
                 <copy file="${basedir}/src/device_icon_mapping.xml" tofile="${basedir}/bin/device_icon_mapping.xml" />
                 <copy file="${basedir}/src/module.properties" tofile="${basedir}/bin/module.properties" />
 
-		<javac srcdir="${basedir}/src" destdir="${classesdir}">
+		<javac srcdir="${basedir}/src" destdir="${classesdir}" includeantruntime="false">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="lib/logging/log4j-1.2.15.jar"/>
@@ -23,8 +23,6 @@
 			</classpath>
 		</javac>
 	</target>
-
-	<target name="debug" depends="clean, compile, build, jdoEnhance, verify" />
 
 	<target name="build" depends="clean, compile, jdoEnhance">
 		<delete dir="${basedir}/build" />
@@ -74,10 +72,5 @@
 				</fileset>
 			</classpath>
 		</java>
-	</target>
-	<target name="verify">
-	        <exec dir="${basedir}" executable="python" failonerror="true">
-	            <arg line="../ucsd-troubleshooter/SHOOTER.py" />
-        	</exec>
 	</target>
 </project>
